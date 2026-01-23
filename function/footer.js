@@ -29,7 +29,7 @@ function createFooterHTML(options = {}) {
   return `
     ${disclaimerHTML}
     <!-- Copyright Footer - Always at bottom -->
-    <div class="w-full py-6 pb-12 mt-auto">
+    <div class="w-full py-6 mt-auto" style="padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);">
       <p class="text-xs text-gray-400 text-center">${COPYRIGHT_TEXT}</p>
     </div>
   `;
@@ -77,12 +77,14 @@ function ensureScrollPadding() {
   style.id = 'footer-scroll-padding';
   style.textContent = `
     .content-area {
-      padding-bottom: 20px !important;
+      /* Use safe-area-inset for iOS, fallback to 0 */
+      padding-bottom: env(safe-area-inset-bottom, 0) !important;
     }
     
     /* Ensure footer sticks to bottom */
     .content-area > [data-footer="true"] {
       margin-top: auto;
+      padding-bottom: env(safe-area-inset-bottom, 20px);
     }
   `;
   
