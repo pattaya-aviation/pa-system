@@ -59,20 +59,23 @@ function createHomeNavbarHTML(options = {}) {
   // Define menu items for desktop navbar
   const menuItems = [
     { name: 'หน้าแรก', href: `${basePath}/home/pa-system.html`, hasDropdown: false },
-    { name: 'Voice for Change', href: `${basePath}/voice for change/voice for change.html`, hasDropdown: true,
+    { name: 'ระบบ', href: '#', hasDropdown: true,
       dropdown: [
-        { section: 'เลือกซื้อผลิตภัณฑ์ล่าสุด', items: [
+        { section: 'Voice for Change', items: [
+          { name: 'หน้าหลัก VFC', href: `${basePath}/voice for change/voice for change.html` },
           { name: 'ร้องเรียน', href: `${basePath}/voice for change/complaint.html` },
           { name: 'เสนอแนะ', href: `${basePath}/voice for change/suggestion.html` },
-          { name: 'ชมเชย', href: `${basePath}/voice for change/compliment.html` }
+          { name: 'ชมเชย', href: `${basePath}/voice for change/compliment.html` },
+          { name: 'ติดตามเรื่อง', href: `${basePath}/voice for change/track.html` }
         ]},
-        { section: 'ลิงก์ด่วน', items: [
-          { name: 'ค้นหาร้าน', href: '#' },
-          { name: 'สถานะคำสั่งซื้อ', href: `${basePath}/voice for change/track.html` }
+        { section: 'HR Services', items: [
+          { name: 'ลางาน', href: '#' },
+          { name: 'ขอเอกสาร', href: '#' },
+          { name: 'สวัสดิการ', href: '#' }
         ]},
-        { section: 'เลือกซื้อในร้านค้าพิเศษ', items: [
-          { name: 'การศึกษา', href: '#' },
-          { name: 'ธุรกิจ', href: '#' }
+        { section: 'ระบบอื่นๆ', items: [
+          { name: 'Read & Sign', href: '#' },
+          { name: 'ประเมินพนักงาน', href: '#' }
         ]}
       ]
     },
@@ -90,7 +93,7 @@ function createHomeNavbarHTML(options = {}) {
   
   // Generate menu items HTML for desktop
   const menuItemsHTML = menuItems.map((item, index) => `
-    <button onclick="${item.hasDropdown ? `toggleNavDropdown(${index})` : `window.location.href='${item.href}'`}" class="nav-menu-item px-3 py-1 text-xs text-gray-600 hover:text-black transition-colors cursor-pointer whitespace-nowrap" data-menu-index="${index}">
+    <button onmouseenter="${item.hasDropdown ? `openNavDropdown(${index})` : ''}" onclick="${!item.hasDropdown ? `window.location.href='${item.href}'` : ''}" class="nav-menu-item px-3 py-1 text-xs text-gray-600 hover:text-black transition-colors cursor-pointer whitespace-nowrap" data-menu-index="${index}">
       ${item.name}
     </button>
   `).join('');
@@ -109,7 +112,7 @@ function createHomeNavbarHTML(options = {}) {
     `).join('');
     
     return `
-      <div id="nav-dropdown-${index}" class="nav-dropdown fixed left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 overflow-hidden transition-all duration-300 z-40" style="top: 65px; max-height: 0; opacity: 0;">
+      <div id="nav-dropdown-${index}" class="nav-dropdown fixed left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 overflow-hidden transition-all duration-300 z-40" style="top: 65px; max-height: 0; opacity: 0;" onmouseenter="keepNavDropdownOpen(${index})" onmouseleave="closeNavDropdownDelayed(${index})">
         <div class="max-w-screen-xl mx-auto px-8 py-10">
           <div class="flex gap-20">
             ${sectionsHTML}
@@ -220,6 +223,87 @@ function toggleNavDropdown(index) {
   }
 }
 
+// Variable to store close timeout
+let dropdownCloseTimeout = null;
+let currentOpenDropdown = null;
+
+// Open dropdown on hover
+function openNavDropdown(index) {
+  // Clear any pending close timeout
+  if (dropdownCloseTimeout) {
+    clearTimeout(dropdownCloseTimeout);
+    dropdownCloseTimeout = null;
+  }
+  
+  const dropdown = document.getElementById(`nav-dropdown-${index}`);
+  const overlay = document.getElementById('nav-dropdown-overlay');
+  const allDropdowns = document.querySelectorAll('.nav-dropdown');
+  const menuItems = document.querySelectorAll('.nav-menu-item');
+  
+  // Close all dropdowns first
+  allDropdowns.forEach(d => {
+    d.style.maxHeight = '0';
+    d.style.opacity = '0';
+  });
+  
+  // Remove active state from all menu items
+  menuItems.forEach(item => {
+    item.classList.remove('font-semibold', 'text-black');
+    item.classList.add('text-gray-600');
+  });
+  
+  if (dropdown) {
+    // Open this dropdown
+    dropdown.style.maxHeight = '400px';
+    dropdown.style.opacity = '1';
+    overlay.style.opacity = '1';
+    overlay.style.pointerEvents = 'auto';
+    currentOpenDropdown = index;
+    
+    // Add active state to menu item
+    const activeItem = document.querySelector(`[data-menu-index="${index}"]`);
+    if (activeItem) {
+      activeItem.classList.add('font-semibold', 'text-black');
+      activeItem.classList.remove('text-gray-600');
+    }
+  }
+}
+
+// Keep dropdown open when hovering over it
+function keepNavDropdownOpen(index) {
+  if (dropdownCloseTimeout) {
+    clearTimeout(dropdownCloseTimeout);
+    dropdownCloseTimeout = null;
+  }
+  currentOpenDropdown = index;
+}
+
+// Close dropdown with delay
+function closeNavDropdownDelayed(index) {
+  dropdownCloseTimeout = setTimeout(() => {
+    const dropdown = document.getElementById(`nav-dropdown-${index}`);
+    const overlay = document.getElementById('nav-dropdown-overlay');
+    const menuItems = document.querySelectorAll('.nav-menu-item');
+    
+    if (dropdown) {
+      dropdown.style.maxHeight = '0';
+      dropdown.style.opacity = '0';
+    }
+    
+    if (overlay) {
+      overlay.style.opacity = '0';
+      overlay.style.pointerEvents = 'none';
+    }
+    
+    menuItems.forEach(item => {
+      item.classList.remove('font-semibold', 'text-black');
+      item.classList.add('text-gray-600');
+    });
+    
+    currentOpenDropdown = null;
+  }, 150); // Small delay to allow moving to dropdown
+}
+
 // Close all dropdowns
 function closeAllDropdowns() {
   const allDropdowns = document.querySelectorAll('.nav-dropdown');
@@ -264,6 +348,9 @@ function closeNavSearch() {
 // Export new functions
 window.createHomeNavbarHTML = createHomeNavbarHTML;
 window.toggleNavDropdown = toggleNavDropdown;
+window.openNavDropdown = openNavDropdown;
+window.keepNavDropdownOpen = keepNavDropdownOpen;
+window.closeNavDropdownDelayed = closeNavDropdownDelayed;
 window.closeAllDropdowns = closeAllDropdowns;
 window.openNavSearch = openNavSearch;
 window.closeNavSearch = closeNavSearch;
