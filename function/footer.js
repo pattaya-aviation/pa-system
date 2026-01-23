@@ -76,10 +76,6 @@ function ensureScrollPadding() {
   const style = document.createElement('style');
   style.id = 'footer-scroll-padding';
   style.textContent = `
-    .content-area {
-      padding-bottom: 20px !important;
-    }
-    
     /* Ensure footer sticks to bottom */
     .content-area > [data-footer="true"] {
       margin-top: auto;
