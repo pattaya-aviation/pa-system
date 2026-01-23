@@ -8,7 +8,7 @@
    Welcome Page Background
    ============================================ */
 .welcome-bg {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+  background: #ffffff;
   min-height: 100vh;
 }
 
