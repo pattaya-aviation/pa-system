@@ -497,6 +497,51 @@ function updateComplaintSectionOptions() {
             { value: '', text: 'เลือกแผนก' },
             { value: 'BG-1', text: 'แผนกสนับสนุนปฏิบัติการภาคพื้น (BG-1)' }
         ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BH') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'HC', text: 'แผนกทรัพยากรบุคคลส่วนกลาง (HC)' },
+            { value: 'HM', text: 'แผนกบริหารทรัพยากรบุคคล (HM)' },
+            { value: 'HO', text: 'แผนกสนับสนุนปฏิบัติการทรัพยากรบุคคล (HO)' },
+            { value: 'HW', text: 'แผนกสวัสดิการและสิทธิประโยชน์พนักงาน (HW)' },
+            { value: 'HD', text: 'แผนกวางแผนกลยุทธ์และพัฒนาทรัพยากรบุคคล (HD)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BF') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'FA', text: 'แผนกบัญชีและการเงิน (FA)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BS') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'ST', text: 'แผนกมาตรฐาน (ST)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BE') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'EA', text: 'แผนกเลขานุการผู้บริหาร (EA)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BR') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'RC', text: 'แผนกสื่อสารองค์กร (RC)' },
+            { value: 'RB', text: 'แผนกพัฒนาธุรกิจ (RB)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BD') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'DP', text: 'แผนกจัดซื้อ (DP)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BI') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'IM', text: 'แผนกเทคโนโลยีสารสนเทศ (IM)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BL') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'LM', text: 'แผนกกฎหมาย (LM)' }
+        ];
     } else if (selectedStation !== 'สำนักงานใหญ่ (HDQ)' && selectedStation !== 'สถานีสุวรรณภูมิ (BKK)' && selectedStation !== '' && selectedDepartment === 'BG') {
         sections = [
             { value: '', text: 'เลือกแผนก' },
