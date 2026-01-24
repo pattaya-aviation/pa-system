@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ข้อเสนอแนะ - Voice for Change</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Fonts CSS -->
+    <link rel="stylesheet" href="../../function/fonts.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 h-16 bg-white/70 backdrop-blur-xl border-b border-gray-100/50">
+        <div class="w-full px-4 h-full flex items-center justify-between">
+            <a href="vfc-home.html" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </a>
+            <img src="../../function/logo/Pattaya Aviation.png" alt="Logo" class="h-10 object-contain">
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="pt-24 pb-8 px-4 max-w-2xl mx-auto">
+        
+        <!-- Header -->
+        <div class="flex items-center gap-4 mb-8">
+            <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">ข้อเสนอแนะ</h1>
+                <p class="text-gray-500 mt-1">แจ้งข้อเสนอแนะเพื่อพัฒนาองค์กร</p>
+            </div>
+        </div>
+        
+        <!-- Form Card -->
+        <div class="bg-white rounded-3xl p-6 shadow-md">
+            <form class="space-y-6">
+                <!-- Subject -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">หัวข้อข้อเสนอแนะ</label>
+                    <input type="text" placeholder="ระบุหัวข้อข้อเสนอแนะ" 
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                </div>
+                
+                <!-- Category -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทข้อเสนอแนะ</label>
+                    <select class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                        <option value="">เลือกประเภท</option>
+                        <option value="process">กระบวนการทำงาน</option>
+                        <option value="facility">สิ่งอำนวยความสะดวก</option>
+                        <option value="welfare">สวัสดิการ</option>
+                        <option value="policy">นโยบาย</option>
+                        <option value="other">อื่นๆ</option>
+                    </select>
+                </div>
+                
+                <!-- Details -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">รายละเอียดข้อเสนอแนะ</label>
+                    <textarea rows="5" placeholder="อธิบายข้อเสนอแนะของคุณ..."
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all resize-none"></textarea>
+                </div>
+                
+                <!-- Expected Outcome -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ผลลัพธ์ที่คาดหวัง</label>
+                    <textarea rows="3" placeholder="ผลลัพธ์ที่คาดหวังจากข้อเสนอแนะนี้..."
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all resize-none"></textarea>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" 
+                    class="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-blue-500/30">
+                    ส่งข้อเสนอแนะ
+                </button>
+            </form>
+        </div>
+        
+    </div>
+
+</body>
+</html>
