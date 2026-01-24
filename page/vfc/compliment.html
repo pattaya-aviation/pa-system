@@ -50,13 +50,20 @@
             <div class="h-px bg-gray-200 mb-4"></div>
             <div class="space-y-4">
                 <!-- Name -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ-นามสกุล (ไม่บังคับ)</label>
-                    <input type="text" 
-                        class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ (ไม่บังคับ)</label>
+                        <input type="text" 
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">นามสกุล</label>
+                        <input type="text" 
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
+                    </div>
                 </div>
                 
-                <!-- Employee ID & Department Row -->
+                <!-- Employee ID & Station Row -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">รหัสพนักงาน</label>
@@ -64,14 +71,44 @@
                             class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
                     </div>
                     <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">สถานี</label>
+                        <select id="stationSelect" onchange="updateDepartmentOptions()" class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
+                            <option value="">เลือกสถานี</option>
+                            <option value="สำนักงานใหญ่ (HDQ)">สำนักงานใหญ่ (HDQ)</option>
+                            <option value="สถานีสุวรรณภูมิ (BKK)">สถานีสุวรรณภูมิ (BKK)</option>
+                            <option value="สถานีสุวรรณภูมิ (BKK-VZ)">สถานีสุวรรณภูมิ (BKK-VZ)</option>
+                            <option value="สถานีสุวรรณภูมิ (BKK-PA)">สถานีสุวรรณภูมิ (BKK-PA)</option>
+                            <option value="สถานีเชียงราย (CEI)">สถานีเชียงราย (CEI)</option>
+                            <option value="สถานีเชียงใหม่ (CNX)">สถานีเชียงใหม่ (CNX)</option>
+                            <option value="สถานีหาดใหญ่ (HDY)">สถานีหาดใหญ่ (HDY)</option>
+                            <option value="สถานีสุราษฎร์ธานี (URT)">สถานีสุราษฎร์ธานี (URT)</option>
+                            <option value="สถานีขอนแก่น (KKC)">สถานีขอนแก่น (KKC)</option>
+                            <option value="สถานีอุบลราชธานี (UBP)">สถานีอุบลราชธานี (UBP)</option>
+                            <option value="สถานีอุดรธานี (UTH)">สถานีอุดรธานี (UTH)</option>
+                            <option value="สถานีอู่ตะเภา (UTP)">สถานีอู่ตะเภา (UTP)</option>
+                            <option value="สถานีภูเก็ต (HKT)">สถานีภูเก็ต (HKT)</option>
+                            <option value="สถานีดอนเมือง (DMK)">สถานีดอนเมือง (DMK)</option>
+                            <option value="ชุมพร (CJM)">ชุมพร (CJM)</option>
+                            <option value="สถานีกระบี่ (KBV)">สถานีกระบี่ (KBV)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Department & Section Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ฝ่าย</label>
+                        <select id="departmentSelect" onchange="updateSectionOptions()" class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
+                            <option value="">เลือกฝ่าย</option>
+                            <option value="BG">ฝ่ายปฏิบัติการภาคพื้น (BG)</option>
+                            <option value="BS">ฝ่ายมาตรฐาน (BS)</option>
+                            <option value="BI">ฝ่ายเทคโนโลยีสารสนเทศ (BI)</option>
+                        </select>
+                    </div>
+                    <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">แผนก</label>
-                        <select class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
+                        <select id="sectionSelect" class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
                             <option value="">เลือกแผนก</option>
-                            <option value="hr">ฝ่ายบุคคล</option>
-                            <option value="it">ฝ่าย IT</option>
-                            <option value="finance">ฝ่ายการเงิน</option>
-                            <option value="operation">ฝ่ายปฏิบัติการ</option>
-                            <option value="other">อื่นๆ</option>
                         </select>
                     </div>
                 </div>
@@ -90,16 +127,46 @@
                         class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
                 </div>
                 
-                <!-- Department -->
+                <!-- Station (Compliment) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">สถานีของผู้ถูกชมเชย</label>
+                    <select id="complimentStationSelect" onchange="updateComplimentDepartmentOptions()" class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
+                        <option value="">เลือกสถานี</option>
+                        <option value="สำนักงานใหญ่ (HDQ)">สำนักงานใหญ่ (HDQ)</option>
+                        <option value="สถานีสุวรรณภูมิ (BKK)">สถานีสุวรรณภูมิ (BKK)</option>
+                        <option value="สถานีสุวรรณภูมิ (BKK-VZ)">สถานีสุวรรณภูมิ (BKK-VZ)</option>
+                        <option value="สถานีสุวรรณภูมิ (BKK-PA)">สถานีสุวรรณภูมิ (BKK-PA)</option>
+                        <option value="สถานีเชียงราย (CEI)">สถานีเชียงราย (CEI)</option>
+                        <option value="สถานีเชียงใหม่ (CNX)">สถานีเชียงใหม่ (CNX)</option>
+                        <option value="สถานีหาดใหญ่ (HDY)">สถานีหาดใหญ่ (HDY)</option>
+                        <option value="สถานีสุราษฎร์ธานี (URT)">สถานีสุราษฎร์ธานี (URT)</option>
+                        <option value="สถานีขอนแก่น (KKC)">สถานีขอนแก่น (KKC)</option>
+                        <option value="สถานีอุบลราชธานี (UBP)">สถานีอุบลราชธานี (UBP)</option>
+                        <option value="สถานีอุดรธานี (UTH)">สถานีอุดรธานี (UTH)</option>
+                        <option value="สถานีอู่ตะเภา (UTP)">สถานีอู่ตะเภา (UTP)</option>
+                        <option value="สถานีภูเก็ต (HKT)">สถานีภูเก็ต (HKT)</option>
+                        <option value="สถานีดอนเมือง (DMK)">สถานีดอนเมือง (DMK)</option>
+                        <option value="ชุมพร (CJM)">ชุมพร (CJM)</option>
+                        <option value="สถานีกระบี่ (KBV)">สถานีกระบี่ (KBV)</option>
+                    </select>
+                </div>
+                
+                <!-- Department (Compliment) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ฝ่ายของผู้ถูกชมเชย</label>
+                    <select id="complimentDepartmentSelect" onchange="updateComplimentSectionOptions()" class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
+                        <option value="">เลือกฝ่าย</option>
+                        <option value="BG">ฝ่ายปฏิบัติการภาคพื้น (BG)</option>
+                        <option value="BS">ฝ่ายมาตรฐาน (BS)</option>
+                        <option value="BI">ฝ่ายเทคโนโลยีสารสนเทศ (BI)</option>
+                    </select>
+                </div>
+                
+                <!-- Section (Compliment) -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">แผนกของผู้ถูกชมเชย</label>
-                    <select class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
+                    <select id="complimentSectionSelect" class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all">
                         <option value="">เลือกแผนก</option>
-                        <option value="hr">ฝ่ายบุคคล</option>
-                        <option value="it">ฝ่าย IT</option>
-                        <option value="finance">ฝ่ายการเงิน</option>
-                        <option value="operation">ฝ่ายปฏิบัติการ</option>
-                        <option value="other">อื่นๆ</option>
                     </select>
                 </div>
                 
@@ -193,6 +260,240 @@ function addFileItem() {
 function updateFileName(input) {
     const fileName = input.files[0] ? input.files[0].name : 'ยังไม่ได้เลือกไฟล์';
     input.closest('.file-item').querySelector('.file-name').textContent = fileName;
+}
+
+function updateDepartmentOptions() {
+    const stationSelect = document.getElementById('stationSelect');
+    const departmentSelect = document.getElementById('departmentSelect');
+    const selectedStation = stationSelect.value;
+    
+    const hdqDepartments = [
+        { value: '', text: 'เลือกฝ่าย' },
+        { value: 'BE', text: 'ฝ่ายสำนักเลขานุการ (BE)' },
+        { value: 'BF', text: 'ฝ่ายบัญชีและการเงิน (BF)' },
+        { value: 'BG', text: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
+        { value: 'BH', text: 'ฝ่ายทรัพยากรบุคคล (BH)' },
+        { value: 'BI', text: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' },
+        { value: 'BL', text: 'ฝ่ายกฎหมาย (BL)' },
+        { value: 'BD', text: 'ฝ่ายจัดซื้อ (BD)' },
+        { value: 'BS', text: 'ฝ่ายมาตรฐาน (BS)' },
+        { value: 'BR', text: 'ฝ่ายพัฒนาธุรกิจและลูกค้าสัมพันธ์ (BR)' }
+    ];
+    
+    const stationDepartments = [
+        { value: '', text: 'เลือกฝ่าย' },
+        { value: 'BG', text: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
+        { value: 'BS', text: 'ฝ่ายมาตรฐาน (BS)' },
+        { value: 'BI', text: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' }
+    ];
+    
+    departmentSelect.innerHTML = '';
+    const departments = selectedStation === 'สำนักงานใหญ่ (HDQ)' ? hdqDepartments : stationDepartments;
+    departments.forEach(dept => {
+        const option = document.createElement('option');
+        option.value = dept.value;
+        option.textContent = dept.text;
+        departmentSelect.appendChild(option);
+    });
+    
+    updateSectionOptions();
+}
+
+function updateSectionOptions() {
+    const stationSelect = document.getElementById('stationSelect');
+    const departmentSelect = document.getElementById('departmentSelect');
+    const sectionSelect = document.getElementById('sectionSelect');
+    const selectedStation = stationSelect.value;
+    const selectedDepartment = departmentSelect.value;
+    
+    const bkkBgSections = [
+        { value: '', text: 'เลือกแผนก' },
+        { value: 'GA', text: 'แผนกบริการผู้โดยสารภาคพื้น (GA)' },
+        { value: 'GB', text: 'แผนกควบคุมระวางบรรทุก (GB)' },
+        { value: 'GC', text: 'แผนกห้องรับรองพิเศษผู้โดยสาร (GC)' },
+        { value: 'GD', text: 'แผนกบริการลานจอด (GD)' },
+        { value: 'GE', text: 'แผนกบริการลูกค้า (GE)' },
+        { value: 'GF', text: 'แผนกบริการสถานี (GF)' }
+    ];
+    
+    const defaultSections = [
+        { value: '', text: 'เลือกแผนก' }
+    ];
+    
+    const hdqBhSections = [
+        { value: '', text: 'เลือกแผนก' },
+        { value: 'HM-S', text: 'ส่วนงานเงินเดือนและค่าตอบแทน (HM-S)' },
+        { value: 'HM-E', text: 'ส่วนงานแรงงานสัมพันธ์ (HM-E)' },
+        { value: 'HM-I', text: 'ส่วนงานสารสนเทศทรัพยากรบุคคล (HM-I)' },
+        { value: 'HO-R', text: 'ส่วนงานสรรหาและว่าจ้าง (HO-R)' },
+        { value: 'HO-E', text: 'ส่วนงานประสานงานด้านการศึกษา (HO-E)' },
+        { value: 'HO-B', text: 'ส่วนงานสนับสนุนและประสานงานสถานีกรุงเทพ (HO-B)' },
+        { value: 'HW-G', text: 'ส่วนงานสวัสดิการทั่วไป (HW-G)' },
+        { value: 'HW-U', text: 'ส่วนงานเครื่องแบบพนักงาน (HW-U)' },
+        { value: 'HW-E', text: 'ส่วนงานบริการพนักงาน (HW-E)' },
+        { value: 'HD-S', text: 'ส่วนงานวางแผนกลยุทธ์ทรัพยากรบุคคล (HD-S)' },
+        { value: 'HD-D', text: 'ส่วนงานพัฒนาองค์กร (HD-D)' }
+    ];
+    
+    sectionSelect.innerHTML = '';
+    
+    const hdqBfSections = [
+        { value: '', text: 'เลือกแผนก' },
+        { value: 'FA-R', text: 'ส่วนงานบัญชีลูกหนี้ (FA-R)' },
+        { value: 'FA-P', text: 'ส่วนงานบัญชีเจ้าหนี้ (FA-P)' }
+    ];
+    
+    const hdqBgSections = [
+        { value: '', text: 'เลือกแผนก' },
+        { value: 'GS-T1', text: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 1' },
+        { value: 'GS-T2', text: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 2' },
+        { value: 'GS-T3', text: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 3' },
+        { value: 'GS-T4', text: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 4' },
+        { value: 'GS-T5', text: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 5' },
+        { value: 'GS-T6', text: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 6' }
+    ];
+    
+    let sections = defaultSections;
+    if (selectedStation === 'สถานีสุวรรณภูมิ (BKK)' && selectedDepartment === 'BG') {
+        sections = bkkBgSections;
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BH') {
+        sections = hdqBhSections;
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BF') {
+        sections = hdqBfSections;
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BG') {
+        sections = hdqBgSections;
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BS') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'ST-C', text: 'ส่วนงานมาตรฐานการรักษาความปลอดภัยการบิน (ST-C)' },
+            { value: 'ST-D', text: 'ส่วนงานควบคุมเอกสารและงานธุรการ (ST-D)' },
+            { value: 'ST-F', text: 'ส่วนงานนิรภัยการบิน (ST-F)' },
+            { value: 'ST-H', text: 'ส่วนงานอาชีวอนามัยและความปลอดภัย (ST-H)' },
+            { value: 'ST-Q', text: 'ส่วนงานประกันคุณภาพ (ST-Q)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BE') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'EA', text: 'แผนกเลขานุการผู้บริหาร (EA)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BR') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'RC', text: 'แผนกสื่อสารองค์กร (RC)' },
+            { value: 'RB', text: 'แผนกพัฒนาธุรกิจ (RB)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BD') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'DP', text: 'แผนกจัดซื้อ (DP)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BI') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'IM', text: 'แผนกเทคโนโลยีสารสนเทศ (IM)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BL') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'LM', text: 'แผนกกฎหมาย (LM)' }
+        ];
+    } else if (selectedStation !== 'สำนักงานใหญ่ (HDQ)' && selectedStation !== 'สถานีสุวรรณภูมิ (BKK)' && selectedDepartment === 'BG') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'GF', text: 'แผนกบริการสถานี (GF)' }
+        ];
+    }
+    
+    sections.forEach(section => {
+        const option = document.createElement('option');
+        option.value = section.value;
+        option.textContent = section.text;
+        sectionSelect.appendChild(option);
+    });
+}
+
+// Compliment Detail Section Functions
+function updateComplimentDepartmentOptions() {
+    const stationSelect = document.getElementById('complimentStationSelect');
+    const departmentSelect = document.getElementById('complimentDepartmentSelect');
+    const selectedStation = stationSelect.value;
+    
+    const hdqDepartments = [
+        { value: '', text: 'เลือกฝ่าย' },
+        { value: 'BE', text: 'ฝ่ายสำนักเลขานุการ (BE)' },
+        { value: 'BF', text: 'ฝ่ายบัญชีและการเงิน (BF)' },
+        { value: 'BG', text: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
+        { value: 'BH', text: 'ฝ่ายทรัพยากรบุคคล (BH)' },
+        { value: 'BI', text: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' },
+        { value: 'BL', text: 'ฝ่ายกฎหมาย (BL)' },
+        { value: 'BD', text: 'ฝ่ายจัดซื้อ (BD)' },
+        { value: 'BS', text: 'ฝ่ายมาตรฐาน (BS)' },
+        { value: 'BR', text: 'ฝ่ายพัฒนาธุรกิจและลูกค้าสัมพันธ์ (BR)' }
+    ];
+    
+    const stationDepartments = [
+        { value: '', text: 'เลือกฝ่าย' },
+        { value: 'BG', text: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
+        { value: 'BS', text: 'ฝ่ายมาตรฐาน (BS)' },
+        { value: 'BI', text: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' }
+    ];
+    
+    departmentSelect.innerHTML = '';
+    const departments = selectedStation === 'สำนักงานใหญ่ (HDQ)' ? hdqDepartments : stationDepartments;
+    departments.forEach(dept => {
+        const option = document.createElement('option');
+        option.value = dept.value;
+        option.textContent = dept.text;
+        departmentSelect.appendChild(option);
+    });
+    
+    updateComplimentSectionOptions();
+}
+
+function updateComplimentSectionOptions() {
+    const stationSelect = document.getElementById('complimentStationSelect');
+    const departmentSelect = document.getElementById('complimentDepartmentSelect');
+    const sectionSelect = document.getElementById('complimentSectionSelect');
+    const selectedStation = stationSelect.value;
+    const selectedDepartment = departmentSelect.value;
+    
+    const bkkBgSections = [
+        { value: '', text: 'เลือกแผนก' },
+        { value: 'GA', text: 'แผนกบริการผู้โดยสารภาคพื้น (GA)' },
+        { value: 'GB', text: 'แผนกควบคุมระวางบรรทุก (GB)' },
+        { value: 'GC', text: 'แผนกห้องรับรองพิเศษผู้โดยสาร (GC)' },
+        { value: 'GD', text: 'แผนกบริการลานจอด (GD)' },
+        { value: 'GE', text: 'แผนกบริการลูกค้า (GE)' },
+        { value: 'GF', text: 'แผนกบริการสถานี (GF)' }
+    ];
+    
+    const defaultSections = [
+        { value: '', text: 'เลือกแผนก' }
+    ];
+    
+    sectionSelect.innerHTML = '';
+    
+    let sections = defaultSections;
+    if (selectedStation === 'สถานีสุวรรณภูมิ (BKK)' && selectedDepartment === 'BG') {
+        sections = bkkBgSections;
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BG') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'BG-1', text: 'แผนกสนับสนุนปฏิบัติการภาคพื้น (BG-1)' }
+        ];
+    } else if (selectedStation !== 'สำนักงานใหญ่ (HDQ)' && selectedStation !== 'สถานีสุวรรณภูมิ (BKK)' && selectedStation !== '' && selectedDepartment === 'BG') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'GF', text: 'แผนกบริการสถานี (GF)' }
+        ];
+    }
+    
+    sections.forEach(section => {
+        const option = document.createElement('option');
+        option.value = section.value;
+        option.textContent = section.text;
+        sectionSelect.appendChild(option);
+    });
 }
 </script>
 </html>
