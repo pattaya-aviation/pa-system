@@ -44,20 +44,63 @@
             </div>
         </div>
         
+        <!-- Personal Info Card -->
+        <div class="bg-white rounded-[2.5rem] p-6 shadow-md mb-4">
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">ข้อมูลส่วนตัว</h2>
+            <div class="h-px bg-gray-200 mb-4"></div>
+            <div class="space-y-4">
+                <!-- Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ-นามสกุล</label>
+                    <input type="text" 
+                        class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                </div>
+                
+                <!-- Employee ID & Department Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">รหัสพนักงาน</label>
+                        <input type="text" 
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">แผนก</label>
+                        <select class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                            <option value="">เลือกแผนก</option>
+                            <option value="hr">ฝ่ายบุคคล</option>
+                            <option value="it">ฝ่าย IT</option>
+                            <option value="finance">ฝ่ายการเงิน</option>
+                            <option value="operation">ฝ่ายปฏิบัติการ</option>
+                            <option value="other">อื่นๆ</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">เบอร์โทรติดต่อ</label>
+                    <input type="tel" 
+                        class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                </div>
+            </div>
+        </div>
+        
         <!-- Form Card -->
-        <div class="bg-white rounded-3xl p-6 shadow-md">
+        <div class="bg-white rounded-[2.5rem] p-6 shadow-md">
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">รายละเอียดข้อเสนอแนะ</h2>
+            <div class="h-px bg-gray-200 mb-4"></div>
             <form class="space-y-6">
                 <!-- Subject -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">หัวข้อข้อเสนอแนะ</label>
-                    <input type="text" placeholder="ระบุหัวข้อข้อเสนอแนะ" 
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                    <input type="text" 
+                        class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
                 </div>
                 
                 <!-- Category -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทข้อเสนอแนะ</label>
-                    <select class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                    <select class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
                         <option value="">เลือกประเภท</option>
                         <option value="process">กระบวนการทำงาน</option>
                         <option value="facility">สิ่งอำนวยความสะดวก</option>
@@ -70,20 +113,62 @@
                 <!-- Details -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">รายละเอียดข้อเสนอแนะ</label>
-                    <textarea rows="5" placeholder="อธิบายข้อเสนอแนะของคุณ..."
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all resize-none"></textarea>
+                    <textarea rows="1"
+                        oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px';"
+                        class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all resize-none overflow-hidden"></textarea>
                 </div>
                 
                 <!-- Expected Outcome -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">ผลลัพธ์ที่คาดหวัง</label>
-                    <textarea rows="3" placeholder="ผลลัพธ์ที่คาดหวังจากข้อเสนอแนะนี้..."
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all resize-none"></textarea>
+                    <textarea rows="1"
+                        oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px';"
+                        class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all resize-none overflow-hidden"></textarea>
+                </div>
+                
+                <!-- File Attachment -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">แนบไฟล์ (ถ้ามี)</label>
+                    
+                    <!-- File List Container -->
+                    <div id="fileListContainer" class="space-y-3">
+                        <!-- File Item 1 -->
+                        <div class="file-item p-4 bg-gray-50 rounded-3xl border border-gray-200">
+                            <div class="flex items-center gap-3 mb-3">
+                                <input type="text" placeholder="กรุณาตั้งชื่อไฟล์" 
+                                    class="flex-1 px-4 py-2 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm">
+                                <button type="button" onclick="this.closest('.file-item').remove()" 
+                                    class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 hover:bg-blue-200 text-blue-500 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <label class="px-4 py-2 bg-blue-50 text-blue-500 rounded-full text-sm font-medium cursor-pointer hover:bg-blue-100 transition-colors whitespace-nowrap">
+                                    เลือกไฟล์
+                                    <input type="file" accept="image/*,.pdf,.doc,.docx" class="hidden" onchange="updateFileName(this)">
+                                </label>
+                                <span class="file-name text-sm text-gray-400">ยังไม่ได้เลือกไฟล์</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Add More Button -->
+                    <button type="button" onclick="addFileItem()" 
+                        class="mt-3 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-3xl border-2 border-dashed border-gray-300 hover:border-blue-400 text-gray-500 hover:text-blue-500 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        <span>เพิ่มไฟล์</span>
+                    </button>
+                    
+                    <p class="mt-2 text-xs text-gray-400">รองรับไฟล์: รูปภาพ, PDF, Word (ขนาดไม่เกิน 10MB)</p>
                 </div>
                 
                 <!-- Submit Button -->
                 <button type="submit" 
-                    class="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-blue-500/30">
+                    class="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-[30px] transition-colors shadow-lg shadow-blue-500/30">
                     ส่งข้อเสนอแนะ
                 </button>
             </form>
@@ -92,4 +177,37 @@
     </div>
 
 </body>
+
+<script>
+function addFileItem() {
+    const container = document.getElementById('fileListContainer');
+    const newItem = document.createElement('div');
+    newItem.className = 'file-item p-4 bg-gray-50 rounded-3xl border border-gray-200';
+    newItem.innerHTML = `
+        <div class="flex items-center gap-3 mb-3">
+            <input type="text" placeholder="กรุณาตั้งชื่อไฟล์" 
+                class="flex-1 px-4 py-2 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm">
+            <button type="button" onclick="this.closest('.file-item').remove()" 
+                class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 hover:bg-blue-200 text-blue-500 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <div class="flex items-center gap-3">
+            <label class="px-4 py-2 bg-blue-50 text-blue-500 rounded-full text-sm font-medium cursor-pointer hover:bg-blue-100 transition-colors whitespace-nowrap">
+                เลือกไฟล์
+                <input type="file" accept="image/*,.pdf,.doc,.docx" class="hidden" onchange="updateFileName(this)">
+            </label>
+            <span class="file-name text-sm text-gray-400">ยังไม่ได้เลือกไฟล์</span>
+        </div>
+    `;
+    container.appendChild(newItem);
+}
+
+function updateFileName(input) {
+    const fileName = input.files[0] ? input.files[0].name : 'ยังไม่ได้เลือกไฟล์';
+    input.closest('.file-item').querySelector('.file-name').textContent = fileName;
+}
+</script>
 </html>
