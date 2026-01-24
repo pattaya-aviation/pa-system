@@ -1,207 +1,166 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <!-- Mobile browser theme color - transparent/white status bar -->
-  <meta name="theme-color" content="#ffffff">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="mobile-web-app-capable" content="yes">
-  <title>Voice for Change - เสียงแห่งการเปลี่ยนแปลง</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="../function/styles.css">
-  <style>
-    /* Card hover effects */
-    .card-complaint {
-      border: 2px solid #fecaca;
-      background: linear-gradient(180deg, rgba(254, 202, 202, 0.1) 0%, rgba(255, 255, 255, 0.95) 100%);
-    }
-    .card-complaint:hover {
-      border-color: #f87171;
-      box-shadow: 0 8px 30px rgba(248, 113, 113, 0.2);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Login - Pro Aviation Management</title>
     
-    .card-suggestion {
-      border: 2px solid #bfdbfe;
-      background: linear-gradient(180deg, rgba(191, 219, 254, 0.1) 0%, rgba(255, 255, 255, 0.95) 100%);
-    }
-    .card-suggestion:hover {
-      border-color: #60a5fa;
-      box-shadow: 0 8px 30px rgba(96, 165, 250, 0.2);
-    }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    .card-compliment {
-      border: 2px solid #bbf7d0;
-      background: linear-gradient(180deg, rgba(187, 247, 208, 0.1) 0%, rgba(255, 255, 255, 0.95) 100%);
-    }
-    .card-compliment:hover {
-      border-color: #4ade80;
-      box-shadow: 0 8px 30px rgba(74, 222, 128, 0.2);
-    }
-  </style>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { touch-action: pan-x pan-y;  font-family: 'Sarabun', sans-serif; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body>
-  <div class="content-area">
-    <!-- Navbar -->
-    <nav class="fixed top-0 left-0 right-0 z-50 h-16 bg-white/70 backdrop-blur-xl border-b border-gray-100/50">
-      <div class="w-full px-4 h-full flex items-center justify-between">
-        <!-- Hamburger Menu Button -->
-        <button id="menuBtn" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
-          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
-        </button>
+<body class="bg-white min-h-screen flex items-center justify-center p-6 lg:p-12">
+    
+    <!-- Main Container -->
+    <div class="w-full max-w-7xl flex flex-col lg:flex-row lg:items-center lg:gap-24">
         
-        <!-- Logo -->
-        <img src="../function/logo/Pattaya Aviation.png" alt="Pattaya Aviation" class="h-10 object-contain">
-      </div>
-      
-      <!-- Dropdown Menu -->
-      <div id="dropdownMenu" class="hidden absolute top-16 left-0 right-0 bg-white backdrop-blur-3xl border-b border-gray-100 shadow-lg">
-        <div class="w-full px-4 lg:px-8 py-4 lg:py-2">
-          <div class="flex flex-col lg:flex-row gap-2 lg:gap-6">
-            <a href="../home.html" class="flex items-center gap-3 lg:gap-2 px-4 py-3 lg:px-3 lg:py-2 rounded-lg hover:bg-gray-50 transition-colors">
-              <svg class="w-5 h-5 lg:w-4 lg:h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-              </svg>
-              <span class="text-gray-700 font-medium lg:text-sm">หน้าหลัก</span>
-            </a>
-            <a href="voice for change.html" class="flex items-center gap-3 lg:gap-2 px-4 py-3 lg:px-3 lg:py-2 rounded-lg hover:bg-gray-50 transition-colors">
-              <svg class="w-5 h-5 lg:w-4 lg:h-4 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
-              </svg>
-              <span class="text-gray-700 font-medium lg:text-sm">Voice for Change</span>
-            </a>
-          </div>
+        <!-- Left: Title (on large screens) -->
+        <div class="text-center lg:text-left lg:flex-1 mb-8 lg:mb-0">
+            <h1 class="text-4xl lg:text-7xl font-bold text-gray-900">Voice For Change</h1>
+            <p class="text-lg lg:text-3xl text-blue-500 mt-2 lg:mt-6">เสียงแห่งการเปลี่ยนแปลง</p>
+            <p class="text-gray-500 mt-4 lg:mt-8 text-sm lg:text-xl hidden lg:block leading-relaxed">
+                เครื่องมือสื่อสารระหว่างพนักงานและองค์กร<br>
+                เพื่อให้สามารถนำข้อมูลมาปรับปรุงและพัฒนาได้อย่างมีประสิทธิภาพ
+            </p>
         </div>
-      </div>
-    </nav>
-    
-    <script>
-      const menuBtn = document.getElementById('menuBtn');
-      const dropdownMenu = document.getElementById('dropdownMenu');
-      
-      menuBtn.addEventListener('click', () => {
-        dropdownMenu.classList.toggle('hidden');
-      });
-      
-      // Close menu when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-          dropdownMenu.classList.add('hidden');
-        }
-      });
-    </script>
-    
-    <!-- Main Content -->
-    <div class="min-h-screen flex flex-col justify-center pt-16">
-      
-      <!-- Hero Section -->
-      <div class="flex-1 flex items-center">
-        <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 md:px-10 lg:px-8 py-6">
-          <div class="flex flex-col lg:flex-row lg:items-center lg:gap-12">
-            
-            <!-- Left: Title & Description -->
-            <div class="mb-8 lg:mb-0 lg:w-1/2 animate-fade-in text-left">
-              <h1 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-4">
-                Voice For Change
-              </h1>
-              <p class="text-2xl lg:text-3xl font-semibold gradient-text mb-8">
-                เสียงแห่งการเปลี่ยนแปลง
-              </p>
-              <p class="text-gray-500 text-base sm:text-lg lg:text-xl leading-relaxed">
-                เครื่องมือสื่อสารระหว่างพนักงานและองค์กร เพื่อให้สามารถนำข้อมูลมาปรับปรุงและพัฒนาได้อย่างมีประสิทธิภาพ เพราะทุกเสียงมีความหมาย
-              </p>
-            </div>
-            
-            <!-- Right: Action Cards -->
-            <div class="lg:w-1/2">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        
+        <!-- Right: Login Form -->
+        <div class="w-full lg:w-[480px] lg:flex-shrink-0">
+            <form id="login-form" class="bg-white rounded-xl p-6 shadow-[0_0_60px_rgba(0,0,0,0.15)] border border-gray-100">
+                <!-- Company Selector -->
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-2 text-gray-600">Company / บริษัท</label>
+                    <div class="relative">
+                        <select id="company-selector" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition appearance-none bg-white font-medium text-gray-700 cursor-pointer">
+                            <option value="pro-aviation">Pro Aviation Management</option>
+                            <option value="pattaya-aviation">Pattaya Aviation</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-2 text-gray-600">Username</label>
+                    <input type="text" id="username" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition" placeholder="รหัสพนักงาน" required autocomplete="off">
+                </div>
                 
-                <!-- ร้องเรียน Card -->
-                <a href="complaint.html" class="group flex items-center gap-3 p-4 py-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200" style="animation: fadeIn 0.4s ease-out 0.1s both;">
-                  <div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0 group-hover:bg-red-100 transition-colors">
-                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                    </svg>
-                  </div>
-                  <div class="flex-1">
-                    <h3 class="font-medium text-gray-800 text-base">ร้องเรียน</h3>
-                    <p class="text-xs text-gray-400">แจ้งปัญหาที่พบเจอในการทำงาน</p>
-                  </div>
-                  <svg class="w-5 h-5 text-gray-300 group-hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                  </svg>
-                </a>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-2 text-gray-600">Password</label>
+                    <input type="password" id="password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition" placeholder="รหัสผ่าน" required autocomplete="off">
+                </div>
                 
-                <!-- เสนอแนะ Card -->
-                <a href="suggestion.html" class="group flex items-center gap-3 p-4 py-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200" style="animation: fadeIn 0.4s ease-out 0.2s both;">
-                  <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-100 transition-colors">
-                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                    </svg>
-                  </div>
-                  <div class="flex-1">
-                    <h3 class="font-medium text-gray-800 text-base">ข้อเสนอแนะ</h3>
-                    <p class="text-xs text-gray-400">แจ้งข้อเสนอแนะเพื่อพัฒนาองค์กร</p>
-                  </div>
-                  <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                  </svg>
-                </a>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-md transition transform active:scale-95">
+                    เข้าสู่ระบบ
+                </button>
                 
-                <!-- ชมเชย Card -->
-                <a href="compliment.html" class="group flex items-center gap-3 p-4 py-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200" style="animation: fadeIn 0.4s ease-out 0.3s both;">
-                  <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0 group-hover:bg-green-100 transition-colors">
-                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
-                    </svg>
-                  </div>
-                  <div class="flex-1">
-                    <h3 class="font-medium text-gray-800 text-base">ชมเชย</h3>
-                    <p class="text-xs text-gray-400">ส่งคำชมเชยให้กับบุคคลหรือทีม</p>
-                  </div>
-                  <svg class="w-5 h-5 text-gray-300 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                  </svg>
-                </a>
-                
-                <!-- ติดตามสถานะ Card -->
-                <a href="track.html" class="group flex items-center gap-3 p-4 py-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200" style="animation: fadeIn 0.4s ease-out 0.4s both;">
-                  <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-100 transition-colors">
-                    <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                    </svg>
-                  </div>
-                  <div class="flex-1">
-                    <h3 class="font-medium text-gray-800 text-base">ติดตามสถานะ</h3>
-                    <p class="text-xs text-gray-400">ตรวจสอบความคืบหน้าของเรื่องที่แจ้ง</p>
-                  </div>
-                  <svg class="w-5 h-5 text-gray-300 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                  </svg>
-                </a>
-                
-              </div>
-            </div>
-            
-          </div>
+                <div class="mt-6 text-xs text-gray-400 text-center">
+                    <p>Please login with your employee ID and password</p>
+                </div>
+                <div class="mt-3 text-center">
+                    <p class="text-gray-500 text-xs">Pro Aviation Management System</p>
+                </div>
+            </form>
         </div>
-      </div>
-      
-      <!-- Disclaimer Footer -->
-      <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 md:px-10 lg:px-8 py-4">
-        <div class="text-left">
-          <p class="text-xs text-gray-400 leading-relaxed">
-            ระบบนี้จัดทำขึ้นโดยมีวัตถุประสงค์เพื่อให้พนักงานทุกคนภายในบริษัทพัทยา เอวิเอชั่น จำกัด ใช้เป็นช่องทางในการสื่อสาร แลกเปลี่ยน ร้องเรียน โดยข้อมูลที่ได้จากแบบสอบถามนี้ ทางฝ่ายทรัพยากรบุคคลจะนำไปปรับปรุงนโยบาย การบริหารจัดการ ผลตอบแทน สวัสดิการ การพัฒนาความรู้ ความก้าวหน้า สภาพแวดล้อม ความปลอดภัย และเรื่องอื่น ๆ ในการทำงาน และข้อมูลที่ได้จากการสำรวจ บริษัทจะไม่มีการสืบค้นถึงตัวบุคคลผู้ให้ข้อมูลและไม่เปิดเผยข้อมูลไปยังบุคคลอื่น
-          </p>
-          <p class="text-xs text-gray-400 mt-3">
-            Copyright © 2025 Pattaya Aviation Co., Ltd. All rights reserved.
-          </p>
-        </div>
-      </div>
     </div>
-  </div>
+
+    <!-- ERROR MODAL -->
+    <div id="error-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden animate-fade-in-up p-6 text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-circle-exclamation text-red-600 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">เข้าสู่ระบบไม่สำเร็จ</h3>
+            <p id="error-message" class="text-gray-600 mb-6">Username หรือ Password ไม่ถูกต้อง</p>
+            <button onclick="closeErrorModal()" class="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-2.5 rounded-lg shadow-md transition">
+                ลองใหม่
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Module -->
+    <script type="module">
+        import { authService, clearAllDataAndReload } from '../js/auth.js';
+
+        // Auto-login check
+        window.addEventListener('load', () => {
+            // Logo Logic
+            const savedCompany = localStorage.getItem('selectedCompany') || 'pro-aviation';
+            const companySelector = document.getElementById('company-selector');
+            const systemLogo = document.getElementById('system-logo');
+            
+            if (companySelector && systemLogo) {
+                companySelector.value = savedCompany;
+                updateLogo(savedCompany);
+
+                companySelector.addEventListener('change', (e) => {
+                    const selected = e.target.value;
+                    localStorage.setItem('selectedCompany', selected);
+                    updateLogo(selected);
+                });
+            }
+
+            function updateLogo(company) {
+                if (company === 'pattaya-aviation') {
+                    systemLogo.src = '../assets/Pattaya Aviation.png';
+                } else {
+                    systemLogo.src = '../assets/PAV_LOGO-1-01.png';
+                }
+            }
+
+            const user = authService.loadSavedUser();
+            if (user) {
+                console.log('✅ Auto-login:', user);
+                redirectToApp(user.role);
+            }
+        });
+
+        // Login form handler
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            const result = authService.login(username, password);
+            
+            if (result.success) {
+                redirectToApp(result.user.role);
+            } else {
+                showError(result.message);
+            }
+        });
+
+        window.showError = (msg) => {
+            document.getElementById('error-message').textContent = msg || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+            document.getElementById('error-modal').classList.remove('hidden');
+        }
+
+        window.closeErrorModal = () => {
+            document.getElementById('error-modal').classList.add('hidden');
+        }
+
+        // Clear data button
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            clearAllDataAndReload();
+        });
+
+        // Redirect to appropriate page
+        function redirectToApp(role) {
+            if (role === 'admin') {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'user.html';
+            }
+        }
+    </script>
 </body>
 </html>
+
