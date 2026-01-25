@@ -13,6 +13,43 @@
     
     <!-- Fonts CSS -->
     <link rel="stylesheet" href="../../function/fonts.css">
+    
+    <!-- Choices.js for Searchable Dropdowns -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    
+    <style>
+        /* Custom Choices.js styling */
+        .choices__inner {
+            border-radius: 1.5rem !important;
+            padding: 0.5rem 1rem !important;
+            min-height: 48px !important;
+            border-color: #e5e7eb !important;
+            background: white !important;
+        }
+        .choices__list--dropdown {
+            border-radius: 1.5rem !important;
+            border-color: #e5e7eb !important;
+            z-index: 1000 !important;
+        }
+        .choices__list--dropdown .choices__item--selectable.is-highlighted {
+            background-color: #fee2e2 !important;
+            color: #dc2626 !important;
+        }
+        .choices[data-type*="select-one"] .choices__input {
+            padding: 8px 16px !important;
+        }
+        .choices__list--dropdown .choices__item {
+            padding: 10px 16px !important;
+        }
+        /* Fix dropdown being cut off by parent container */
+        #personalInfoFields {
+            overflow: visible !important;
+        }
+        .space-y-4 {
+            overflow: visible !important;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
     
@@ -58,7 +95,7 @@
             </div>
             <p class="text-sm text-gray-500 mb-3">ข้อมูลของท่านจะถูกเก็บเป็นความลับ</p>
             <div id="personalInfoDivider" class="h-px bg-gray-200 mb-4 transition-all duration-300"></div>
-            <div id="personalInfoFields" class="space-y-4 transition-all duration-300 overflow-hidden">
+            <div id="personalInfoFields" class="space-y-4 transition-all duration-300">
                 <!-- Name -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -579,11 +616,17 @@ function toggleAnonymous() {
         
         setTimeout(() => {
             fields.style.maxHeight = 'none';
+            fields.style.overflow = 'visible';  // Allow dropdown to show
         }, 300);
         
-        fields.querySelectorAll('input, select').forEach(el => {
+        fields.querySelectorAll('input').forEach(el => {
             el.disabled = false;
         });
+        
+        // Enable Choices.js dropdowns
+        if (personalStationChoices) personalStationChoices.enable();
+        if (personalDepartmentChoices) personalDepartmentChoices.enable();
+        if (personalSectionChoices) personalSectionChoices.enable();
     } else {
         // ปิด = ไม่ระบุตัวตน (ซ่อนฟอร์ม)
         label.textContent = 'ไม่ระบุตัวตน';
@@ -599,15 +642,58 @@ function toggleAnonymous() {
             fields.style.marginTop = '-1rem';
         }, 10);
         
-        fields.querySelectorAll('input, select').forEach(el => {
+        fields.querySelectorAll('input').forEach(el => {
             el.value = '';
             el.disabled = true;
         });
+        
+        // Disable Choices.js dropdowns
+        if (personalStationChoices) personalStationChoices.disable();
+        if (personalDepartmentChoices) personalDepartmentChoices.disable();
+        if (personalSectionChoices) personalSectionChoices.disable();
     }
 }
 
 // เริ่มต้นเป็นไม่ระบุตัวตน
+let personalStationChoices, personalDepartmentChoices, personalSectionChoices;
+let complaintStationChoices, complaintDepartmentChoices, complaintSectionChoices;
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Choices.js FIRST before any toggle/hide
+    const choicesConfig = {
+        searchEnabled: true,
+        searchPlaceholderValue: 'พิมพ์เพื่อค้นหา...',
+        noResultsText: 'ไม่พบผลลัพธ์',
+        noChoicesText: 'ไม่มีตัวเลือก',
+        itemSelectText: '',
+        shouldSort: false,
+        searchFloor: 1,
+        searchResultLimit: 100
+    };
+    
+    // Personal Info Section
+    if (document.getElementById('stationSelect')) {
+        personalStationChoices = new Choices('#stationSelect', choicesConfig);
+    }
+    if (document.getElementById('departmentSelect')) {
+        personalDepartmentChoices = new Choices('#departmentSelect', choicesConfig);
+    }
+    if (document.getElementById('sectionSelect')) {
+        personalSectionChoices = new Choices('#sectionSelect', choicesConfig);
+    }
+    
+    // Complaint Details Section
+    if (document.getElementById('complaintStationSelect')) {
+        complaintStationChoices = new Choices('#complaintStationSelect', choicesConfig);
+    }
+    if (document.getElementById('complaintDepartmentSelect')) {
+        complaintDepartmentChoices = new Choices('#complaintDepartmentSelect', choicesConfig);
+    }
+    if (document.getElementById('complaintSectionSelect')) {
+        complaintSectionChoices = new Choices('#complaintSectionSelect', choicesConfig);
+    }
+    
+    // THEN setup the anonymous toggle
     const fields = document.getElementById('personalInfoFields');
     const divider = document.getElementById('personalInfoDivider');
     
