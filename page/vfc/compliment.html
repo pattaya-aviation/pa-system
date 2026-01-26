@@ -80,10 +80,19 @@
         
         <!-- Personal Info Card -->
         <div class="bg-white rounded-[2.5rem] p-6 shadow-md mb-4">
-            <h2 class="text-lg font-semibold text-gray-800 mb-2">ข้อมูลผู้ส่ง</h2>
-            <p class="text-sm text-gray-500 mb-3">ข้อมูลของท่านจะถูกเก็บเป็นความลับ</p>
-            <div class="h-px bg-gray-200 mb-4"></div>
-            <div class="space-y-4">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-lg font-semibold text-gray-800">ข้อมูลส่วนตัว</h2>
+                <div class="flex items-center gap-2">
+                    <span id="identityLabel" class="text-sm text-green-600 font-medium">ระบุตัวตน</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="identityToggle" class="sr-only peer" checked onchange="toggleIdentityFields()">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                    </label>
+                </div>
+            </div>
+            <p class="text-sm text-green-500 mb-3">ข้อมูลของท่านจะถูกเก็บเป็นความลับ</p>
+            <div id="identityDivider" class="h-px bg-gray-200 mb-4"></div>
+            <div id="identityFields" class="space-y-4">
                 <!-- Name -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -267,6 +276,57 @@
 </body>
 
 <script>
+// Toggle identity fields visibility
+function toggleIdentityFields() {
+    const toggle = document.getElementById('identityToggle');
+    const fields = document.getElementById('identityFields');
+    const divider = document.getElementById('identityDivider');
+    const label = document.getElementById('identityLabel');
+    
+    if (toggle.checked) {
+        // เปิด = ระบุตัวตน
+        label.textContent = 'ระบุตัวตน';
+        label.className = 'text-sm text-green-600 font-medium';
+        
+        fields.style.maxHeight = fields.scrollHeight + 'px';
+        fields.style.opacity = '1';
+        fields.style.marginTop = '0';
+        divider.style.opacity = '1';
+        divider.style.maxHeight = '1px';
+        divider.style.marginBottom = '16px';
+        setTimeout(() => {
+            fields.style.maxHeight = 'none';
+        }, 300);
+    } else {
+        // ปิด = ไม่ระบุตัวตน
+        label.textContent = 'ไม่ระบุตัวตน';
+        label.className = 'text-sm text-gray-600';
+        
+        fields.style.maxHeight = fields.scrollHeight + 'px';
+        divider.style.opacity = '0';
+        divider.style.maxHeight = '0';
+        divider.style.marginBottom = '0';
+        setTimeout(() => {
+            fields.style.maxHeight = '0';
+            fields.style.opacity = '0';
+            fields.style.marginTop = '-16px';
+        }, 10);
+    }
+}
+
+// Initialize identity fields with transition styles
+document.addEventListener('DOMContentLoaded', function() {
+    const fields = document.getElementById('identityFields');
+    const divider = document.getElementById('identityDivider');
+    if (fields) {
+        fields.style.transition = 'max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease';
+        fields.style.overflow = 'hidden';
+    }
+    if (divider) {
+        divider.style.transition = 'max-height 0.3s ease, opacity 0.3s ease, margin-bottom 0.3s ease';
+    }
+});
+
 function addFileItem() {
     const container = document.getElementById('fileListContainer');
     const newItem = document.createElement('div');
