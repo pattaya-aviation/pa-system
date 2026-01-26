@@ -85,17 +85,17 @@
         <div class="bg-white rounded-[2.5rem] p-6 shadow-md mb-4">
             <div class="flex items-center justify-between mb-2">
                 <h2 class="text-lg font-semibold text-gray-800">ข้อมูลส่วนตัว</h2>
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <span id="toggleLabel" class="text-sm text-gray-600">ไม่ระบุตัวตน</span>
-                    <div class="relative">
-                        <input type="checkbox" id="anonymousToggle" onchange="toggleAnonymous()" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-300 peer-focus:ring-2 peer-focus:ring-green-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
-                    </div>
-                </label>
+                <div class="flex items-center gap-2">
+                    <span id="identityLabel" class="text-sm text-red-600 font-medium">ระบุตัวตน</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="identityToggle" class="sr-only peer" checked onchange="toggleIdentityFields()">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500"></div>
+                    </label>
+                </div>
             </div>
-            <p class="text-sm text-gray-500 mb-3">ข้อมูลของท่านจะถูกเก็บเป็นความลับ</p>
-            <div id="personalInfoDivider" class="h-px bg-gray-200 mb-4 transition-all duration-300"></div>
-            <div id="personalInfoFields" class="space-y-4 transition-all duration-300">
+            <p class="text-sm text-red-500 mb-3">ข้อมูลของท่านจะถูกเก็บเป็นความลับ</p>
+            <div id="identityDivider" class="h-px bg-gray-200 mb-4"></div>
+            <div id="identityFields" class="space-y-4">
                 <!-- Name -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -597,65 +597,45 @@ function updateComplaintSectionOptions() {
     }
 }
 
-function toggleAnonymous() {
-    const checkbox = document.getElementById('anonymousToggle');
-    const fields = document.getElementById('personalInfoFields');
-    const divider = document.getElementById('personalInfoDivider');
-    const label = document.getElementById('toggleLabel');
+// Toggle identity fields visibility
+function toggleIdentityFields() {
+    const toggle = document.getElementById('identityToggle');
+    const fields = document.getElementById('identityFields');
+    const divider = document.getElementById('identityDivider');
+    const label = document.getElementById('identityLabel');
     
-    if (checkbox.checked) {
-        // เปิด = ระบุตัวตน (แสดงฟอร์ม)
+    if (toggle.checked) {
+        // เปิด = ระบุตัวตน
         label.textContent = 'ระบุตัวตน';
-        label.className = 'text-sm text-green-600 font-medium';
+        label.className = 'text-sm text-red-600 font-medium';
         
-        // Show with animation
-        divider.style.opacity = '1';
-        divider.style.marginBottom = '1rem';
         fields.style.maxHeight = fields.scrollHeight + 'px';
         fields.style.opacity = '1';
         fields.style.marginTop = '0';
-        
+        divider.style.opacity = '1';
+        divider.style.maxHeight = '1px';
+        divider.style.marginBottom = '16px';
         setTimeout(() => {
             fields.style.maxHeight = 'none';
-            fields.style.overflow = 'visible';  // Allow dropdown to show
         }, 300);
-        
-        fields.querySelectorAll('input').forEach(el => {
-            el.disabled = false;
-        });
-        
-        // Enable Choices.js dropdowns
-        if (personalStationChoices) personalStationChoices.enable();
-        if (personalDepartmentChoices) personalDepartmentChoices.enable();
-        if (personalSectionChoices) personalSectionChoices.enable();
     } else {
-        // ปิด = ไม่ระบุตัวตน (ซ่อนฟอร์ม)
+        // ปิด = ไม่ระบุตัวตน
         label.textContent = 'ไม่ระบุตัวตน';
         label.className = 'text-sm text-gray-600';
         
-        // Hide with animation
         fields.style.maxHeight = fields.scrollHeight + 'px';
+        divider.style.opacity = '0';
+        divider.style.maxHeight = '0';
+        divider.style.marginBottom = '0';
         setTimeout(() => {
-            divider.style.opacity = '0';
-            divider.style.marginBottom = '0';
             fields.style.maxHeight = '0';
             fields.style.opacity = '0';
-            fields.style.marginTop = '-1rem';
+            fields.style.marginTop = '-16px';
         }, 10);
-        
-        fields.querySelectorAll('input').forEach(el => {
-            el.value = '';
-            el.disabled = true;
-        });
-        
-        // Disable Choices.js dropdowns
-        if (personalStationChoices) personalStationChoices.disable();
-        if (personalDepartmentChoices) personalDepartmentChoices.disable();
-        if (personalSectionChoices) personalSectionChoices.disable();
     }
 }
 
-// เริ่มต้นเป็นไม่ระบุตัวตน
+// เริ่มต้นเป็นระบุตัวตน
 let personalStationChoices, personalDepartmentChoices, personalSectionChoices;
 let complaintStationChoices, complaintDepartmentChoices, complaintSectionChoices;
 
@@ -698,18 +678,16 @@ document.addEventListener('DOMContentLoaded', function() {
         complaintSectionChoices = new Choices('#complaintSectionSelect', choicesConfig);
     }
     
-    // THEN setup the anonymous toggle
-    const fields = document.getElementById('personalInfoFields');
-    const divider = document.getElementById('personalInfoDivider');
-    
-    // ตั้งค่าเริ่มต้น
-    fields.style.maxHeight = '0';
-    fields.style.opacity = '0';
-    fields.style.marginTop = '-1rem';
-    divider.style.opacity = '0';
-    divider.style.marginBottom = '0';
-    
-    toggleAnonymous();
+    // Initialize identity fields with transition styles
+    const fields = document.getElementById('identityFields');
+    const divider = document.getElementById('identityDivider');
+    if (fields) {
+        fields.style.transition = 'max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease';
+        fields.style.overflow = 'hidden';
+    }
+    if (divider) {
+        divider.style.transition = 'max-height 0.3s ease, opacity 0.3s ease, margin-bottom 0.3s ease';
+    }
 });
 </script>
 </html>
