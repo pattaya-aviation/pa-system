@@ -40,7 +40,81 @@
         .deduction-card label svg {
             flex-shrink: 0;
         }
+        /* Touch-friendly tooltip */
+        .tooltip-trigger {
+            position: relative;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .tooltip-content {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 100%;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: #1f2937;
+            color: white;
+            font-size: 12px;
+            border-radius: 8px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 50;
+            pointer-events: none;
+        }
+        .tooltip-content::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1f2937;
+        }
+        /* Show on hover (desktop) */
+        .tooltip-trigger:hover .tooltip-content {
+            opacity: 1;
+            visibility: visible;
+        }
+        /* Show when active (mobile tap) */
+        .tooltip-trigger.active .tooltip-content {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
+    
+    <script>
+        // Touch-friendly tooltip toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.tooltip-trigger').forEach(function(trigger) {
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Close all other tooltips
+                    document.querySelectorAll('.tooltip-trigger.active').forEach(function(other) {
+                        if (other !== trigger) {
+                            other.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle this tooltip
+                    this.classList.toggle('active');
+                });
+            });
+            
+            // Close tooltip when tapping elsewhere
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.tooltip-trigger')) {
+                    document.querySelectorAll('.tooltip-trigger.active').forEach(function(trigger) {
+                        trigger.classList.remove('active');
+                    });
+                }
+            });
+        });
+    </script>
 </head>
 <body class="bg-gray-50 min-h-screen">
     
@@ -219,7 +293,7 @@
     </nav>
     
     <!-- Main Content -->
-    <main class="pt-20 pb-8 px-4 lg:px-8 max-w-7xl mx-auto">
+    <main class="pt-20 pb-8 px-4 max-w-4xl lg:max-w-6xl mx-auto">
         
         <!-- Header -->
         <div class="mb-8">
@@ -237,7 +311,7 @@
         </div>
         
         <!-- Income Section Card -->
-        <div class="bg-white rounded-3xl shadow-lg p-6 lg:p-8 mb-6">
+        <div class="bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
             <h2 class="text-lg font-semibold text-emerald-600 mb-4">รายได้</h2>
             
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -268,7 +342,7 @@
         </div>
         
         <!-- Deductions Section Card -->
-        <div class="deduction-card bg-white rounded-3xl shadow-lg p-6 lg:p-8 mb-6">
+        <div class="deduction-card bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
             <h2 class="text-lg font-semibold text-emerald-600 mb-4">รายการลดหย่อน</h2>
             
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -325,9 +399,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ค่าลดหย่อนฝากครรภ์และคลอดบุตร
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">สูงสุด 60,000 บาท ต่อการตั้งครรภ์</span>
+                            <span class="tooltip-content">สูงสุด 60,000 บาท ต่อการตั้งครรภ์</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -340,9 +414,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ค่าลดหย่อนบุตร
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">คนละ 30,000 บาท</span>
+                            <span class="tooltip-content">คนละ 30,000 บาท</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
@@ -361,9 +435,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         บุตรคนที่ 2 เป็นต้นไปที่เกิดตั้งแต่ปี 2561
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ลดหย่อนได้คนละ 60,000 บาท</span>
+                            <span class="tooltip-content">ลดหย่อนได้คนละ 60,000 บาท</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
@@ -382,9 +456,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ค่าลดหย่อนบิดา-มารดา
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">คนละ 30,000 บาท (สูงสุด 4 คน)</span>
+                            <span class="tooltip-content">คนละ 30,000 บาท (สูงสุด 4 คน)</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
@@ -403,9 +477,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ค่าลดหย่อน อุปการะผู้พิการ-ทุพพลภาพ
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">คนละ 60,000 บาท</span>
+                            <span class="tooltip-content">คนละ 60,000 บาท</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
@@ -423,7 +497,7 @@
         </div>
         
         <!-- Economic Stimulus Card -->
-        <div class="deduction-card bg-white rounded-3xl shadow-lg p-6 lg:p-8 mb-6">
+        <div class="deduction-card bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
             <h2 class="text-lg font-semibold text-blue-600 mb-4">กลุ่มกระตุ้นเศรษฐกิจ</h2>
             
             <div class="space-y-4">
@@ -431,9 +505,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         Easy E-Receipt
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 50,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 50,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -446,9 +520,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ดอกเบี้ยที่อยู่อาศัย
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 100,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 100,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -461,9 +535,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ค่าสร้างบ้านใหม่ 2567 - 2568
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 100,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 100,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -476,9 +550,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ค่าติดตั้งโซล่าเซลล์สำหรับที่อยู่อาศัย
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 200,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 200,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -491,9 +565,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ค่าซื้องานศิลปะด้านทัศนศิลป์
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 100,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 100,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -505,7 +579,7 @@
         </div>
         
         <!-- Life Insurance Card -->
-        <div class="deduction-card bg-white rounded-3xl shadow-lg p-6 lg:p-8 mb-6">
+        <div class="deduction-card bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
             <h2 class="text-lg font-semibold text-purple-600 mb-4">กลุ่มประกันชีวิต</h2>
             
             <div class="space-y-4">
@@ -513,9 +587,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ประกันชีวิตทั่วไป/ประกันสะสมทรัพย์
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 100,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 100,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -528,9 +602,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ประกันสุขภาพตัวเอง
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ลดหย่อนได้ 25,000 บาท (รวมประกันชีวิตไม่เกิน 100,000 บาท)</span>
+                            <span class="tooltip-content">ลดหย่อนได้ 25,000 บาท (รวมประกันชีวิตไม่เกิน 100,000 บาท)</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -543,9 +617,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ประกันสุขภาพบิดามารดา
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 15,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 15,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -558,9 +632,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ประกันชีวิตคู่สมรส
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 10,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 10,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -573,9 +647,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ประกันสังคม
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 9,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 9,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -587,7 +661,7 @@
         </div>
         
         <!-- Investment Group Card -->
-        <div class="deduction-card bg-white rounded-3xl shadow-lg p-6 lg:p-8 mb-6">
+        <div class="deduction-card bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
             <h2 class="text-lg font-semibold text-orange-600 mb-2">กลุ่มการลงทุน</h2>
             <p class="text-xs text-orange-500 mb-4">เมื่อรวมกับประกันชีวิตแบบบำนาญแล้ว ไม่เกิน 500,000.00 บาท</p>
             
@@ -596,9 +670,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         กองทุน PVD, สงเคราะห์ครู
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 15% ของรายได้ สูงสุด 500,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 15% ของรายได้ สูงสุด 500,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -611,9 +685,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         กบข.
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 30% ของรายได้ สูงสุด 500,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 30% ของรายได้ สูงสุด 500,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -626,9 +700,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         ประกันบำนาญ
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 15% ของรายได้ สูงสุด 200,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 15% ของรายได้ สูงสุด 200,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -641,9 +715,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         กองทุนการออมเงินแห่งชาติ
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 30,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 30,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -656,9 +730,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         กองทุน RMF
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 30% ของรายได้ สูงสุด 500,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 30% ของรายได้ สูงสุด 500,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -671,9 +745,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         เงินลงทุนธุรกิจ Social Enterprise
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 100,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 100,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -686,9 +760,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         กองทุน ThaiESG
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 30% ของรายได้ สูงสุด 300,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 30% ของรายได้ สูงสุด 300,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -700,7 +774,7 @@
         </div>
         
         <!-- Donation Group Card -->
-        <div class="deduction-card bg-white rounded-3xl shadow-lg p-6 lg:p-8 mb-6">
+        <div class="deduction-card bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
             <h2 class="text-lg font-semibold text-pink-600 mb-4">กลุ่มเงินบริจาค</h2>
             
             <div class="space-y-4">
@@ -708,9 +782,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         พรรคการเมือง
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 10,000 บาท</span>
+                            <span class="tooltip-content">ไม่เกิน 10,000 บาท</span>
                         </span>
                     </label>
                     <div class="relative">
@@ -723,9 +797,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         การศึกษา กีฬา พัฒนาสังคม โรงพยาบาลรัฐ
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 10% ของรายได้หลังหักค่าลดหย่อน (2 เท่า)</span>
+                            <span class="tooltip-content">ไม่เกิน 10% ของรายได้หลังหักค่าลดหย่อน (2 เท่า)</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
@@ -744,9 +818,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         เงินบริจาคทั่วไป
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ไม่เกิน 10% ของรายได้หลังหักค่าลดหย่อน (ตามที่จ่ายจริง)</span>
+                            <span class="tooltip-content">ไม่เกิน 10% ของรายได้หลังหักค่าลดหย่อน (ตามที่จ่ายจริง)</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
@@ -765,9 +839,9 @@
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         เงินบริจาคผ่านระบบบริจาคอิเล็กทรอนิกส์ (e-Donation)
-                        <span class="relative group cursor-help">
+                        <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">ลดหย่อนได้ 2 เท่าของเงินบริจาค</span>
+                            <span class="tooltip-content">ลดหย่อนได้ 2 เท่าของเงินบริจาค</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
@@ -790,7 +864,7 @@
         </button>
         
         <!-- Results Section Card -->
-        <div id="results" class="hidden bg-white rounded-3xl shadow-lg p-6 lg:p-8">
+        <div id="results" class="hidden bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">ผลการคำนวณ</h3>
             
             <div class="space-y-3">
