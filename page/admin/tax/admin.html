@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Admin - ระบบภาษี</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Sarabun', sans-serif; }
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        body {
+            background-color: #f8fafc;
+        }
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            transition: all 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 64px;
+        }
+        .sidebar.collapsed .sidebar-text {
+            display: none;
+        }
+        /* Main content */
+        .main-content {
+            margin-left: 280px;
+            transition: all 0.3s ease;
+        }
+        .main-content.expanded {
+            margin-left: 64px;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar fixed left-0 top-0 h-full bg-slate-900 text-white z-40 flex flex-col">
+        <!-- Logo Header -->
+        <div class="p-4 border-b border-slate-700 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+            </div>
+            <div class="sidebar-text">
+                <h1 class="font-bold text-lg">PA Admin</h1>
+                <p class="text-xs text-slate-400">Pattaya Aviation</p>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+            <!-- Dashboard -->
+            <a href="../dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+                <span class="sidebar-text font-medium">Dashboard</span>
+            </a>
+            
+            <!-- VFC Section -->
+            <div class="pt-4">
+                <p class="sidebar-text px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Voice for Change</p>
+                <a href="../vfc/admin.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <span class="sidebar-text">จัดการคำร้อง VFC</span>
+                </a>
+            </div>
+            
+            <!-- Tax Section -->
+            <div class="pt-4">
+                <p class="sidebar-text px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Tax System</p>
+                <a href="admin.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600 text-white">
+                    <svg class="w-5 h-5 flex-shrink-0 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="sidebar-text">จัดการข้อมูลภาษี</span>
+                </a>
+            </div>
+        </nav>
+        
+        <!-- User Profile -->
+        <div class="p-3 border-t border-slate-700">
+            <div class="flex items-center gap-3 px-3 py-2">
+                <div class="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                    A
+                </div>
+                <div class="sidebar-text flex-1 min-w-0">
+                    <p class="font-medium text-sm truncate" id="adminName">Admin User</p>
+                    <p class="text-xs text-slate-400 truncate" id="adminEmail">admin@pattayaaviation.com</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main id="mainContent" class="main-content min-h-screen">
+        <!-- Top Header -->
+        <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSidebar()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900">Tax System</h1>
+                    <p class="text-sm text-gray-500">จัดการข้อมูลภาษีและแบบฟอร์ม ล.ย.01</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <!-- Search -->
+                <div class="relative">
+                    <input type="text" placeholder="ค้นหาพนักงาน..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent w-64">
+                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Content -->
+        <div class="p-6">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-900">245</h3>
+                    <p class="text-gray-500 text-sm mt-1">พนักงานทั้งหมด</p>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-900">189</h3>
+                    <p class="text-gray-500 text-sm mt-1">ส่ง ล.ย.01 แล้ว</p>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-900">56</h3>
+                    <p class="text-gray-500 text-sm mt-1">ยังไม่ส่ง ล.ย.01</p>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm mb-8">
+                <h2 class="text-lg font-bold text-gray-900 mb-4">การดำเนินการ</h2>
+                <div class="flex flex-wrap gap-4">
+                    <button class="px-6 py-3 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                        </svg>
+                        Import ข้อมูลพนักงาน
+                    </button>
+                    <button class="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Export ล.ย.01 ทั้งหมด
+                    </button>
+                    <button class="px-6 py-3 border border-gray-200 rounded-xl font-medium hover:bg-gray-50 transition-colors flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        ส่งแจ้งเตือนพนักงาน
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Employee Tax Data Table -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <h2 class="text-lg font-bold text-gray-900">ข้อมูลภาษีพนักงาน</h2>
+                    <div class="flex items-center gap-2">
+                        <select class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
+                            <option>ปีภาษี 2568</option>
+                            <option>ปีภาษี 2567</option>
+                        </select>
+                        <select class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
+                            <option>สถานีทั้งหมด</option>
+                            <option>HDQ</option>
+                            <option>BKK</option>
+                            <option>CNX</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 text-left">
+                            <tr>
+                                <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">รหัสพนักงาน</th>
+                                <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">ชื่อ-นามสกุล</th>
+                                <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">สถานี</th>
+                                <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">ฝ่าย</th>
+                                <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">สถานะ ล.ย.01</th>
+                                <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">วันที่ส่ง</th>
+                                <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">EMP001</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">นายสมชาย ใจดี</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">HDQ</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">BH</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">ส่งแล้ว</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-500">15 ม.ค. 69</td>
+                                <td class="px-6 py-4">
+                                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">ดูรายละเอียด</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">EMP002</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">นางสาวสมหญิง รักงาน</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">BKK</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">BG</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">รอดำเนินการ</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-500">-</td>
+                                <td class="px-6 py-4">
+                                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">ดูรายละเอียด</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">EMP003</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">นายวิชัย ขยันทำ</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">CNX</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">BF</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">ส่งแล้ว</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-500">20 ม.ค. 69</td>
+                                <td class="px-6 py-4">
+                                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">ดูรายละเอียด</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                    <span class="text-sm text-gray-500">แสดง 1-10 จาก 245 รายการ</span>
+                    <div class="flex items-center gap-1">
+                        <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                        <button class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-sm font-medium">1</button>
+                        <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50">2</button>
+                        <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50">3</button>
+                        <button class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        }
+        
+        // Auth check
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('msalUser') || 'null');
+            if (user) {
+                document.getElementById('adminName').textContent = user.name || 'Admin User';
+                document.getElementById('adminEmail').textContent = user.username || 'admin@company.com';
+            }
+        });
+    </script>
+</body>
+</html>
