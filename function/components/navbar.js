@@ -54,14 +54,15 @@
         // If sub page, return simple navbar with back button and title
         if (isSubPage) {
             return `
-    <!-- Sub Page Navbar (Floating Pill Style) -->
-    <nav class="fixed top-4 left-4 right-4 lg:left-1/2 lg:right-auto lg:-translate-x-1/2 z-50">
-        <div class="bg-white/70 backdrop-blur-xl rounded-3xl px-3 py-2 flex items-center gap-3 shadow-lg border border-gray-200/50">
+    <!-- Sub Page Navbar (Static then Floating on Scroll) -->
+    <nav id="subPageNavbar" class="relative z-50 transition-all duration-300">
+        <div id="subPageNavbarInner" class="bg-white px-4 py-3 flex items-center gap-3 transition-all duration-300">
             <!-- Back Button -->
-            <a href="${backUrl}" class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100/70 transition-colors shrink-0">
-                <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="${backUrl}" class="inline-flex items-center gap-1 px-3 py-2 rounded-full border border-gray-300 hover:bg-gray-100/70 transition-colors shrink-0">
+                <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
+                <span class="text-gray-700 text-sm font-medium leading-none">กลับ</span>
             </a>
             
             <!-- Divider -->
@@ -159,7 +160,7 @@
     
     <!-- Mobile Navbar (Floating Pill Style) -->
     <nav class="lg:hidden fixed top-4 left-4 right-4 z-50">
-        <div class="bg-white/70 backdrop-blur-xl rounded-full px-4 py-2 flex items-center justify-between shadow-lg border border-gray-200/50">
+        <div class="bg-white/70 backdrop-blur-xl rounded-full px-4 py-2 flex items-center justify-between border border-gray-200/50">
             <!-- Logo -->
             <a href="${paths.home}" class="shrink-0" id="mobileLogoLink">
                 <img src="${paths.logo}" alt="Logo" class="h-8 object-contain" id="navbarLogo">
@@ -328,6 +329,29 @@
             const subtitleElement = document.getElementById('navbarPageSubtitle');
             if (subtitleElement && container.dataset.pageSubtitle) {
                 subtitleElement.textContent = container.dataset.pageSubtitle;
+            }
+            
+            // Setup scroll listener for floating navbar
+            const navbar = document.getElementById('subPageNavbar');
+            const navbarInner = document.getElementById('subPageNavbarInner');
+            
+            if (navbar && navbarInner) {
+                function updateNavbarOnScroll() {
+                    const scrollY = window.scrollY;
+                    
+                    if (scrollY > 50) {
+                        // Floating style
+                        navbar.className = 'fixed top-4 left-4 right-4 lg:left-1/2 lg:right-auto lg:-translate-x-1/2 z-50 transition-all duration-300';
+                        navbarInner.className = 'bg-white/70 backdrop-blur-xl rounded-3xl px-4 py-3 flex items-center gap-3 shadow-lg border border-gray-200/50 transition-all duration-300';
+                    } else {
+                        // Static style
+                        navbar.className = 'relative z-50 transition-all duration-300';
+                        navbarInner.className = 'bg-white px-4 py-3 flex items-center gap-3 transition-all duration-300';
+                    }
+                }
+                
+                window.addEventListener('scroll', updateNavbarOnScroll, { passive: true });
+                updateNavbarOnScroll(); // Initial check
             }
         }
     };
