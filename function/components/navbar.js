@@ -45,7 +45,8 @@
             track: `${basePath}page/vfc/track.html`,
             taxHome: `${basePath}page/tax/tax-home.html`,
             taxCalculator: `${basePath}page/tax/tax-calculator.html`,
-            paLy01: `${basePath}page/tax/pa-ly01.html`
+            paLy01: `${basePath}page/tax/pa-ly01.html`,
+            login: `${basePath}page/login/login.html`
         };
         
         // Determine back URL based on current section
@@ -101,7 +102,7 @@
                         </svg>
                     </a>
                     <!-- Dropdown -->
-                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 transition-all duration-200 z-50">
+                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200/50 py-2 transition-all duration-200 z-50">
                         <a href="${paths.complaint}" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
                             <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
@@ -139,7 +140,7 @@
                         </svg>
                     </a>
                     <!-- Dropdown -->
-                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 transition-all duration-200 z-50">
+                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200/50 py-2 transition-all duration-200 z-50">
                         <a href="${paths.taxCalculator}" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
                             <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
@@ -155,6 +156,11 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Login Button -->
+            <a href="${paths.login}" class="ml-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors font-medium text-sm">
+                เข้าสู่ระบบ
+            </a>
         </div>
     </nav>
     
@@ -261,6 +267,13 @@
                             <span class="text-gray-600 text-sm">ลดหย่อนภาษี (ล.ย.01)</span>
                         </a>
                     </div>
+                </div>
+                
+                <!-- Login Button -->
+                <div class="border-t border-gray-100/50 mt-2 pt-2 mx-2">
+                    <a href="${paths.login}" class="flex items-center justify-center px-5 py-3 bg-blue-500 hover:bg-blue-600 rounded-xl mx-2 transition-colors">
+                        <span class="text-white font-medium">เข้าสู่ระบบ</span>
+                    </a>
                 </div>
             </div>
         </div>
