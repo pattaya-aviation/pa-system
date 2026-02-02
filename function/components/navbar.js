@@ -56,7 +56,7 @@
             return `
     <!-- Sub Page Navbar (Static then Floating on Scroll) -->
     <nav id="subPageNavbar" class="relative z-50 transition-all duration-300">
-        <div id="subPageNavbarInner" class="bg-white px-4 py-3 flex items-center gap-3 shadow-none transition-all duration-300">
+        <div id="subPageNavbarInner" class="bg-white/70 backdrop-blur-xl px-4 py-3 flex items-center gap-3 border-b border-gray-200/50 transition-all duration-300">
             <!-- Back Button -->
             <a href="${backUrl}" class="inline-flex items-center gap-1 px-3 py-2 rounded-full border border-gray-300 hover:bg-gray-100/70 transition-colors shrink-0">
                 <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -346,7 +346,7 @@
                     } else {
                         // Static style
                         navbar.className = 'relative z-50 transition-all duration-300';
-                        navbarInner.className = 'bg-white px-4 py-3 flex items-center gap-3 shadow-none transition-all duration-300';
+                        navbarInner.className = 'bg-white/70 backdrop-blur-xl px-4 py-3 flex items-center gap-3 border-b border-gray-200/50 transition-all duration-300';
                     }
                 }
                 
