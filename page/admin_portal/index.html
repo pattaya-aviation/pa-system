@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - PA System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Sarabun', sans-serif; }
+        
+        /* Sidebar transition */
+        .sidebar {
+            width: 280px;
+            transition: width 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 72px;
+        }
+        .sidebar.collapsed .sidebar-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+        .sidebar-text {
+            transition: opacity 0.2s ease, width 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        /* Main content transition */
+        .main-content {
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        .main-content.expanded {
+            margin-left: 72px;
+        }
+        
+        /* Glass card effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        /* Hover effects */
+        .nav-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .nav-item.active {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+        
+        /* Stats card hover */
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar fixed left-0 top-0 h-full bg-slate-900 text-white z-40 flex flex-col">
+        <!-- Logo Header -->
+        <div class="p-4 border-b border-slate-700 flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+            </div>
+            <div class="sidebar-text">
+                <h1 class="font-bold text-lg">PA Admin</h1>
+                <p class="text-xs text-slate-400">Pattaya Aviation</p>
+            </div>
+        </div>
+        
+        <!-- Toggle Button -->
+        <button onclick="toggleSidebar()" class="absolute -right-3 top-20 w-6 h-6 bg-slate-700 hover:bg-slate-600 rounded-full flex items-center justify-center shadow-lg transition-colors z-50">
+            <svg id="toggleIcon" class="w-4 h-4 text-white transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        
+        <!-- Navigation -->
+        <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+            <!-- Dashboard -->
+            <a href="#" class="nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+                <span class="sidebar-text font-medium">Dashboard</span>
+            </a>
+            
+            <!-- VFC Section -->
+            <div class="pt-4">
+                <p class="sidebar-text px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Voice for Change</p>
+                <a href="#vfc-complaints" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <span class="sidebar-text">ข้อร้องเรียน</span>
+                    <span class="sidebar-text ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">5</span>
+                </a>
+                <a href="#vfc-suggestions" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                    <span class="sidebar-text">ข้อเสนอแนะ</span>
+                    <span class="sidebar-text ml-auto bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">3</span>
+                </a>
+                <a href="#vfc-compliments" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <span class="sidebar-text">ข้อชมเชย</span>
+                    <span class="sidebar-text ml-auto bg-green-500 text-white text-xs px-2 py-0.5 rounded-full">2</span>
+                </a>
+            </div>
+            
+            <!-- Tax Section -->
+            <div class="pt-4">
+                <p class="sidebar-text px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Tax System</p>
+                <a href="#tax-employees" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span class="sidebar-text">ข้อมูลพนักงาน</span>
+                </a>
+                <a href="#tax-ly01" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span class="sidebar-text">ล.ย.01</span>
+                </a>
+            </div>
+            
+            <!-- Settings -->
+            <div class="pt-4">
+                <p class="sidebar-text px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Settings</p>
+                <a href="#settings" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="sidebar-text">ตั้งค่าระบบ</span>
+                </a>
+            </div>
+        </nav>
+        
+        <!-- User Profile -->
+        <div class="p-3 border-t border-slate-700">
+            <div class="flex items-center gap-3 px-3 py-2">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0" id="userAvatar">
+                    A
+                </div>
+                <div class="sidebar-text flex-1 min-w-0">
+                    <p class="font-medium text-sm truncate" id="userName">Admin User</p>
+                    <p class="text-xs text-slate-400 truncate" id="userEmail">admin@pattayaaviation.com</p>
+                </div>
+                <button onclick="logout()" class="sidebar-text p-1.5 hover:bg-slate-700 rounded-lg transition-colors" title="ออกจากระบบ">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="mainContent" class="main-content min-h-screen p-6">
+        <!-- Header -->
+        <header class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+                <p class="text-gray-500">ยินดีต้อนรับสู่ระบบจัดการ PA System</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <input type="text" placeholder="ค้นหา..." 
+                        class="w-64 px-4 py-2 pl-10 rounded-xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all bg-white">
+                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+                <button class="relative p-2 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 transition-colors">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- VFC Complaints -->
+            <div class="stat-card glass-card rounded-2xl p-6 border border-gray-200 cursor-pointer">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm text-green-500 font-medium">+12%</span>
+                </div>
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">24</h3>
+                <p class="text-gray-500">ข้อร้องเรียนทั้งหมด</p>
+            </div>
+
+            <!-- VFC Suggestions -->
+            <div class="stat-card glass-card rounded-2xl p-6 border border-gray-200 cursor-pointer">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm text-green-500 font-medium">+8%</span>
+                </div>
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">18</h3>
+                <p class="text-gray-500">ข้อเสนอแนะทั้งหมด</p>
+            </div>
+
+            <!-- VFC Compliments -->
+            <div class="stat-card glass-card rounded-2xl p-6 border border-gray-200 cursor-pointer">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm text-green-500 font-medium">+25%</span>
+                </div>
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">12</h3>
+                <p class="text-gray-500">ข้อชมเชยทั้งหมด</p>
+            </div>
+
+            <!-- Tax Employees -->
+            <div class="stat-card glass-card rounded-2xl p-6 border border-gray-200 cursor-pointer">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm text-gray-400 font-medium">0%</span>
+                </div>
+                <h3 class="text-3xl font-bold text-gray-900 mb-1">156</h3>
+                <p class="text-gray-500">พนักงานทั้งหมด</p>
+            </div>
+        </div>
+
+        <!-- Recent Activity & Quick Actions -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Recent VFC Tickets -->
+            <div class="lg:col-span-2 glass-card rounded-2xl border border-gray-200 overflow-hidden">
+                <div class="p-6 border-b border-gray-100">
+                    <h2 class="text-lg font-bold text-gray-900">เรื่องล่าสุด</h2>
+                </div>
+                <div class="divide-y divide-gray-100">
+                    <!-- Ticket Item -->
+                    <div class="p-4 hover:bg-gray-50 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01"/>
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-medium text-gray-900 truncate">ปัญหาระบบแอร์ในสำนักงาน</p>
+                                <p class="text-sm text-gray-500">ข้อร้องเรียน • HDQ • 2 ชม. ที่แล้ว</p>
+                            </div>
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded-full">รอดำเนินการ</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 hover:bg-gray-50 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707"/>
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-medium text-gray-900 truncate">เสนอปรับปรุงระบบ IT</p>
+                                <p class="text-sm text-gray-500">ข้อเสนอแนะ • BKK • 5 ชม. ที่แล้ว</p>
+                            </div>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">กำลังพิจารณา</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 hover:bg-gray-50 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682"/>
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-medium text-gray-900 truncate">ชมเชยทีม Ground Operations</p>
+                                <p class="text-sm text-gray-500">ข้อชมเชย • CNX • 1 วัน ที่แล้ว</p>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">ดำเนินการแล้ว</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 bg-gray-50 text-center">
+                    <a href="#" class="text-blue-500 hover:text-blue-600 font-medium text-sm">ดูทั้งหมด →</a>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="glass-card rounded-2xl border border-gray-200 p-6">
+                <h2 class="text-lg font-bold text-gray-900 mb-4">การดำเนินการด่วน</h2>
+                <div class="space-y-3">
+                    <button class="w-full flex items-center gap-3 p-4 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 transition-colors text-left">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <span class="font-medium">จัดการข้อร้องเรียน</span>
+                    </button>
+                    
+                    <button class="w-full flex items-center gap-3 p-4 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 transition-colors text-left">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707"/>
+                        </svg>
+                        <span class="font-medium">จัดการข้อเสนอแนะ</span>
+                    </button>
+                    
+                    <button class="w-full flex items-center gap-3 p-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition-colors text-left">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="font-medium">จัดการ ล.ย.01</span>
+                    </button>
+                    
+                    <button class="w-full flex items-center gap-3 p-4 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 transition-colors text-left">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="font-medium">ส่งออกรายงาน</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Check authentication
+        function checkAuth() {
+            const user = sessionStorage.getItem('user');
+            if (!user) {
+                // Redirect to home if not logged in
+                window.location.href = '../../Home/pa-system.html';
+                return;
+            }
+            
+            // Display user info
+            const userData = JSON.parse(user);
+            document.getElementById('userName').textContent = userData.name || 'Admin User';
+            document.getElementById('userEmail').textContent = userData.email || 'admin@pattayaaviation.com';
+            document.getElementById('userAvatar').textContent = (userData.name || 'A').charAt(0).toUpperCase();
+        }
+        
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+            toggleIcon.style.transform = sidebar.classList.contains('collapsed') ? 'rotate(180deg)' : '';
+        }
+        
+        // Logout
+        function logout() {
+            sessionStorage.removeItem('user');
+            window.location.href = '../../Home/pa-system.html';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+    </script>
+
+</body>
+</html>
