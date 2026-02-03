@@ -305,7 +305,7 @@
                 <form id="modalLoginForm" class="space-y-5">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
-                        <input type="email" id="modalEmail" required
+                        <input type="text" id="modalEmail" required
                             class="w-full px-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white/50"
                             placeholder="example@pattayaaviation.com">
                     </div>
@@ -547,13 +547,34 @@
     document.addEventListener('DOMContentLoaded', function() {
         loadMSAL();
         
-        // Handle modal form submit
+        // Handle modal form submit - with test user support
         setTimeout(() => {
             const form = document.getElementById('modalLoginForm');
             if (form) {
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    showModalError("กรุณาใช้ปุ่ม 'เข้าสู่ระบบด้วย Microsoft' แทน");
+                    
+                    const email = document.getElementById('modalEmail').value;
+                    const password = document.getElementById('modalPassword').value;
+                    
+                    // Test user for local development
+                    if (email === 'test' && password === '1234') {
+                        sessionStorage.setItem('user', JSON.stringify({
+                            name: 'Test User',
+                            email: 'test@pattayaaviation.com',
+                            id: 'test-user-local'
+                        }));
+                        
+                        showModalSuccess("ยินดีต้อนรับ Test User!");
+                        
+                        setTimeout(() => {
+                            closeLoginModal();
+                            const basePath = window.__navbarBasePath || '/';
+                            window.location.href = `${basePath}page/admin_portal/index.html`;
+                        }, 1500);
+                    } else {
+                        showModalError("กรุณาใช้ปุ่ม 'เข้าสู่ระบบด้วย Microsoft' หรือใช้ test user (email: test, password: 1234)");
+                    }
                 });
             }
         }, 500);
