@@ -2,309 +2,49 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Portal - PA System</title>
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Fonts CSS -->
     <link rel="stylesheet" href="../../function/fonts.css">
-    
-    <style>
-        html, body {
-            overflow-x: hidden;
-            max-width: 100vw;
-        }
-        body {
-            background-color: #f5f5f5;
-            min-height: 100vh;
-            min-height: 100dvh;
-            position: relative;
-        }
-        /* Background wrapper */
-        .bg-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -2;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        /* Frosted Glass Overlay */
-        .frost-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-        /* Card hover effect */
-        .menu-card:hover {
-            transform: translateY(-2px);
-        }
-    </style>
 </head>
-<body class="min-h-screen">
+<body class="bg-white min-h-screen">
     
-    <!-- Background -->
-    <div class="bg-wrapper"></div>
-    <div class="frost-overlay"></div>
-    
-    <!-- Header -->
-    <header class="bg-white/70 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <img src="../../function/logo/Pattaya Aviation.png" alt="Pattaya Aviation" class="h-10">
-                <div>
-                    <h1 class="text-lg font-bold text-gray-900">Admin Portal</h1>
-                    <p class="text-xs text-gray-500">Pattaya Aviation</p>
-                </div>
+    <!-- Floating Pill Navbar -->
+    <div class="fixed top-4 right-4 z-50">
+        <div class="flex items-center gap-3 bg-white/80 backdrop-blur-xl px-4 py-2 rounded-full border border-gray-200">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm -ml-1" id="userAvatar">
+                ?
             </div>
-            <div class="flex items-center gap-4">
-                <div class="text-right hidden sm:block">
-                    <p class="text-sm font-medium text-gray-900" id="userName">Admin User</p>
-                    <p class="text-xs text-gray-500" id="userEmail">admin@pattayaaviation.com</p>
-                </div>
-                <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm" id="userAvatar">
-                    A
-                </div>
-                <button onclick="logout()" class="p-2 hover:bg-gray-100 rounded-xl transition-colors" title="ออกจากระบบ">
-                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                    </svg>
-                </button>
+            <div class="text-left">
+                <p class="text-sm font-medium text-gray-900" id="userName">Loading...</p>
+                <p class="text-xs text-gray-500" id="userEmail">...</p>
             </div>
         </div>
-    </header>
-    
+    </div>
+
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-6 py-8">
-        
-        <!-- Page Title -->
-        <div class="mb-8">
-            <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">ระบบจัดการหลังบ้าน</h2>
-            <p class="text-gray-500 mt-1">เลือกระบบที่ต้องการจัดการ</p>
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="text-center">
+            <h1 class="text-2xl font-bold text-gray-900">Admin Portal</h1>
         </div>
-        
-        <!-- VFC Section -->
-        <section class="mb-10">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                </svg>
-                Voice for Change
-            </h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                
-                <!-- ข้อร้องเรียน -->
-                <a href="#" class="menu-card group bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 border border-gray-200">
-                    <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                        <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2">
-                            <h4 class="text-base font-semibold text-gray-900">ข้อร้องเรียน</h4>
-                            <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-medium rounded-full">5 รายการใหม่</span>
-                        </div>
-                        <p class="text-sm text-gray-500 mt-1">จัดการเรื่องร้องเรียนจากพนักงาน</p>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </a>
-                
-                <!-- ข้อเสนอแนะ -->
-                <a href="#" class="menu-card group bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 border border-gray-200">
-                    <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                        <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2">
-                            <h4 class="text-base font-semibold text-gray-900">ข้อเสนอแนะ</h4>
-                            <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs font-medium rounded-full">3 รายการใหม่</span>
-                        </div>
-                        <p class="text-sm text-gray-500 mt-1">จัดการข้อเสนอแนะจากพนักงาน</p>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </a>
-                
-                <!-- ข้อชมเชย -->
-                <a href="#" class="menu-card group bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 border border-gray-200">
-                    <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                        <svg class="w-7 h-7 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2">
-                            <h4 class="text-base font-semibold text-gray-900">ข้อชมเชย</h4>
-                            <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs font-medium rounded-full">2 รายการใหม่</span>
-                        </div>
-                        <p class="text-sm text-gray-500 mt-1">จัดการข้อชมเชยจากพนักงาน</p>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </a>
-                
-            </div>
-        </section>
-        
-        <!-- Tax Section -->
-        <section class="mb-10">
-            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                </svg>
-                Tax System
-            </h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                
-                <!-- ข้อมูลพนักงาน -->
-                <a href="#" class="menu-card group bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 border border-gray-200">
-                    <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                        <svg class="w-7 h-7 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-base font-semibold text-gray-900">ข้อมูลพนักงาน</h4>
-                        <p class="text-sm text-gray-500 mt-1">จัดการข้อมูลพนักงานในระบบ</p>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </a>
-                
-                <!-- ล.ย.01 -->
-                <a href="#" class="menu-card group bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 border border-gray-200">
-                    <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                        <svg class="w-7 h-7 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-base font-semibold text-gray-900">ล.ย.01</h4>
-                        <p class="text-sm text-gray-500 mt-1">จัดการแบบ ล.ย.01 ของพนักงาน</p>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </a>
-                
-                <!-- รายงาน -->
-                <a href="#" class="menu-card group bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 border border-gray-200">
-                    <div class="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                        <svg class="w-7 h-7 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-base font-semibold text-gray-900">รายงาน</h4>
-                        <p class="text-sm text-gray-500 mt-1">ดูรายงานและสถิติภาษี</p>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-teal-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </a>
-                
-            </div>
-        </section>
-        
-        <!-- Settings Section -->
-        <section>
-            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                ตั้งค่าระบบ
-            </h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                
-                <!-- ตั้งค่าทั่วไป -->
-                <a href="#" class="menu-card group bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 border border-gray-200">
-                    <div class="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                        <svg class="w-7 h-7 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-base font-semibold text-gray-900">ตั้งค่าทั่วไป</h4>
-                        <p class="text-sm text-gray-500 mt-1">ตั้งค่าระบบและการแสดงผล</p>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </a>
-                
-                <!-- จัดการผู้ใช้ -->
-                <a href="#" class="menu-card group bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 border border-gray-200">
-                    <div class="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                        <svg class="w-7 h-7 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-base font-semibold text-gray-900">จัดการผู้ใช้</h4>
-                        <p class="text-sm text-gray-500 mt-1">จัดการสิทธิ์และผู้ดูแลระบบ</p>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-300 group-hover:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </a>
-                
-            </div>
-        </section>
-        
-    </main>
-    
-    <!-- Footer -->
-    <footer class="border-t border-gray-200 bg-white/50 backdrop-blur-xl mt-12">
-        <div class="max-w-7xl mx-auto px-6 py-4 text-center text-sm text-gray-500">
-            © 2026 Pattaya Aviation. All rights reserved.
-        </div>
-    </footer>
+    </div>
 
     <script>
         // Check authentication
-        function checkAuth() {
-            const user = sessionStorage.getItem('user');
-            if (!user) {
-                // Redirect to home if not logged in
-                window.location.href = '../Home/pa-system.html';
-                return;
-            }
-            
-            // Display user info
+        const user = sessionStorage.getItem('user');
+        if (!user) {
+            window.location.href = '../Home/pa-system.html';
+        } else {
             const userData = JSON.parse(user);
-            document.getElementById('userName').textContent = userData.name || 'Admin User';
-            document.getElementById('userEmail').textContent = userData.email || 'admin@pattayaaviation.com';
-            document.getElementById('userAvatar').textContent = (userData.name || 'A').charAt(0).toUpperCase();
+            document.getElementById('userName').textContent = userData.name || 'User';
+            document.getElementById('userEmail').textContent = userData.email || '';
+            document.getElementById('userAvatar').textContent = (userData.name || 'U').charAt(0).toUpperCase();
         }
         
-        // Logout
         function logout() {
             sessionStorage.removeItem('user');
             window.location.href = '../Home/pa-system.html';
         }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuth();
-        });
     </script>
 
 </body>
