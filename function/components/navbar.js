@@ -508,9 +508,9 @@
         
         setTimeout(() => {
             closeLoginModal();
-            // Redirect to admin after login
+            // Redirect to admin portal after login
             const basePath = window.__navbarBasePath || '/';
-            window.location.href = `${basePath}page/admin/vfc/admin.html`;
+            window.location.href = `${basePath}page/admin_portal/index.html`;
         }, 1500);
     }
 
