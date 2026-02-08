@@ -83,8 +83,7 @@
       .modal-backdrop {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(4px);
+        background: transparent;
         z-index: 200;
         opacity: 0;
         visibility: hidden;
@@ -134,9 +133,6 @@
       }
 
       /* Left panel: full width on mobile, fixed width on desktop */
-      #leftPanel {
-        width: 100%;
-      }
       @media (min-width: 1024px) {
         #leftPanel {
           width: 25%;
