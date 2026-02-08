@@ -4,37 +4,48 @@
  * Usage: Include this script and call renderAdminNav('containerId', 'currentPage')
  */
 
+// Detect basePath: if inside a subfolder of admin_portal, prefix '../'
+const adminNavBasePath = (function() {
+    const path = window.location.pathname;
+    // Check if we're inside a subfolder like /vfc-admin/index.html
+    const adminPortalMatch = path.match(/\/admin_portal\/([^/]+)\//);
+    if (adminPortalMatch) {
+        return '../'; // We're in a subfolder, go up one level
+    }
+    return ''; // We're directly in admin_portal/
+})();
+
 // Menu items configuration
 const adminMenuItems = [
     {
         id: 'home',
-        href: 'index.html',
+        href: adminNavBasePath + 'index.html',
         label: 'หน้าหลัก',
         hoverWidth: '140px',
         icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
         </svg>`,
-        iconColor: 'text-gray-700'
+        iconColor: 'text-gray-900'
     },
     {
         id: 'vfc',
-        href: 'vfc-admin.html',
+        href: adminNavBasePath + 'vfc-admin.html',
         label: 'Voice for Change',
         hoverWidth: '195px',
         icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
         </svg>`,
-        iconColor: 'text-blue-500'
+        iconColor: 'text-gray-900'
     },
     {
         id: 'tax',
-        href: 'tax-admin.html',
+        href: adminNavBasePath + 'tax-admin.html',
         label: 'Tax System',
         hoverWidth: '155px',
         icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
         </svg>`,
-        iconColor: 'text-purple-500'
+        iconColor: 'text-gray-900'
     }
 ];
 
@@ -147,7 +158,7 @@ function renderDesktopMenu(currentPage) {
         html += `
             <a href="${item.href}" class="menu-item ${isActive ? 'active' : ''}" style="--hover-width: ${item.hoverWidth}">
                 <div class="icon-wrapper">
-                    <span class="${item.iconColor}">${item.icon}</span>
+                <span class="${isActive ? 'text-blue-500' : item.iconColor}">${item.icon}</span>
                 </div>
                 <span class="menu-text ${isActive ? 'text-gray-900 font-medium' : 'text-gray-700'}">${item.label}</span>
             </a>
@@ -178,7 +189,7 @@ function renderMobileMenu(currentPage) {
         const isActive = currentPage === item.id;
         menuItems += `
             <a href="${item.href}" class="flex items-center gap-3 px-4 py-3 ${isActive ? 'bg-gray-100 text-gray-900 font-medium' : 'hover:bg-gray-50 text-gray-700'}">
-                <span class="${item.iconColor} w-5 h-5">${item.icon.replace('w-6 h-6', 'w-5 h-5')}</span>
+                <span class="${isActive ? 'text-blue-500' : item.iconColor} w-5 h-5">${item.icon.replace('w-6 h-6', 'w-5 h-5')}</span>
                 ${item.label}
             </a>
         `;
