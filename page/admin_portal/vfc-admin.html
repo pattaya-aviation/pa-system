@@ -66,6 +66,16 @@
         margin-bottom: 0.75rem;
       }
 
+      /* Profile circle becomes dot indicator */
+      .message-item .dot-indicator {
+        width: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        shrink: 0;
+        margin-top: 6px;
+      }
+
       /* Panel Resizer */
       .panel-resizer {
         width: 4px;
@@ -256,6 +266,38 @@
         <div id="contentHome">
           <!-- Category Dropdown -->
           <div class="px-1 py-2 mb-2 flex items-center gap-2">
+            <!-- Filter Dropdown (Read/Unread) -->
+            <div class="relative">
+              <button
+                onclick="toggleStatusDropdown()"
+                id="statusDropdownBtn"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-full hover:bg-gray-200 transition-all"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                <span id="statusLabel">รายการทั้งหมด</span>
+                <svg class="w-3.5 h-3.5 transition-transform" id="statusArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div
+                id="statusDropdownMenu"
+                class="hidden absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden z-50"
+              >
+                <button onclick="selectStatus('all', 'รายการทั้งหมด')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2 font-medium">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  รายการทั้งหมด
+                </button>
+                <button onclick="selectStatus('unread', 'ยังไม่ได้อ่าน')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                  ยังไม่ได้อ่าน
+                </button>
+              </div>
+            </div>
+
             <!-- Category Dropdown -->
             <div class="relative">
               <button
@@ -294,38 +336,6 @@
                 </button>
               </div>
             </div>
-
-            <!-- Filter Dropdown (Read/Unread) -->
-            <div class="relative">
-              <button
-                onclick="toggleStatusDropdown()"
-                id="statusDropdownBtn"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-full hover:bg-gray-200 transition-all"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-                <span id="statusLabel">รายการทั้งหมด</span>
-                <svg class="w-3.5 h-3.5 transition-transform" id="statusArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div
-                id="statusDropdownMenu"
-                class="hidden absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden z-50"
-              >
-                <button onclick="selectStatus('all', 'รายการทั้งหมด')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2 font-medium">
-                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  รายการทั้งหมด
-                </button>
-                <button onclick="selectStatus('unread', 'ยังไม่ได้อ่าน')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                  ยังไม่ได้อ่าน
-                </button>
-              </div>
-            </div>
           </div>
 
           <div
@@ -349,6 +359,27 @@
                     >
                   </div>
                   <div class="flex items-center gap-2">
+                    <!-- Select Multiple Button -->
+                    <button
+                      onclick="toggleSelectMode()"
+                      id="selectModeBtn"
+                      class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+                      title="เลือกหลายรายการ"
+                    >
+                      <svg
+                        class="w-4 h-4 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                        />
+                      </svg>
+                    </button>
                     <!-- Filter Button with Dropdown -->
                     <div class="relative">
                       <button
@@ -469,6 +500,24 @@
                           stroke-linejoin="round"
                           stroke-width="2"
                           d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+                      title="ถังขยะ"
+                    >
+                      <svg
+                        class="w-4 h-4 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                         />
                       </svg>
                     </button>
@@ -984,127 +1033,8 @@
               class="hidden lg:flex overflow-hidden flex-col"
               style="flex: 1"
             >
-              <!-- Detail Action Bar -->
-              <div
-                class="px-6 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50"
-              >
-                <div class="flex items-center gap-2">
-                  <button
-                    class="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-                    title="ย้อนกลับ"
-                  >
-                    <svg
-                      class="w-4 h-4 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 19l-7-7 7-7"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-                    title="ถัดไป"
-                  >
-                    <svg
-                      class="w-4 h-4 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
-                  <span class="text-xs text-gray-500 ml-2">1 / 24</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <button
-                    class="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-                    title="พิมพ์"
-                  >
-                    <svg
-                      class="w-4 h-4 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-                    title="ดาวน์โหลด"
-                  >
-                    <svg
-                      class="w-4 h-4 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-                    title="ลบ"
-                  >
-                    <svg
-                      class="w-4 h-4 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    class="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-                    title="เพิ่มเติม"
-                  >
-                    <svg
-                      class="w-4 h-4 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
               <!-- Detail Header -->
-              <div class="px-6 py-4 border-b border-gray-100">
+              <div class="px-6 py-4">
                 <div class="flex items-center justify-between mb-3">
                   <h2 class="text-lg font-semibold text-gray-900">
                     สภาพแวดล้อมในการทำงานไม่เหมาะสม
@@ -1114,7 +1044,7 @@
                     >ร้องเรียน</span
                   >
                 </div>
-                <div class="flex items-center gap-4 text-sm text-gray-500">
+                <div class="flex items-center gap-4 text-sm text-gray-500 border-t border-gray-100 pt-3">
                   <div class="flex items-center gap-2">
                     <div
                       class="w-8 h-8 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-medium text-xs"
@@ -1412,11 +1342,128 @@
           status: "pending",
         },
       };
+      let selectMode = false;
+
+      // Toggle select mode for multi-select
+      function toggleSelectMode() {
+        selectMode = !selectMode;
+        const btn = document.getElementById('selectModeBtn');
+        const items = document.querySelectorAll('.message-item');
+
+        if (selectMode) {
+          btn.classList.add('bg-blue-100', 'text-blue-600');
+          btn.classList.remove('hover:bg-gray-100');
+          items.forEach(item => {
+            const dotIndicator = item.querySelector('.dot-indicator');
+            if (dotIndicator) {
+              dotIndicator.dataset.prevHtml = dotIndicator.innerHTML;
+              dotIndicator.innerHTML = `<input type="checkbox" class="w-3.5 h-3.5 rounded border-gray-300 text-blue-600 cursor-pointer" onclick="event.stopPropagation()">`;
+              dotIndicator.style.width = '16px';
+            }
+          });
+        } else {
+          btn.classList.remove('bg-blue-100', 'text-blue-600');
+          btn.classList.add('hover:bg-gray-100');
+          items.forEach(item => {
+            const dotIndicator = item.querySelector('.dot-indicator');
+            if (dotIndicator && dotIndicator.dataset.prevHtml !== undefined) {
+              dotIndicator.innerHTML = dotIndicator.dataset.prevHtml;
+              dotIndicator.style.width = '8px';
+              delete dotIndicator.dataset.prevHtml;
+            }
+          });
+        }
+      }
+
+      // Mark message as unread
+      function markAsUnread(id) {
+        const item = document.querySelector(`.message-item[onclick="selectMessage(${id})"]`);
+        if (item) {
+          const dotIndicator = item.querySelector('.dot-indicator');
+          if (dotIndicator && !dotIndicator.querySelector('.bg-blue-500')) {
+            dotIndicator.innerHTML = '<div class="w-2 h-2 bg-blue-500 rounded-full"></div>';
+          }
+        }
+      }
+
+      // Toggle unread status from list
+      function toggleUnread(id) {
+        const item = document.querySelector(`.message-item[onclick="selectMessage(${id})"]`);
+        if (!item) return;
+        const dotIndicator = item.querySelector('.dot-indicator');
+        if (!dotIndicator) return;
+        if (dotIndicator.querySelector('.bg-blue-500')) {
+          dotIndicator.innerHTML = '';
+        } else {
+          dotIndicator.innerHTML = '<div class="w-2 h-2 bg-blue-500 rounded-full"></div>';
+        }
+      }
+
+      // Toggle pin and move to pinned section
+      function togglePin(id, svgEl) {
+        const item = document.querySelector(`.message-item[onclick="selectMessage(${id})"]`);
+        if (!item) return;
+        const list = item.parentElement;
+        const isPinned = item.dataset.pinned === 'true';
+        const pinnedHeader = document.getElementById('pinnedSectionHeader');
+
+        if (isPinned) {
+          // Unpin - move back to date section
+          item.dataset.pinned = 'false';
+          svgEl.setAttribute('fill', 'none');
+          svgEl.classList.remove('text-blue-500');
+          svgEl.classList.add('text-gray-300');
+
+          // Find the correct date section to return to
+          const dateSection = item.dataset.dateSection;
+          const sectionHeader = list.querySelector(`.date-section-header[data-section="${dateSection}"]`);
+          if (sectionHeader) {
+            // Insert after the section header
+            const nextSibling = sectionHeader.nextElementSibling;
+            list.insertBefore(item, nextSibling);
+          }
+
+          // Hide pinned header if no more pinned items
+          const pinnedItems = list.querySelectorAll('.message-item[data-pinned="true"]');
+          if (pinnedItems.length === 0 && pinnedHeader) {
+            pinnedHeader.style.display = 'none';
+          }
+        } else {
+          // Pin - move to pinned section
+          item.dataset.pinned = 'true';
+          svgEl.setAttribute('fill', 'currentColor');
+          svgEl.classList.add('text-blue-500');
+          svgEl.classList.remove('text-gray-300');
+
+          // Show pinned header
+          if (pinnedHeader) {
+            pinnedHeader.style.display = '';
+            // Insert right after pinned header
+            pinnedHeader.insertAdjacentElement('afterend', item);
+          } else {
+            list.insertBefore(item, list.firstElementChild);
+          }
+        }
+      }
 
       // Select message and update detail panel
       function selectMessage(id) {
         const message = mockupMessages[id];
         if (!message) return;
+
+        // In select mode, toggle checkbox instead of opening message
+        if (selectMode) {
+          const clickedItem = document.querySelector(
+            `.message-item[onclick="selectMessage(${id})"]`,
+          );
+          if (clickedItem) {
+            const checkbox = clickedItem.querySelector('.dot-indicator input[type="checkbox"]');
+            if (checkbox) {
+              checkbox.checked = !checkbox.checked;
+            }
+          }
+          return;
+        }
 
         // Update active state in message list
         document.querySelectorAll(".message-item").forEach((item) => {
@@ -1434,6 +1481,12 @@
             `border-l-${message.typeColor}-500`,
           );
           clickedItem.classList.remove("hover:bg-gray-50");
+
+          // Remove unread dot when message is read
+          const dotIndicator = clickedItem.querySelector('.dot-indicator');
+          if (dotIndicator) {
+            dotIndicator.innerHTML = '';
+          }
         }
 
         // Update detail panel
@@ -1447,48 +1500,11 @@
 
           detailPanel.innerHTML = `
                     <!-- Detail Header -->
-                    <div class="px-6 py-4 border-b border-gray-100">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center gap-2">
-                                <button class="p-1.5 hover:bg-gray-100 rounded-lg">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                                    </svg>
-                                </button>
-                                <button class="p-1.5 hover:bg-gray-100 rounded-lg">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                    </svg>
-                                </button>
-                                <span class="text-sm text-gray-500 ml-2">${id} / 24</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button class="p-1.5 hover:bg-gray-100 rounded-lg" title="ปักมุด">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                                    </svg>
-                                </button>
-                                <button class="p-1.5 hover:bg-gray-100 rounded-lg" title="ดาวน์โหลด">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                    </svg>
-                                </button>
-                                <button class="p-1.5 hover:bg-gray-100 rounded-lg" title="ลบ">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                    </svg>
-                                </button>
-                                <button class="p-1.5 hover:bg-gray-100 rounded-lg" title="เพิ่มเติม">
-                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
+                    <div class="px-6 py-4">
                         
                         <h2 class="text-lg font-semibold text-gray-900 mb-3">${message.title}</h2>
                         
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between border-t border-gray-100 pt-3">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-full bg-gradient-to-br from-${message.typeColor}-400 to-${message.typeColor}-600 flex items-center justify-center text-white font-medium text-sm">${message.senderInitials}</div>
                                 <div>
@@ -1852,6 +1868,161 @@
             resizer.classList.remove('active');
             document.body.style.cursor = '';
             document.body.style.userSelect = '';
+          }
+        });
+      })();
+
+      // Restructure message items: move date down, add pin icon
+      document.querySelectorAll('.message-item').forEach(item => {
+        const headerRow = item.querySelector('.flex.items-center.justify-between.mb-1');
+        if (!headerRow) return;
+
+        const dateSpan = headerRow.querySelector(':scope > span.text-xs.text-gray-400');
+        if (!dateSpan) return;
+
+        const dateText = dateSpan.textContent.trim();
+
+        // Replace date with action icons (unread toggle + pin)
+        const msgId = item.getAttribute('onclick').match(/\d+/)[0];
+        dateSpan.outerHTML = `<div class="flex items-center gap-1 shrink-0">
+          <svg class="w-3.5 h-3.5 text-gray-300 cursor-pointer hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" onclick="event.stopPropagation(); toggleUnread(${msgId}, this)" title="อ่านแล้ว/ยังไม่อ่าน">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"/>
+          </svg>
+          <svg class="w-3.5 h-3.5 text-gray-300 cursor-pointer hover:text-blue-500 transition-colors pin-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" onclick="event.stopPropagation(); togglePin(${msgId}, this)" title="ปักมุด">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+          </svg>
+        </div>`;
+
+        // Find the last <p> (preview text) and wrap it with date
+        const contentDiv = headerRow.parentElement;
+        const paragraphs = contentDiv.querySelectorAll('p');
+        if (paragraphs.length >= 2) {
+          const lastP = paragraphs[paragraphs.length - 1];
+          const wrapper = document.createElement('div');
+          wrapper.className = 'flex items-center justify-between mt-0.5';
+          lastP.classList.remove('mt-0.5');
+          lastP.parentNode.insertBefore(wrapper, lastP);
+          wrapper.appendChild(lastP);
+          const dateEl = document.createElement('span');
+          dateEl.className = 'text-[10px] text-gray-400 shrink-0 ml-2';
+          dateEl.textContent = dateText;
+          wrapper.appendChild(dateEl);
+        }
+
+        // Replace profile circle with dot indicator
+        const outerFlex = item.querySelector('.flex.items-start.gap-3');
+        if (!outerFlex) return;
+        const profileCircle = outerFlex.querySelector(':scope > div:first-child:not(.flex-1)');
+        const unreadDot = outerFlex.querySelector(':scope > .w-2.h-2.bg-blue-500');
+
+        if (profileCircle) {
+          const indicator = document.createElement('div');
+          indicator.className = 'dot-indicator';
+          if (unreadDot) {
+            indicator.innerHTML = '<div class="w-2 h-2 bg-blue-500 rounded-full"></div>';
+            unreadDot.remove();
+          }
+          profileCircle.replaceWith(indicator);
+        } else if (unreadDot) {
+          unreadDot.remove();
+          const indicator = document.createElement('div');
+          indicator.className = 'dot-indicator';
+          indicator.innerHTML = '<div class="w-2 h-2 bg-blue-500 rounded-full"></div>';
+          outerFlex.insertBefore(indicator, outerFlex.firstChild);
+        }
+      });
+
+      // Add date section dividers
+      (function() {
+        const list = document.querySelector('.flex-1.overflow-y-auto.custom-scrollbar');
+        if (!list) return;
+
+        // Parse Thai Buddhist date (DD/MM/BBEE) to JS Date
+        function parseBEDate(str) {
+          const parts = str.split('/');
+          if (parts.length !== 3) return null;
+          const day = parseInt(parts[0]);
+          const month = parseInt(parts[1]) - 1;
+          const year = parseInt(parts[2]) - 543;
+          return new Date(year, month, day);
+        }
+
+        // Determine section label for a date
+        function getSectionLabel(dateStr) {
+          const d = parseBEDate(dateStr);
+          if (!d) return 'อื่นๆ';
+          const today = new Date(2026, 1, 3); // 03/02/2569 = 2026-02-03
+          const diffDays = Math.floor((today - d) / (1000 * 60 * 60 * 24));
+          if (diffDays === 0) return 'วันนี้';
+          if (diffDays === 1) return 'เมื่อวานนี้';
+          if (diffDays <= 6) return 'สัปดาห์นี้';
+          if (diffDays <= 13) return 'สัปดาห์ก่อน';
+          return 'เก่ากว่านั้น';
+        }
+
+        // Create pinned section header (hidden by default)
+        const pinnedHeader = document.createElement('div');
+        pinnedHeader.id = 'pinnedSectionHeader';
+        pinnedHeader.className = 'date-section-header flex items-center gap-2 px-4 py-2 bg-gray-50 border-b border-gray-100 cursor-pointer select-none';
+        pinnedHeader.dataset.section = 'pinned';
+        pinnedHeader.style.display = 'none';
+        pinnedHeader.innerHTML = `
+          <svg class="w-3.5 h-3.5 text-gray-400 transition-transform duration-200 section-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+          <svg class="w-3.5 h-3.5 text-blue-500" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+          </svg>
+          <span class="text-xs font-semibold text-blue-600">ปักมุด</span>
+        `;
+        pinnedHeader.addEventListener('click', function() {
+          const chevron = this.querySelector('.section-chevron');
+          const isCollapsed = chevron.classList.contains('-rotate-90');
+          chevron.classList.toggle('-rotate-90');
+          let next = this.nextElementSibling;
+          while (next && next.dataset.pinned === 'true') {
+            next.style.display = isCollapsed ? '' : 'none';
+            next = next.nextElementSibling;
+          }
+        });
+        list.insertBefore(pinnedHeader, list.firstElementChild);
+
+        // Collect dates from the date elements we moved to bottom row
+        const items = list.querySelectorAll('.message-item');
+        let lastSection = '';
+
+        items.forEach(item => {
+          // Get date from the bottom row we created earlier
+          const dateEl = item.querySelector('.text-\\[10px\\].text-gray-400');
+          if (!dateEl) return;
+          const dateStr = dateEl.textContent.trim();
+          const section = getSectionLabel(dateStr);
+          item.dataset.dateSection = section;
+
+          if (section !== lastSection) {
+            // Create section header
+            const header = document.createElement('div');
+            header.className = 'date-section-header flex items-center gap-2 px-4 py-2 bg-gray-50 border-b border-gray-100 cursor-pointer select-none';
+            header.dataset.section = section;
+            header.innerHTML = `
+              <svg class="w-3.5 h-3.5 text-gray-400 transition-transform duration-200 section-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+              <span class="text-xs font-semibold text-amber-600">${section}</span>
+            `;
+            header.addEventListener('click', function() {
+              const chevron = this.querySelector('.section-chevron');
+              const isCollapsed = chevron.classList.contains('-rotate-90');
+              chevron.classList.toggle('-rotate-90');
+              // Toggle visibility of items in this section
+              let next = this.nextElementSibling;
+              while (next && !next.classList.contains('date-section-header')) {
+                next.style.display = isCollapsed ? '' : 'none';
+                next = next.nextElementSibling;
+              }
+            });
+            list.insertBefore(header, item);
+            lastSection = section;
           }
         });
       })();
