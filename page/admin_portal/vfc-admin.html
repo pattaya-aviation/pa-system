@@ -83,7 +83,8 @@
       .modal-backdrop {
         position: fixed;
         inset: 0;
-        background: transparent;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
         z-index: 200;
         opacity: 0;
         visibility: hidden;
@@ -92,7 +93,6 @@
       .modal-backdrop.open {
         opacity: 1;
         visibility: visible;
-        backdrop-filter: blur(4px);
       }
       .modal-card {
         position: fixed;
