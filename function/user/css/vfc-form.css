@@ -1,0 +1,48 @@
+/* ========================================
+   VFC Form Shared Styles
+   Used by: complaint.html, compliment.html, suggestion.html
+   Color: Blue (#2563eb / #dbeafe)
+   ======================================== */
+
+/* Custom Choices.js styling */
+.choices__inner {
+    border-radius: 1.5rem !important;
+    padding: 0.5rem 1rem !important;
+    min-height: 48px !important;
+    border-color: #e5e7eb !important;
+    background: white !important;
+}
+.choices__list--dropdown {
+    border-radius: 1.5rem !important;
+    border-color: #e5e7eb !important;
+    z-index: 1000 !important;
+}
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background-color: #dbeafe !important;
+    color: #2563eb !important;
+}
+.choices[data-type*="select-one"] .choices__input {
+    padding: 8px 16px !important;
+}
+.choices__list--dropdown .choices__item {
+    padding: 10px 16px !important;
+}
+
+/* Fix dropdown being cut off by parent container */
+#personalInfoFields {
+    overflow: visible !important;
+}
+.space-y-4 {
+    overflow: visible !important;
+}
+
+/* Ensure Personal Info card is above all other cards so dropdown is not hidden */
+.personal-info-card {
+    position: relative;
+    z-index: 10;
+    overflow: visible !important;
+}
+.form-card {
+    position: relative;
+    z-index: 1;
+}
