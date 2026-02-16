@@ -67,64 +67,190 @@
             <!-- Search Box -->
             <div class="mb-6">
                 <div class="flex gap-3">
-                    <input type="text" placeholder="กรอกรหัสติดตาม (เช่น VFC-001)" 
-                        class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none transition-all">
-                    <button class="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-xl transition-colors">
+                    <input id="trackingInput" type="text" placeholder="กรอกรหัสติดตาม (เช่น VFC-CP-20260216-1234)" 
+                        class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none transition-all"
+                        onkeydown="if(event.key==='Enter') searchTracking()">
+                    <!-- QR Upload Button -->
+                    <label class="px-3 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl transition-colors cursor-pointer flex items-center justify-center" title="อัพโหลด QR Code">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9h4V5H3v4zm0 6h4v4H3v-4zm6-6h4V5H9v4zm6 0h4V5h-4v4zm-6 6h4v4H9v-4zm6 0h4v4h-4v-4zM3 3h6v6H3V3zm12 0h6v6h-6V3zM3 15h6v6H3v-6z"/>
+                        </svg>
+                        <input type="file" accept="image/*" class="hidden" onchange="decodeQRCode(this)">
+                    </label>
+                    <button onclick="searchTracking()" class="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-xl transition-colors">
                         ค้นหา
                     </button>
                 </div>
+                <p id="qrStatus" class="text-xs mt-2 hidden"></p>
             </div>
             
+            <!-- Search Results -->
+            <div id="searchResults" class="space-y-4 hidden"></div>
+
             <!-- Status List -->
-            <div class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-800">รายการล่าสุดของคุณ</h2>
-                
-                <!-- Status Card 1 -->
-                <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                    <div class="flex items-start justify-between">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-lg">VFC-001</span>
-                                <span class="text-xs font-medium text-yellow-600 bg-yellow-50 px-2 py-1 rounded-lg">กำลังดำเนินการ</span>
-                            </div>
-                            <h3 class="font-medium text-gray-900">ข้อเสนอแนะปรับปรุงระบบ</h3>
-                            <p class="text-sm text-gray-500 mt-1">ส่งเมื่อ 20 ม.ค. 2025</p>
-                        </div>
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            <div id="statusList" class="space-y-4">
+                <h2 class="text-lg font-semibold text-gray-800">รายการล่าสุด</h2>
+                <div id="recentList">
+                    <div class="text-center py-8 text-gray-400">
+                        <svg class="w-12 h-12 mx-auto mb-3 animate-spin text-gray-300" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                         </svg>
+                        <p>กำลังโหลด...</p>
                     </div>
                 </div>
-                
-                <!-- Status Card 2 -->
-                <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                    <div class="flex items-start justify-between">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-lg">VFC-002</span>
-                                <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-lg">เสร็จสิ้น</span>
-                            </div>
-                            <h3 class="font-medium text-gray-900">ชมเชยทีม IT</h3>
-                            <p class="text-sm text-gray-500 mt-1">ส่งเมื่อ 15 ม.ค. 2025</p>
-                        </div>
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-                </div>
-                
-                <!-- Empty State -->
-                <div class="text-center py-8 text-gray-400 hidden">
-                    <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    <p>ไม่พบรายการ</p>
-                </div>
-                
             </div>
         </div>
         
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../../function/shared/js/supabase-config.js"></script>
+<script>
+// Status mapping
+const STATUS_MAP = {
+    pending: { label: 'รอดำเนินการ', color: 'text-orange-600 bg-orange-50' },
+    in_progress: { label: 'กำลังดำเนินการ', color: 'text-yellow-600 bg-yellow-50' },
+    done: { label: 'เสร็จสิ้น', color: 'text-green-600 bg-green-50' }
+};
+
+const TYPE_MAP = {
+    complaint: { label: 'ร้องเรียน', color: 'text-red-600 bg-red-50' },
+    compliment: { label: 'ชมเชย', color: 'text-green-600 bg-green-50' },
+    suggestion: { label: 'ข้อเสนอแนะ', color: 'text-blue-600 bg-blue-50' }
+};
+
+function formatDate(dateStr) {
+    const d = new Date(dateStr);
+    const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    return d.getDate() + ' ' + months[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+}
+
+function renderCard(item) {
+    const status = STATUS_MAP[item.status] || STATUS_MAP.pending;
+    const type = TYPE_MAP[item.type] || TYPE_MAP.suggestion;
+    const subject = item.subject || (item.detail_text ? item.detail_text.substring(0, 50) : 'ไม่มีหัวข้อ');
+    return '<div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">' +
+        '<div class="flex items-start justify-between">' +
+            '<div class="flex-1">' +
+                '<div class="flex items-center gap-2 mb-2 flex-wrap">' +
+                    '<span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-lg">' + item.tracking_number + '</span>' +
+                    '<span class="text-xs font-medium ' + type.color + ' px-2 py-1 rounded-lg">' + type.label + '</span>' +
+                    '<span class="text-xs font-medium ' + status.color + ' px-2 py-1 rounded-lg">' + status.label + '</span>' +
+                '</div>' +
+                '<h3 class="font-medium text-gray-900">' + subject + '</h3>' +
+                '<p class="text-sm text-gray-500 mt-1">ส่งเมื่อ ' + formatDate(item.created_at) + '</p>' +
+                (item.detail_station ? '<p class="text-xs text-gray-400 mt-1">สถานี: ' + item.detail_station + '</p>' : '') +
+            '</div>' +
+            '<svg class="w-5 h-5 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>' +
+            '</svg>' +
+        '</div>' +
+    '</div>';
+}
+
+// Search by tracking number
+async function searchTracking() {
+    const input = document.getElementById('trackingInput').value.trim();
+    if (!input) return;
+
+    const resultsDiv = document.getElementById('searchResults');
+    resultsDiv.classList.remove('hidden');
+    resultsDiv.innerHTML = '<div class="text-center py-4 text-gray-400">กำลังค้นหา...</div>';
+
+    const { data, error } = await window.supabaseClient
+        .from('vfc_submissions')
+        .select('*')
+        .ilike('tracking_number', '%' + input + '%')
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+    if (error) {
+        resultsDiv.innerHTML = '<div class="text-center py-4 text-red-500">เกิดข้อผิดพลาดในการค้นหา</div>';
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        resultsDiv.innerHTML = '<div class="text-center py-8 text-gray-400">' +
+            '<svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>' +
+            '</svg>' +
+            '<p>ไม่พบรายการสำหรับ "' + input + '"</p>' +
+        '</div>';
+        return;
+    }
+
+    resultsDiv.innerHTML = '<h2 class="text-lg font-semibold text-gray-800">ผลการค้นหา (' + data.length + ' รายการ)</h2>' +
+        data.map(renderCard).join('');
+}
+
+// Load recent submissions
+async function loadRecentSubmissions() {
+    const recentList = document.getElementById('recentList');
+    
+    const { data, error } = await window.supabaseClient
+        .from('vfc_submissions')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+    if (error || !data || data.length === 0) {
+        recentList.innerHTML = '<div class="text-center py-8 text-gray-400">' +
+            '<svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>' +
+            '</svg>' +
+            '<p>ยังไม่มีรายการ</p>' +
+        '</div>';
+        return;
+    }
+
+    recentList.innerHTML = data.map(renderCard).join('');
+}
+
+// QR Code decoder
+function decodeQRCode(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const status = document.getElementById('qrStatus');
+    status.classList.remove('hidden', 'text-red-500', 'text-green-500');
+    status.classList.add('text-gray-500');
+    status.textContent = 'กำลังอ่าน QR Code...';
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    fetch('https://api.qrserver.com/v1/read-qr-code/', {
+        method: 'POST',
+        body: formData
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        var result = data && data[0] && data[0].symbol && data[0].symbol[0] && data[0].symbol[0].data;
+        if (result) {
+            document.getElementById('trackingInput').value = result;
+            status.classList.remove('text-gray-500');
+            status.classList.add('text-green-500');
+            status.textContent = 'อ่าน QR Code สำเร็จ: ' + result;
+            searchTracking();
+        } else {
+            status.classList.remove('text-gray-500');
+            status.classList.add('text-red-500');
+            status.textContent = 'ไม่สามารถอ่าน QR Code ได้ กรุณาลองใหม่';
+        }
+    })
+    .catch(function() {
+        status.classList.remove('text-gray-500');
+        status.classList.add('text-red-500');
+        status.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+    });
+
+    input.value = '';
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', loadRecentSubmissions);
+</script>
 
 </body>
 </html>
