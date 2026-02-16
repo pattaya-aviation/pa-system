@@ -242,7 +242,7 @@ const VFCForm = (function() {
         
         if (toggle.checked) {
             label.textContent = 'ระบุตัวตน';
-            label.className = 'text-sm text-blue-600 font-medium';
+            label.className = 'text-sm text-gray-900 font-medium';
             
             fields.style.maxHeight = fields.scrollHeight + 'px';
             fields.style.opacity = '1';
@@ -271,7 +271,7 @@ const VFCForm = (function() {
      * Category pill selection
      */
     function selectCategory(btn, value) {
-        const activeClasses = ['bg-blue-500', 'text-white', 'border-blue-500'];
+        const activeClasses = ['bg-gray-900', 'text-white', 'border-gray-900'];
         const inactiveClasses = ['bg-white', 'text-gray-600', 'border-gray-200'];
         
         document.querySelectorAll('.category-pill').forEach(pill => {
@@ -301,23 +301,23 @@ const VFCForm = (function() {
         const newItem = document.createElement('div');
         newItem.className = 'file-item p-4 bg-gray-50 rounded-3xl border border-gray-200';
         newItem.innerHTML = `
-            <div class="flex items-center gap-3 mb-3">
+            <div class="flex items-center gap-3 mb-2">
+                <label class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-900 text-white cursor-pointer hover:bg-gray-800 transition-colors shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                    </svg>
+                    <input type="file" accept="image/*,.pdf,.doc,.docx" class="hidden" onchange="VFCForm.updateFileName(this)">
+                </label>
                 <input type="text" placeholder="กรุณาตั้งชื่อไฟล์" 
-                    class="flex-1 px-4 py-2 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm">
+                    class="flex-1 px-4 py-2 rounded-3xl border border-gray-200 outline-none transition-all text-sm min-w-0">
                 <button type="button" onclick="this.closest('.file-item').remove()" 
-                    class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 hover:bg-blue-200 text-blue-500 transition-colors">
+                    class="w-9 h-9 flex items-center justify-center rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors shrink-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
-            <div class="flex items-center gap-3">
-                <label class="px-4 py-2 bg-blue-50 text-blue-500 rounded-full text-sm font-medium cursor-pointer hover:bg-blue-100 transition-colors whitespace-nowrap">
-                    เลือกไฟล์
-                    <input type="file" accept="image/*,.pdf,.doc,.docx" class="hidden" onchange="VFCForm.updateFileName(this)">
-                </label>
-                <span class="file-name text-sm text-gray-400">ยังไม่ได้เลือกไฟล์</span>
-            </div>
+            <span class="file-name text-xs text-red-500 pl-1">ยังไม่ได้เลือกไฟล์</span>
         `;
         container.appendChild(newItem);
     }
@@ -326,8 +326,135 @@ const VFCForm = (function() {
      * Update file name display
      */
     function updateFileName(input) {
-        const fileName = input.files[0] ? input.files[0].name : 'ยังไม่ได้เลือกไฟล์';
-        input.closest('.file-item').querySelector('.file-name').textContent = fileName;
+        const span = input.closest('.file-item').querySelector('.file-name');
+        if (input.files[0]) {
+            span.textContent = input.files[0].name;
+            span.className = 'file-name text-xs text-blue-500 underline pl-1';
+        } else {
+            span.textContent = 'ยังไม่ได้เลือกไฟล์';
+            span.className = 'file-name text-xs text-red-500 pl-1';
+        }
+    }
+
+    // ========================================
+    // Tracking Modal
+    // ========================================
+
+    function generateTrackingNumber(prefix) {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        const seq = String(Math.floor(1000 + Math.random() * 9000));
+        const typeCode = prefix === 'complaint' ? 'CP' : prefix === 'compliment' ? 'CM' : 'SG';
+        return `VFC-${typeCode}-${y}${m}${d}-${seq}`;
+    }
+
+    function createTrackingModal() {
+        const modal = document.createElement('div');
+        modal.id = 'trackingModal';
+        modal.className = 'fixed inset-0 z-[999] flex items-center justify-center p-4 hidden';
+        modal.innerHTML = `
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeTrackingModal()"></div>
+            <div class="relative bg-white rounded-[2rem] shadow-2xl max-w-sm w-full p-8 text-center z-10">
+                <!-- X Close Button -->
+                <button onclick="closeTrackingModal()" 
+                    class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-1">ส่งเรื่องสำเร็จ!</h3>
+                <p class="text-sm text-gray-500 mb-4">กรุณาบันทึกหมายเลขติดตามของคุณ</p>
+                <!-- Saveable area -->
+                <div id="trackingSaveArea">
+                    <div class="bg-gray-50 rounded-2xl p-4 mb-4 border border-gray-200">
+                        <p class="text-xs text-gray-400 mb-1">หมายเลขติดตาม</p>
+                        <p id="trackingNumber" class="text-lg font-bold text-gray-900 tracking-wider select-all"></p>
+                    </div>
+                    <div class="flex justify-center mb-5">
+                        <div class="bg-white p-3 rounded-2xl border border-gray-200 inline-block">
+                            <img id="trackingQR" src="" alt="QR Code" class="w-40 h-40" crossorigin="anonymous" />
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mb-4">สแกน QR Code เพื่อบันทึกหมายเลขติดตาม</p>
+                <!-- Save Button -->
+                <button onclick="saveTrackingImage()" 
+                    class="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-full transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    <span>บันทึกลงเครื่อง</span>
+                </button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    function showTrackingModal(trackingNum) {
+        document.getElementById('trackingNumber').textContent = trackingNum;
+        document.getElementById('trackingQR').src =
+            'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(trackingNum);
+        document.getElementById('trackingModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeTrackingModal() {
+        document.getElementById('trackingModal').classList.add('hidden');
+        document.body.style.overflow = '';
+        window.location.href = 'vfc-home.html';
+    }
+
+    function saveTrackingImage() {
+        const trackingNum = document.getElementById('trackingNumber').textContent;
+        const qrImg = document.getElementById('trackingQR');
+
+        // Create canvas to combine QR + tracking number
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const padding = 40;
+        const qrSize = 200;
+        const textHeight = 60;
+        canvas.width = qrSize + padding * 2;
+        canvas.height = qrSize + padding * 2 + textHeight;
+
+        // White background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw tracking number text
+        ctx.fillStyle = '#111827';
+        ctx.font = 'bold 16px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('หมายเลขติดตาม', canvas.width / 2, padding);
+        ctx.font = 'bold 20px Arial, sans-serif';
+        ctx.fillText(trackingNum, canvas.width / 2, padding + 30);
+
+        // Draw QR code
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function() {
+            ctx.drawImage(img, padding, padding + textHeight, qrSize, qrSize);
+            // Download
+            const link = document.createElement('a');
+            link.download = trackingNum + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        };
+        img.onerror = function() {
+            // Fallback: download just the text as image
+            const link = document.createElement('a');
+            link.download = trackingNum + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        };
+        img.src = qrImg.src;
     }
 
     // ========================================
@@ -376,6 +503,83 @@ const VFCForm = (function() {
             if (divider) {
                 divider.style.transition = 'max-height 0.3s ease, opacity 0.3s ease, margin-bottom 0.3s ease';
             }
+
+            // Create tracking modal
+            createTrackingModal();
+
+            // Form submit handler
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+
+                    // Collect data
+                    const isAnonymous = !document.getElementById('identityToggle')?.checked;
+                    const trackingNum = generateTrackingNumber(prefix);
+
+                    const getValue = (id) => {
+                        const el = document.getElementById(id);
+                        return el ? (el.value || '').trim() : '';
+                    };
+
+                    const getSelectText = (id) => {
+                        const el = document.getElementById(id);
+                        if (!el || el.selectedIndex <= 0) return '';
+                        return el.options[el.selectedIndex].text;
+                    };
+
+                    // Detail dropdown IDs
+                    const capPrefix = prefix.charAt(0).toUpperCase() + prefix.slice(1);
+                    const detailStationId = prefix + 'StationSelect';
+                    const detailDeptId = prefix + 'DepartmentSelect';
+                    const detailSectionId = prefix + 'SectionSelect';
+
+                    const category = getValue('selectedCategory');
+                    const otherCategory = getValue('otherCategoryInput');
+
+                    const data = {
+                        tracking_number: trackingNum,
+                        type: prefix,
+                        subject: getValue('subjectInput'),
+                        category: category === 'other' ? otherCategory : category,
+                        is_anonymous: isAnonymous,
+                        reporter_name: isAnonymous ? null : (getValue('firstName') + ' ' + getValue('lastName')).trim() || null,
+                        reporter_employee_id: isAnonymous ? null : getValue('employeeId') || null,
+                        reporter_station: isAnonymous ? null : getSelectText('stationSelect') || null,
+                        reporter_department: isAnonymous ? null : getSelectText('departmentSelect') || null,
+                        reporter_section: isAnonymous ? null : getSelectText('sectionSelect') || null,
+                        detail_station: getSelectText(detailStationId) || null,
+                        detail_department: getSelectText(detailDeptId) || null,
+                        detail_section: getSelectText(detailSectionId) || null,
+                        detail_text: getValue('detailText') || null,
+                        fix_text: getValue('fixText') || null,
+                        status: 'pending'
+                    };
+
+                    // Submit to Supabase
+                    try {
+                        if (!window.supabaseClient) {
+                            alert('Supabase ยังไม่พร้อม กรุณารีเฟรชหน้า');
+                            return;
+                        }
+
+                        const { error } = await window.supabaseClient
+                            .from('vfc_submissions')
+                            .insert([data]);
+
+                        if (error) {
+                            console.error('Supabase error:', error);
+                            alert('เกิดข้อผิดพลาด: ' + error.message + '\n\nCode: ' + (error.code || 'N/A'));
+                            return;
+                        }
+
+                        showTrackingModal(trackingNum);
+                    } catch (err) {
+                        console.error('Submit error:', err);
+                        alert('ไม่สามารถส่งข้อมูลได้: ' + err.message);
+                    }
+                });
+            }
         });
     }
 
@@ -388,7 +592,9 @@ const VFCForm = (function() {
         toggleIdentityFields,
         selectCategory,
         addFileItem,
-        updateFileName
+        updateFileName,
+        closeTrackingModal,
+        saveTrackingImage
     };
 
 })();
@@ -398,3 +604,5 @@ window.toggleIdentityFields = VFCForm.toggleIdentityFields;
 window.selectCategory = VFCForm.selectCategory;
 window.addFileItem = VFCForm.addFileItem;
 window.updateFileName = VFCForm.updateFileName;
+window.closeTrackingModal = VFCForm.closeTrackingModal;
+window.saveTrackingImage = VFCForm.saveTrackingImage;
