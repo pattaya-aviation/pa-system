@@ -11,52 +11,21 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Fonts CSS -->
-    <link rel="stylesheet" href="../../function/fonts.css">
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="../../function/shared/css/fonts.css">
+    
+    <!-- User Portal CSS -->
+    <link rel="stylesheet" href="../../function/user/css/user-base.css">
     
     <style>
-        html, body {
-            overflow-x: hidden;
-            max-width: 100vw;
-        }
-        body {
-            background-color: #ffffff;
-            min-height: 100vh;
-            min-height: 100dvh;
-            position: relative;
-        }
-        /* Background wrapper - works on all devices including iOS */
+        /* Page-specific: Wallpaper */
         .bg-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -2;
-            background-image: url('../../function/walpaper/desktop.jpg');
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
+            background-image: url('../../function/user/wallpaper/desktop.jpg');
         }
-        /* Portrait mode: use vertical wallpaper */
         @media (orientation: portrait) {
             .bg-wrapper {
-                background-image: url('../../function/walpaper/phone.jpg');
+                background-image: url('../../function/user/wallpaper/phone.jpg');
             }
-        }
-
-        /* Hide navbar in fullscreen mode */
-        :fullscreen nav,
-        :-webkit-full-screen nav,
-        :-moz-full-screen nav,
-        :-ms-fullscreen nav {
-            display: none !important;
-        }
-        :fullscreen body,
-        :-webkit-full-screen body,
-        :-moz-full-screen body,
-        :-ms-fullscreen body {
-            padding-top: 1.5rem !important;
         }
     </style>
 </head>
@@ -68,7 +37,7 @@
     
     <!-- Navbar Component -->
     <div id="navbar-container"></div>
-    <script src="../../function/components/navbar.js"></script>
+    <script src="../../function/user/components/navbar.js"></script>
     
     <!-- Main Container -->
     <div class="w-full max-w-7xl flex flex-col lg:flex-row lg:items-center lg:gap-24">

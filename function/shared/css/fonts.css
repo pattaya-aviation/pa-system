@@ -1,0 +1,25 @@
+/* Google Fonts - Sarabun */
+@import url("https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap");
+
+/* Font Family */
+body {
+  font-family: "Sarabun", sans-serif;
+  touch-action: pan-x pan-y;
+}
+
+/* Font Weights */
+.font-light {
+  font-weight: 300;
+}
+.font-normal {
+  font-weight: 400;
+}
+.font-medium {
+  font-weight: 500;
+}
+.font-semibold {
+  font-weight: 600;
+}
+.font-bold {
+  font-weight: 700;
+}

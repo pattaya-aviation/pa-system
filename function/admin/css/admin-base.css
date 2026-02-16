@@ -1,0 +1,22 @@
+/* ===================================================
+   ADMIN PORTAL - Base Styles
+   ใช้ร่วมกันทุกหน้าของ Admin Portal
+   =================================================== */
+
+/* Executive Compact Mode */
+body {
+    zoom: 0.8;
+}
+
+/* Dropdown transition */
+.dropdown-menu {
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    transition: all 0.2s ease;
+}
+.dropdown-menu.open {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}

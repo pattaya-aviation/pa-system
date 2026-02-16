@@ -11,57 +11,25 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Fonts CSS -->
-    <link rel="stylesheet" href="../../function/fonts.css">
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="../../function/shared/css/fonts.css">
+    
+    <!-- User Portal CSS -->
+    <link rel="stylesheet" href="../../function/user/css/user-base.css">
     
     <!-- Choices.js for Searchable Dropdowns -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     
     <style>
-        /* Prevent horizontal scrolling */
-        html, body {
-            overflow-x: hidden;
-            max-width: 100vw;
-        }
-        body {
-            background-color: #ffffff;
-            min-height: 100vh;
-            min-height: 100dvh;
-            position: relative;
-        }
-        /* Background wrapper - works on all devices including iOS */
+        /* Page-specific: Wallpaper */
         .bg-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -2;
-            background-image: url('../../function/walpaper/desktop.jpg');
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
+            background-image: url('../../function/user/wallpaper/desktop.jpg');
         }
-        /* Portrait mode: use vertical wallpaper */
         @media (orientation: portrait) {
             .bg-wrapper {
-                background-image: url('../../function/walpaper/phone.jpg');
+                background-image: url('../../function/user/wallpaper/phone.jpg');
             }
-        }
-
-        /* Hide navbar in fullscreen mode */
-        :fullscreen nav,
-        :-webkit-full-screen nav,
-        :-moz-full-screen nav,
-        :-ms-fullscreen nav {
-            display: none !important;
-        }
-        :fullscreen body,
-        :-webkit-full-screen body,
-        :-moz-full-screen body,
-        :-ms-fullscreen body {
-            padding-top: 1.5rem !important;
         }
         /* Custom Choices.js styling */
         .choices__inner {
@@ -115,7 +83,7 @@
          data-icon-color="bg-blue-100"
          data-icon-svg="<svg class='w-6 h-6 text-blue-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z'/></svg>">
     </div>
-    <script src="../../function/components/navbar.js"></script>
+    <script src="../../function/user/components/navbar.js"></script>
 
     
     <!-- Main Content -->

@@ -36,7 +36,7 @@
         
         // Generate relative paths
         const paths = {
-            logo: `${basePath}function/logo/Pattaya Aviation.png`,
+            logo: `${basePath}function/shared/logo/Pattaya Aviation.png`,
             home: `${basePath}page/Home/pa-system.html`,
             vfcHome: `${basePath}page/vfc/vfc-home.html`,
             complaint: `${basePath}page/vfc/complaint.html`,

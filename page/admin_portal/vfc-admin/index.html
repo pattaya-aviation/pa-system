@@ -5,23 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Voice for Change Admin - PA System</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../../../function/fonts.css" />
+    <link rel="stylesheet" href="../../../function/shared/css/fonts.css" />
+    <!-- Admin Portal CSS -->
+    <link rel="stylesheet" href="../../../function/admin/css/admin-base.css" />
     <style>
-      body {
-        zoom: 0.8;
-      }
-      /* Dropdown transition */
-      .dropdown-menu {
-        opacity: 0;
-        transform: translateY(-10px);
-        visibility: hidden;
-        transition: all 0.2s ease;
-      }
-      .dropdown-menu.open {
-        opacity: 1;
-        transform: translateY(0);
-        visibility: visible;
-      }
 
       /* Compact inbox style */
       .inbox-compact {
@@ -261,7 +248,7 @@
         font-size: 13px !important;
       }
     </style>
-    <script src="../../../function/components/admin-nav.js"></script>
+    <script src="../../../function/admin/components/admin-nav.js"></script>
   </head>
   <body class="bg-gray-100 min-h-screen">
     <!-- Admin Navigation (rendered by component) -->
