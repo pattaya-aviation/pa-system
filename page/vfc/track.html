@@ -27,6 +27,35 @@
                 background-image: url('../../function/user/wallpaper/phone.jpg');
             }
         }
+        /* Timeline tracking styles */
+        .track-timeline { position: relative; padding-left: 32px; margin-top: 16px; }
+        .track-step { position: relative; padding-bottom: 28px; }
+        .track-step:last-child { padding-bottom: 0; }
+        .track-step::before {
+            content: ''; position: absolute; left: -25px; top: 28px; bottom: 0;
+            width: 2px; background: #e5e7eb;
+        }
+        .track-step:last-child::before { display: none; }
+        .track-step.done::before { background: #a78bfa; }
+        .track-dot {
+            position: absolute; left: -32px; top: 4px;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: #e5e7eb; border: 3px solid #fff;
+            box-shadow: 0 0 0 2px #e5e7eb;
+            z-index: 1;
+        }
+        .track-step.done .track-dot { background: #8b5cf6; box-shadow: 0 0 0 2px #8b5cf6; }
+        .track-step.active .track-dot {
+            background: #8b5cf6; box-shadow: 0 0 0 2px #8b5cf6, 0 0 0 6px rgba(139,92,246,0.2);
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { box-shadow: 0 0 0 2px #8b5cf6, 0 0 0 6px rgba(139,92,246,0.2); }
+            50% { box-shadow: 0 0 0 2px #8b5cf6, 0 0 0 10px rgba(139,92,246,0.05); }
+        }
+        .track-step.done .track-title, .track-step.active .track-title { color: #1f2937; font-weight: 600; }
+        .track-step.pending .track-title { color: #9ca3af; }
+        .track-step.pending .track-desc { color: #d1d5db; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -51,7 +80,7 @@
         
         <!-- Header -->
         <div class="flex items-center gap-4 mb-8">
-            <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <div class="w-14 h-14 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
                 <svg class="w-7 h-7 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                 </svg>
@@ -68,38 +97,24 @@
             <div class="mb-6">
                 <div class="flex gap-3">
                     <input id="trackingInput" type="text" placeholder="กรอกรหัสติดตาม (เช่น VFC-CP-20260216-1234)" 
-                        class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none transition-all"
+                        class="flex-1 px-4 py-3 rounded-full border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none transition-all"
                         onkeydown="if(event.key==='Enter') searchTracking()">
                     <!-- QR Upload Button -->
-                    <label class="px-3 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl transition-colors cursor-pointer flex items-center justify-center" title="อัพโหลด QR Code">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9h4V5H3v4zm0 6h4v4H3v-4zm6-6h4V5H9v4zm6 0h4V5h-4v4zm-6 6h4v4H9v-4zm6 0h4v4h-4v-4zM3 3h6v6H3V3zm12 0h6v6h-6V3zM3 15h6v6H3v-6z"/>
+                    <label class="px-3 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors cursor-pointer flex items-center justify-center" title="สแกน QR Code">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="17"/><line x1="17" y1="21" x2="21" y2="21"/><line x1="14" y1="21" x2="14" y2="18"/>
                         </svg>
                         <input type="file" accept="image/*" class="hidden" onchange="decodeQRCode(this)">
                     </label>
-                    <button onclick="searchTracking()" class="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-xl transition-colors">
-                        ค้นหา
-                    </button>
                 </div>
+                <button onclick="searchTracking()" class="w-full mt-3 px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-full transition-colors">
+                    ค้นหา
+                </button>
                 <p id="qrStatus" class="text-xs mt-2 hidden"></p>
             </div>
             
             <!-- Search Results -->
             <div id="searchResults" class="space-y-4 hidden"></div>
-
-            <!-- Status List -->
-            <div id="statusList" class="space-y-4">
-                <h2 class="text-lg font-semibold text-gray-800">รายการล่าสุด</h2>
-                <div id="recentList">
-                    <div class="text-center py-8 text-gray-400">
-                        <svg class="w-12 h-12 mx-auto mb-3 animate-spin text-gray-300" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                        </svg>
-                        <p>กำลังโหลด...</p>
-                    </div>
-                </div>
-            </div>
         </div>
         
     </div>
@@ -127,26 +142,54 @@ function formatDate(dateStr) {
 }
 
 function renderCard(item) {
-    const status = STATUS_MAP[item.status] || STATUS_MAP.pending;
     const type = TYPE_MAP[item.type] || TYPE_MAP.suggestion;
-    const subject = item.subject || (item.detail_text ? item.detail_text.substring(0, 50) : 'ไม่มีหัวข้อ');
-    return '<div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">' +
-        '<div class="flex items-start justify-between">' +
-            '<div class="flex-1">' +
-                '<div class="flex items-center gap-2 mb-2 flex-wrap">' +
-                    '<span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-lg">' + item.tracking_number + '</span>' +
-                    '<span class="text-xs font-medium ' + type.color + ' px-2 py-1 rounded-lg">' + type.label + '</span>' +
-                    '<span class="text-xs font-medium ' + status.color + ' px-2 py-1 rounded-lg">' + status.label + '</span>' +
-                '</div>' +
-                '<h3 class="font-medium text-gray-900">' + subject + '</h3>' +
-                '<p class="text-sm text-gray-500 mt-1">ส่งเมื่อ ' + formatDate(item.created_at) + '</p>' +
-                (item.detail_station ? '<p class="text-xs text-gray-400 mt-1">สถานี: ' + item.detail_station + '</p>' : '') +
-            '</div>' +
-            '<svg class="w-5 h-5 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
-                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>' +
-            '</svg>' +
-        '</div>' +
-    '</div>';
+    const subject = item.subject || (item.detail_text ? item.detail_text.substring(0, 60) : 'ไม่มีหัวข้อ');
+    const st = item.status || 'pending';
+
+    // Define timeline steps
+    const steps = [
+        { key: 'submitted', title: 'ส่งเรื่องแล้ว', desc: 'ส่งเมื่อ ' + formatDate(item.created_at) },
+        { key: 'received',  title: 'รับเรื่องแล้ว', desc: 'เจ้าหน้าที่รับเรื่องเรียบร้อย' },
+        { key: 'in_progress', title: 'กำลังดำเนินการ', desc: 'อยู่ระหว่างการตรวจสอบและดำเนินการ' },
+        { key: 'done', title: 'เสร็จสิ้น', desc: 'ดำเนินการเสร็จสิ้นแล้ว' }
+    ];
+
+    // Determine which steps are done/active/pending
+    const statusOrder = { pending: 0, in_progress: 2, resolved: 3, closed: 3, done: 3 };
+    const currentIdx = statusOrder[st] !== undefined ? statusOrder[st] : 0;
+    // If pending → step 0 is active (submitted done, rest pending)
+    // If in_progress → steps 0,1 done, step 2 active
+    // If done/resolved/closed → all done
+    let activeIdx = currentIdx;
+    if (st === 'pending') activeIdx = 0;
+    else if (st === 'in_progress') activeIdx = 2;
+    else activeIdx = 3;
+
+    let html = '<div class="bg-gray-50 rounded-2xl p-5 border border-gray-100 mt-3">';
+    // Header
+    html += '<div class="flex items-center gap-2 flex-wrap mb-1">';
+    html += '<span class="text-sm font-bold text-purple-600">' + item.tracking_number + '</span>';
+    html += '<span class="text-xs font-medium ' + type.color + ' px-2 py-0.5 rounded-full">' + type.label + '</span>';
+    html += '</div>';
+    html += '<h3 class="font-semibold text-gray-900 text-base">' + subject + '</h3>';
+    if (item.detail_station) html += '<p class="text-xs text-gray-400 mt-1">สถานี: ' + item.detail_station + '</p>';
+
+    // Timeline
+    html += '<div class="track-timeline">';
+    steps.forEach(function(step, idx) {
+        let cls = 'pending';
+        if (idx < activeIdx) cls = 'done';
+        else if (idx === activeIdx) cls = 'active';
+
+        html += '<div class="track-step ' + cls + '">';
+        html += '<div class="track-dot"></div>';
+        html += '<div>';
+        html += '<div class="track-title text-sm">' + step.title + '</div>';
+        html += '<div class="track-desc text-xs text-gray-400 mt-0.5">' + (cls !== 'pending' ? step.desc : 'รอดำเนินการ') + '</div>';
+        html += '</div></div>';
+    });
+    html += '</div></div>';
+    return html;
 }
 
 // Search by tracking number
@@ -182,29 +225,6 @@ async function searchTracking() {
 
     resultsDiv.innerHTML = '<h2 class="text-lg font-semibold text-gray-800">ผลการค้นหา (' + data.length + ' รายการ)</h2>' +
         data.map(renderCard).join('');
-}
-
-// Load recent submissions
-async function loadRecentSubmissions() {
-    const recentList = document.getElementById('recentList');
-    
-    const { data, error } = await window.supabaseClient
-        .from('vfc_submissions')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-    if (error || !data || data.length === 0) {
-        recentList.innerHTML = '<div class="text-center py-8 text-gray-400">' +
-            '<svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
-                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>' +
-            '</svg>' +
-            '<p>ยังไม่มีรายการ</p>' +
-        '</div>';
-        return;
-    }
-
-    recentList.innerHTML = data.map(renderCard).join('');
 }
 
 // QR Code decoder
@@ -248,8 +268,7 @@ function decodeQRCode(input) {
     input.value = '';
 }
 
-// Init
-document.addEventListener('DOMContentLoaded', loadRecentSubmissions);
+// Init — no auto-load, only search
 </script>
 
 </body>
