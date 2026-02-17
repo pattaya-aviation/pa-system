@@ -55,6 +55,13 @@
       border: 1px solid #e5e7eb;
       overflow: hidden;
     }
+    .filter-card {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      padding: 14px 20px;
+      margin-bottom: 12px;
+    }
     .tbl-head {
       padding: 16px 24px;
       border-bottom: 1px solid #f3f4f6;
@@ -205,46 +212,118 @@
 
     /* Detail modal */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.35);
       backdrop-filter: blur(4px); z-index: 100;
       display: flex; align-items: center; justify-content: center;
       padding: 16px; opacity: 0; visibility: hidden; transition: all 0.25s;
     }
     .modal-overlay.open { opacity: 1; visibility: visible; }
     .modal-box {
-      background: white; border-radius: 20px; width: 100%; max-width: 640px;
-      max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+      background: white; border-radius: 16px; width: 100%; max-width: 900px;
+      max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.18);
       transform: translateY(20px); transition: transform 0.25s;
     }
     .modal-overlay.open .modal-box { transform: translateY(0); }
-    .modal-head {
-      padding: 20px 24px; border-bottom: 1px solid #f3f4f6;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .modal-body { padding: 24px; }
-    .detail-row {
-      display: grid; grid-template-columns: 140px 1fr; gap: 8px;
-      padding: 10px 0; border-bottom: 1px solid #f9fafb;
-      font-size: 0.8125rem;
-    }
-    .detail-label { color: #9ca3af; font-weight: 500; }
-    .detail-val { color: #111827; }
 
-    /* Tab bar */
+    /* Email-style header */
+    .email-header {
+      padding: 20px 28px 16px; border-bottom: 1px solid #f3f4f6;
+    }
+    .email-subject {
+      font-size: 1.125rem; font-weight: 700; color: #111827;
+      margin-bottom: 4px; line-height: 1.4;
+    }
+    .email-meta-row {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      margin-top: 8px; font-size: 0.75rem; color: #9ca3af;
+    }
+    .email-close {
+      position: absolute; top: 18px; right: 20px;
+      width: 32px; height: 32px; border-radius: 8px; border: none;
+      background: transparent; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #9ca3af; transition: all 0.15s;
+    }
+    .email-close:hover { background: #f3f4f6; color: #374151; }
+
+    /* Sender info */
+    .email-sender {
+      padding: 14px 28px; display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .email-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, #a78bfa, #7c3aed);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 0.875rem; flex-shrink: 0;
+    }
+    .email-sender-name { font-size: 0.8125rem; font-weight: 600; color: #111827; }
+    .email-sender-detail { font-size: 0.6875rem; color: #9ca3af; }
+
+    /* Email body */
+    .email-body { padding: 24px 28px; }
+    .email-content {
+      font-size: 0.875rem; color: #374151; line-height: 1.7;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .email-detail-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin-top: 20px; padding: 16px; background: #f9fafb;
+      border-radius: 12px;
+    }
+    @media (max-width: 600px) { .email-detail-grid { grid-template-columns: 1fr; } }
+    .email-detail-item {}
+    .email-detail-label { font-size: 0.6875rem; color: #9ca3af; font-weight: 500; text-transform: uppercase; letter-spacing: 0.03em; }
+    .email-detail-val { font-size: 0.8125rem; color: #111827; font-weight: 500; margin-top: 2px; }
+
+    /* Modal form controls */
+    .modal-section { padding: 16px 28px; border-top: 1px solid #f3f4f6; }
+    .modal-section-title { font-size: 0.8125rem; font-weight: 600; color: #374151; margin-bottom: 10px; }
+    .modal-select {
+      width: 100%; padding: 8px 12px; border-radius: 10px;
+      border: 1.5px solid #e5e7eb; font-size: 0.8125rem;
+      color: #374151; background: white; outline: none; cursor: pointer;
+    }
+    .modal-select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    .modal-textarea {
+      width: 100%; padding: 12px 14px; border-radius: 12px;
+      border: 1.5px solid #e5e7eb; font-size: 0.8125rem;
+      color: #374151; outline: none; resize: vertical; min-height: 80px;
+      font-family: inherit; line-height: 1.6;
+    }
+    .modal-textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    .modal-save-btn {
+      padding: 8px 20px; border-radius: 10px; border: none;
+      font-size: 0.8125rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      background: #3b82f6; color: white;
+    }
+    .modal-save-btn:hover { background: #2563eb; }
+    .modal-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .modal-save-msg {
+      font-size: 0.75rem; margin-top: 6px; min-height: 18px;
+    }
+    .modal-actions {
+      padding: 14px 28px; border-top: 1px solid #f3f4f6;
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+
+    /* Tab bar — underline style */
     .tab-bar {
-      display: flex; align-items: center; gap: 4px;
-      padding: 4px; background: #f3f4f6; border-radius: 10px;
-      width: fit-content; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 0;
+      border-bottom: 2px solid #e5e7eb;
+      width: 100%; margin-bottom: 20px;
     }
     .tab-btn {
-      padding: 6px 16px; border-radius: 8px; border: none;
-      font-size: 0.8125rem; font-weight: 500;
-      cursor: pointer; transition: all 0.2s;
-      background: transparent; color: #6b7280;
+      padding: 10px 20px; border: none; border-bottom: 2px solid transparent;
+      margin-bottom: -2px; font-size: 0.8125rem; font-weight: 500;
+      cursor: pointer; transition: all 0.15s;
+      background: transparent; color: #6b7280; white-space: nowrap;
+      display: flex; align-items: center; gap: 6px;
     }
-    .tab-btn:hover { background: #e5e7eb; color: #374151; }
-    .tab-btn.active { background: #3b82f6; color: white; }
-    .tab-btn.active:hover { background: #2563eb; }
+    .tab-btn:hover { color: #111827; }
+    .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
+    .tab-btn.active:hover { color: #1d4ed8; border-bottom-color: #1d4ed8; }
     .tab-placeholder {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       min-height: 400px; color: #9ca3af; gap: 12px;
@@ -467,24 +546,47 @@
   <div class="admin-content">
 
     <!-- Header -->
-    <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
-      <div>
-        <h1 class="text-xl font-bold text-gray-900">Voice for Change</h1>
-        <p class="text-sm text-gray-500 mt-0.5">จัดการคำร้องเรียน ชมเชย และข้อเสนอแนะ</p>
-      </div>
+    <div class="mb-4">
+      <h1 class="text-xl font-bold text-gray-900">Voice for Change</h1>
+      <p class="text-sm text-gray-500 mt-0.5">จัดการคำร้องเรียน ชมเชย และข้อเสนอแนะ</p>
+    </div>
+
+    <!-- Floating Navbar - Right: Search Circle + Bell Circle -->
+    <div class="fixed top-4 right-4 z-50">
       <div class="flex items-center gap-3">
-        <!-- Tab Bar -->
-        <div class="tab-bar" style="margin-bottom:0">
-          <button class="tab-btn active" id="tabInbox" onclick="switchTab('inbox')">หน้าแรก</button>
-          <button class="tab-btn" id="tabBoard" onclick="switchTab('board')">กระดาน</button>
-          <button class="tab-btn" id="tabTable" onclick="switchTab('table')">ตาราง</button>
-          <button class="tab-btn" id="tabSettings" onclick="switchTab('settings')">ตั้งค่า</button>
-        </div>
-        <button onclick="refreshData()" class="btn-ref">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-          รีเฟรช
+        <!-- Search Button (Circle) -->
+        <button onclick="document.getElementById('fSearch').focus(); switchTab('table');" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </button>
+        <!-- Bell Button -->
+        <button onclick="toggleNotifPanel()" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors relative">
+          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+          </svg>
+          <span id="notifDot" class="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full" style="display:none;"></span>
         </button>
       </div>
+    </div>
+    <!-- Tab Bar -->
+    <div class="tab-bar" style="margin-bottom:16px">
+      <button class="tab-btn active" id="tabInbox" onclick="switchTab('inbox')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>
+        หน้าแรก
+      </button>
+      <button class="tab-btn" id="tabBoard" onclick="switchTab('board')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+        กระดาน
+      </button>
+      <button class="tab-btn" id="tabTable" onclick="switchTab('table')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+        รายการ
+      </button>
+      <button class="tab-btn" id="tabSettings" onclick="switchTab('settings')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        ตั้งค่า
+      </button>
     </div>
 
     <!-- Tab: Inbox -->
@@ -528,6 +630,8 @@
       <div class="kanban-wrap" id="kanbanBoard"></div>
     </div>
 
+
+
     <!-- Tab: Settings -->
     <div id="contentSettings" class="tab-content hidden">
       <div class="tab-placeholder">
@@ -538,10 +642,9 @@
 
     <!-- Tab: Table -->
     <div id="contentTable" class="tab-content hidden">
-    <!-- Table Card -->
-    <div class="tbl-card">
-      <!-- Filters -->
-      <div class="tbl-head">
+    <!-- Filter Card -->
+    <div class="filter-card">
+      <div class="flex items-center justify-between flex-wrap gap-3">
         <div class="flex items-center gap-2 flex-wrap">
           <select id="fType" onchange="applyFilters()" class="f-select">
             <option value="">ทุกประเภท</option>
@@ -573,6 +676,10 @@
           <input type="text" id="fSearch" placeholder="ค้นหา..." class="f-search" oninput="applyFilters()">
         </div>
       </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="tbl-card">
 
       <!-- Table -->
       <div class="tbl-scroll">
@@ -609,17 +716,11 @@
   </div><!-- /admin-content -->
   <!-- Detail Modal -->
   <div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
-    <div class="modal-box">
-      <div class="modal-head">
-        <div>
-          <div class="text-base font-semibold text-gray-900" id="mTitle">รายละเอียด</div>
-          <div class="trk mt-0.5" id="mTracking"></div>
-        </div>
-        <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
-          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-      <div class="modal-body" id="mBody"></div>
+    <div class="modal-box" style="position:relative">
+      <button onclick="closeModal()" class="email-close">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div id="mEmailContent"></div>
       <div class="modal-actions" id="mActions"></div>
     </div>
   </div>
@@ -1212,35 +1313,90 @@
 
       const tp = TYPES[item.type] || { th: item.type, cls: '' };
       const st = item.status || 'pending';
+      const subject = item.subject || 'ไม่มีหัวข้อ';
+      const senderName = item.is_anonymous ? 'ไม่ระบุตัวตน' : (item.reporter_name || 'ไม่ระบุชื่อ');
+      const initials = item.is_anonymous ? '?' : (senderName.charAt(0) || '?');
+      const senderSub = [item.reporter_employee_id, item.reporter_station, item.reporter_department].filter(Boolean).join(' · ');
 
-      document.getElementById('mTitle').innerHTML = `<span class="badge ${tp.cls}">${tp.th}</span> ${item.subject || 'ไม่มีหัวข้อ'}`;
-      document.getElementById('mTracking').textContent = item.tracking_number || '';
+      let html = '';
 
-      const rows = [
+      // ── Email Header ──
+      html += '<div class="email-header">';
+      html += `<div class="email-subject">${subject}</div>`;
+      html += '<div class="email-meta-row">';
+      html += `<span class="badge ${tp.cls}">${tp.th}</span>`;
+      html += `<span class="s-badge s-${st}"><span class="dot"></span>${STATUS[st]||st}</span>`;
+      html += `<span class="trk">${item.tracking_number || ''}</span>`;
+      html += `<span style="margin-left:auto">${fmtDate(item.created_at)}</span>`;
+      html += '</div></div>';
+
+      // ── Sender Info ──
+      html += '<div class="email-sender">';
+      html += `<div class="email-avatar">${initials}</div>`;
+      html += '<div>';
+      html += `<div class="email-sender-name">${senderName}</div>`;
+      html += `<div class="email-sender-detail">${senderSub || 'ไม่ระบุข้อมูลผู้ส่ง'}</div>`;
+      html += '</div></div>';
+
+      // ── Email Body ──
+      html += '<div class="email-body">';
+      // Main content text
+      if (item.detail_text) {
+        html += `<div class="email-content">${item.detail_text}</div>`;
+      }
+      if (item.fix_text) {
+        html += `<div style="margin-top:16px;padding:12px 16px;background:#fef3c7;border-radius:10px;font-size:0.8125rem;color:#92400e;"><strong>สิ่งที่ต้องการแก้ไข:</strong> ${item.fix_text}</div>`;
+      }
+      // Detail grid
+      const details = [
         ['หมวดหมู่', item.category],
-        ['สถานะ', `<span class="s-badge s-${st}"><span class="dot"></span>${STATUS[st]||st}</span>`],
-        ['สถานี (เรื่อง)', item.detail_station],
-        ['ฝ่าย (เรื่อง)', item.detail_department],
-        ['แผนก (เรื่อง)', item.detail_section],
-        ['รายละเอียด', item.detail_text],
-        ['สิ่งที่ต้องการแก้ไข', item.fix_text],
-        ['ไม่ระบุตัวตน', item.is_anonymous ? 'ใช่' : 'ไม่'],
-        ['ชื่อผู้ส่ง', item.reporter_name],
-        ['รหัสพนักงาน', item.reporter_employee_id],
-        ['สถานี (ผู้ส่ง)', item.reporter_station],
-        ['ฝ่าย (ผู้ส่ง)', item.reporter_department],
-        ['แผนก (ผู้ส่ง)', item.reporter_section],
-        ['วันที่ส่ง', fmtDate(item.created_at)]
-      ];
+        ['สถานี', item.detail_station],
+        ['ฝ่าย', item.detail_department],
+        ['แผนก', item.detail_section],
+      ].filter(([,v]) => v);
+      if (details.length) {
+        html += '<div class="email-detail-grid">';
+        details.forEach(([l,v]) => {
+          html += `<div class="email-detail-item"><div class="email-detail-label">${l}</div><div class="email-detail-val">${v}</div></div>`;
+        });
+        html += '</div>';
+      }
+      html += '</div>';
 
-      document.getElementById('mBody').innerHTML = rows
-        .filter(([, v]) => v)
-        .map(([l, v]) => `<div class="detail-row"><div class="detail-label">${l}</div><div class="detail-val">${v}</div></div>`)
-        .join('');
+      // ── Status Change ──
+      const statusOpts = [
+        { val: 'pending', label: 'รอดำเนินการ' },
+        { val: 'in_progress', label: 'กำลังดำเนินการ' },
+        { val: 'resolved', label: 'เสร็จสิ้น' },
+        { val: 'closed', label: 'ปิดแล้ว' }
+      ];
+      html += '<div class="modal-section">';
+      html += '<div class="modal-section-title">เปลี่ยนสถานะ</div>';
+      html += '<div style="display:flex;gap:8px;align-items:center">';
+      html += '<select id="mStatusSelect" class="modal-select" style="flex:1">';
+      statusOpts.forEach(o => {
+        html += `<option value="${o.val}"${o.val === st ? ' selected' : ''}>${o.label}</option>`;
+      });
+      html += '</select>';
+      html += `<button class="modal-save-btn" onclick="updateStatus('${id}')">บันทึก</button>`;
+      html += '</div>';
+      html += '<div id="statusMsg" class="modal-save-msg"></div>';
+      html += '</div>';
+
+      // ── Reply Section ──
+      html += '<div class="modal-section">';
+      html += '<div class="modal-section-title">ตอบกลับ / บันทึกการดำเนินการ</div>';
+      html += `<textarea id="mReplyText" class="modal-textarea" placeholder="พิมพ์คำตอบหรือบันทึกการดำเนินการ...">${item.admin_response || ''}</textarea>`;
+      html += '<div style="display:flex;justify-content:flex-end;margin-top:8px">';
+      html += `<button class="modal-save-btn" onclick="saveReply('${id}')">บันทึกคำตอบ</button>`;
+      html += '</div>';
+      html += '<div id="replyMsg" class="modal-save-msg"></div>';
+      html += '</div>';
+
+      document.getElementById('mEmailContent').innerHTML = html;
 
       // Action buttons
       const pinned = isPinned(id);
-      const readStatus = isRead(id);
       document.getElementById('mActions').innerHTML = `
         <button class="m-act-btn ${pinned ? 'active' : ''}" onclick="togglePin('${id}'); updateModalActions('${id}')">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
@@ -1253,10 +1409,67 @@
       `;
 
       document.getElementById('detailModal').classList.add('open');
-
-      // Mark as read
       markAsRead(id);
       render();
+    }
+
+    // Update status in Supabase
+    async function updateStatus(id) {
+      const newStatus = document.getElementById('mStatusSelect').value;
+      const msgEl = document.getElementById('statusMsg');
+      msgEl.textContent = 'กำลังบันทึก...';
+      msgEl.style.color = '#6b7280';
+
+      const client = await waitSB();
+      const { error } = await client
+        .from('vfc_submissions')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (error) {
+        msgEl.textContent = '❌ เกิดข้อผิดพลาด: ' + error.message;
+        msgEl.style.color = '#ef4444';
+        return;
+      }
+
+      // Update local data
+      const item = allData.find(d => String(d.id) === String(id));
+      if (item) item.status = newStatus;
+
+      msgEl.textContent = '✅ บันทึกสถานะเรียบร้อย';
+      msgEl.style.color = '#22c55e';
+      updateStats();
+      applyFilters();
+      renderDashboard();
+      setTimeout(() => { msgEl.textContent = ''; }, 3000);
+    }
+
+    // Save admin reply to Supabase
+    async function saveReply(id) {
+      const text = document.getElementById('mReplyText').value.trim();
+      const msgEl = document.getElementById('replyMsg');
+      msgEl.textContent = 'กำลังบันทึก...';
+      msgEl.style.color = '#6b7280';
+
+      const client = await waitSB();
+      const { error } = await client
+        .from('vfc_submissions')
+        .update({ admin_response: text })
+        .eq('id', id);
+
+      if (error) {
+        msgEl.textContent = '❌ เกิดข้อผิดพลาด: ' + error.message;
+        msgEl.style.color = '#ef4444';
+        return;
+      }
+
+      // Update local data
+      const item = allData.find(d => String(d.id) === String(id));
+      if (item) item.admin_response = text;
+
+      msgEl.textContent = '✅ บันทึกคำตอบเรียบร้อย';
+      msgEl.style.color = '#22c55e';
+      setTimeout(() => { msgEl.textContent = ''; }, 3000);
     }
 
     function updateModalActions(id) {
@@ -1285,8 +1498,26 @@
       fetchData();
     }
 
+    // Notification
+    function updateNotifDot() {
+      const unreadCount = allData.filter(d => !isRead(d.id)).length;
+      const dot = document.getElementById('notifDot');
+      if (dot) dot.style.display = unreadCount > 0 ? 'block' : 'none';
+    }
+    function toggleNotifPanel() {
+      const unreadCount = allData.filter(d => !isRead(d.id)).length;
+      if (unreadCount > 0) {
+        alert('คุณมี ' + unreadCount + ' รายการที่ยังไม่ได้อ่าน');
+      } else {
+        alert('ไม่มีการแจ้งเตือนใหม่');
+      }
+    }
+
     // Init
-    document.addEventListener('DOMContentLoaded', fetchData);
+    document.addEventListener('DOMContentLoaded', async () => {
+      await fetchData();
+      updateNotifDot();
+    });
   </script>
 </body>
 </html>
