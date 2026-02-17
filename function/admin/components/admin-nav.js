@@ -91,7 +91,12 @@ const adminNavStyles = `
         box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.12);
     }
     .menu-item.active {
-        background: rgba(243, 244, 246, 0.9);
+        background: #3b82f6;
+        border-color: #3b82f6;
+        box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.3);
+    }
+    .menu-item.active:hover {
+        box-shadow: 0 8px 25px -5px rgba(59, 130, 246, 0.35);
     }
     .menu-item .icon-wrapper {
         width: 56px;
@@ -158,9 +163,9 @@ function renderDesktopMenu(currentPage) {
         html += `
             <a href="${item.href}" class="menu-item ${isActive ? 'active' : ''}" style="--hover-width: ${item.hoverWidth}">
                 <div class="icon-wrapper">
-                <span class="${isActive ? 'text-blue-500' : item.iconColor}">${item.icon}</span>
+                <span class="${isActive ? 'text-white' : 'text-blue-500'}">${item.icon}</span>
                 </div>
-                <span class="menu-text ${isActive ? 'text-gray-900 font-medium' : 'text-gray-700'}">${item.label}</span>
+                <span class="menu-text ${isActive ? 'text-white font-medium' : 'text-gray-700'}">${item.label}</span>
             </a>
         `;
     });
