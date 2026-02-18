@@ -623,8 +623,13 @@
     .kanban-cards::-webkit-scrollbar-thumb { background: #c1c7d0; border-radius: 4px; }
     .kanban-card {
       background: white; border-radius: 24px; padding: 14px 16px;
-      border: 1px solid #dfe1e6; cursor: pointer;
-      transition: box-shadow 0.15s, border-color 0.15s;
+      border: 1px solid #dfe1e6; cursor: grab;
+      transition: opacity 0.2s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .kanban-card.dragging { opacity: 0.4; cursor: grabbing; }
+    .kanban-col.drag-over .kanban-cards {
+      background: rgba(59,130,246,0.06); border-radius: 16px;
+      outline: 2px dashed #93c5fd; outline-offset: -4px;
     }
     .kanban-card:hover {
       box-shadow: 0 1px 5px rgba(9,30,66,0.15);
@@ -641,20 +646,15 @@
       font-size: 0.75rem; font-weight: 600;
       margin-bottom: 8px;
     }
-    .kanban-card-date { color: #97a0af; font-size: 0.75rem; }
-    .kanban-card-date.date-desktop { display: block; margin-bottom: 6px; }
-    .kanban-card-date.date-mobile { display: none; }
-    .kanban-card-footer { display: none; }
-    .cats-desktop { display: block; }
-    @media (max-width: 640px) {
-      .kanban-card-date.date-desktop { display: none; }
-      .kanban-card-date.date-mobile { display: block; }
-      .cats-desktop { display: none; }
-      .kanban-card-footer {
-        display: flex; align-items: flex-end; justify-content: space-between;
-        font-size: 0.6875rem; color: #5e6c84; margin-top: 8px;
-      }
+    .kanban-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.6875rem; color: #5e6c84;
     }
+    .kanban-card-trk {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 0.6875rem; color: #6366f1;
+    }
+    .kanban-card-date { color: #97a0af; font-size: 0.75rem; }
     .kanban-empty {
       text-align: center; padding: 24px 12px;
       color: #b3bac5; font-size: 0.75rem;
@@ -1594,25 +1594,78 @@
               suggestion: 'background:#fef9c3;color:#ca8a04'
             };
             const catStyle = catColors[r.type] || 'background:#f3f4f6;color:#6b7280';
-            html += `<div class="kanban-card" onclick="openDetail('${r.id}')">`;
+            html += `<div class="kanban-card" draggable="true" data-id="${r.id}" onclick="openDetail('${r.id}')">`;
             html += `<div class="kanban-card-title">${r.subject || 'ไม่มีหัวข้อ'}</div>`;
-            html += `<div class="kanban-card-date date-desktop">${fmtDate(r.created_at).split(' ')[0]}</div>`;
-            html += `<div class="cats-desktop">`;
+            html += `<div class="kanban-card-date" style="margin-bottom:6px">${fmtDate(r.created_at).split(' ')[0]}</div>`;
             html += `<span class="kanban-card-cat" style="${catStyle}">${tp.th}</span>`;
             if (r.category) html += ` <span class="kanban-card-cat" style="background:#e0e7ff;color:#4338ca">${catTh(r.category)}</span>`;
             html += `</div>`;
-            html += `<div class="kanban-card-footer">`;
-            html += `<div>`;
-            html += `<span class="kanban-card-cat" style="${catStyle}">${tp.th}</span>`;
-            if (r.category) html += ` <span class="kanban-card-cat" style="background:#e0e7ff;color:#4338ca">${catTh(r.category)}</span>`;
-            html += `</div>`;
-            html += `<span class="kanban-card-date date-mobile">${fmtDate(r.created_at).split(' ')[0]}</span>`;
-            html += `</div></div>`;
           });
         }
         html += `</div></div>`;
       });
       board.innerHTML = html;
+      initDragAndDrop();
+    }
+
+    // ── Drag & Drop ──
+    function initDragAndDrop() {
+      const cards = document.querySelectorAll('.kanban-card[draggable]');
+      const cols = document.querySelectorAll('.kanban-col');
+
+      cards.forEach(card => {
+        card.addEventListener('dragstart', e => {
+          card.classList.add('dragging');
+          e.dataTransfer.setData('text/plain', card.dataset.id);
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        card.addEventListener('dragend', () => {
+          card.classList.remove('dragging');
+          cols.forEach(c => c.classList.remove('drag-over'));
+        });
+      });
+
+      cols.forEach(col => {
+        col.addEventListener('dragover', e => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          col.classList.add('drag-over');
+        });
+        col.addEventListener('dragleave', e => {
+          if (!col.contains(e.relatedTarget)) col.classList.remove('drag-over');
+        });
+        col.addEventListener('drop', async e => {
+          e.preventDefault();
+          col.classList.remove('drag-over');
+          const itemId = e.dataTransfer.getData('text/plain');
+          const newStatus = col.dataset.status;
+          const item = allData.find(d => String(d.id) === String(itemId));
+          if (!item || item.status === newStatus) return;
+
+          // Optimistic update
+          const oldStatus = item.status;
+          item.status = newStatus;
+          updateStats(); applyFilters(); renderBoard(); renderDashboard();
+
+          // Save to Supabase
+          try {
+            const client = await waitSB();
+            const { error } = await client
+              .from('vfc_submissions')
+              .update({ status: newStatus })
+              .eq('id', itemId);
+            if (error) {
+              item.status = oldStatus;
+              updateStats(); applyFilters(); renderBoard(); renderDashboard();
+              alert('❌ บันทึกไม่สำเร็จ: ' + error.message);
+            }
+          } catch (err) {
+            item.status = oldStatus;
+            updateStats(); applyFilters(); renderBoard(); renderDashboard();
+            alert('❌ เกิดข้อผิดพลาด: ' + err.message);
+          }
+        });
+      });
     }
 
     // Read status (localStorage)
