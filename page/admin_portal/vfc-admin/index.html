@@ -576,8 +576,8 @@
       .board-filter-bar { display: flex; }
     }
     .board-filter-pill {
-      flex-shrink: 0; padding: 7px 14px; border-radius: 9999px;
-      font-size: 0.72rem; font-weight: 600; cursor: pointer;
+      flex-shrink: 0; padding: 10px 18px; border-radius: 9999px;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
       border: 1.5px solid #e5e7eb; background: white; color: #6b7280;
       transition: all 0.15s; white-space: nowrap;
     }
@@ -641,15 +641,20 @@
       font-size: 0.75rem; font-weight: 600;
       margin-bottom: 8px;
     }
-    .kanban-card-footer {
-      display: flex; align-items: center; justify-content: space-between;
-      font-size: 0.6875rem; color: #5e6c84;
-    }
-    .kanban-card-trk {
-      font-family: 'SF Mono','Fira Code',monospace;
-      font-size: 0.6875rem; color: #6366f1;
-    }
     .kanban-card-date { color: #97a0af; font-size: 0.75rem; }
+    .kanban-card-date.date-desktop { display: block; margin-bottom: 6px; }
+    .kanban-card-date.date-mobile { display: none; }
+    .kanban-card-footer { display: none; }
+    .cats-desktop { display: block; }
+    @media (max-width: 640px) {
+      .kanban-card-date.date-desktop { display: none; }
+      .kanban-card-date.date-mobile { display: block; }
+      .cats-desktop { display: none; }
+      .kanban-card-footer {
+        display: flex; align-items: flex-end; justify-content: space-between;
+        font-size: 0.6875rem; color: #5e6c84; margin-top: 8px;
+      }
+    }
     .kanban-empty {
       text-align: center; padding: 24px 12px;
       color: #b3bac5; font-size: 0.75rem;
@@ -1591,10 +1596,18 @@
             const catStyle = catColors[r.type] || 'background:#f3f4f6;color:#6b7280';
             html += `<div class="kanban-card" onclick="openDetail('${r.id}')">`;
             html += `<div class="kanban-card-title">${r.subject || 'ไม่มีหัวข้อ'}</div>`;
-            html += `<div class="kanban-card-date" style="margin-bottom:6px">${fmtDate(r.created_at).split(' ')[0]}</div>`;
+            html += `<div class="kanban-card-date date-desktop">${fmtDate(r.created_at).split(' ')[0]}</div>`;
+            html += `<div class="cats-desktop">`;
             html += `<span class="kanban-card-cat" style="${catStyle}">${tp.th}</span>`;
             if (r.category) html += ` <span class="kanban-card-cat" style="background:#e0e7ff;color:#4338ca">${catTh(r.category)}</span>`;
             html += `</div>`;
+            html += `<div class="kanban-card-footer">`;
+            html += `<div>`;
+            html += `<span class="kanban-card-cat" style="${catStyle}">${tp.th}</span>`;
+            if (r.category) html += ` <span class="kanban-card-cat" style="background:#e0e7ff;color:#4338ca">${catTh(r.category)}</span>`;
+            html += `</div>`;
+            html += `<span class="kanban-card-date date-mobile">${fmtDate(r.created_at).split(' ')[0]}</span>`;
+            html += `</div></div>`;
           });
         }
         html += `</div></div>`;
