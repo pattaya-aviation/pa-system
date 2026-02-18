@@ -122,10 +122,12 @@
     .s-pending .dot { background: #f59e0b; }
     .s-in_progress { background: #eff6ff; color: #2563eb; }
     .s-in_progress .dot { background: #3b82f6; }
+    .s-investigating { background: #fef3c7; color: #b45309; }
+    .s-investigating .dot { background: #f97316; }
+    .s-follow_up { background: #f0f9ff; color: #0369a1; }
+    .s-follow_up .dot { background: #0ea5e9; }
     .s-resolved { background: #f0fdf4; color: #16a34a; }
     .s-resolved .dot { background: #22c55e; }
-    .s-closed { background: #f3f4f6; color: #6b7280; }
-    .s-closed .dot { background: #9ca3af; }
 
     /* Tracking */
     .trk { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.75rem; color: #6366f1; font-weight: 500; }
@@ -218,41 +220,48 @@
       padding: 16px; opacity: 0; visibility: hidden; transition: all 0.25s;
     }
     .modal-overlay.open { opacity: 1; visibility: visible; }
-    .modal-box {
-      background: white; width: 100%; max-width: 640px;
+
+    /* Wrap: flex container for pill rail + modal-box */
+    .modal-wrap {
+      display: flex; align-items: stretch;
+      width: 100%; max-width: 640px;
       max-height: 88vh; height: auto;
-      border-radius: 20px; overflow-y: auto;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.18);
       transform: scale(0.96); opacity: 0;
       transition: transform 0.25s cubic-bezier(0.32,0.72,0,1), opacity 0.25s;
+    }
+    .modal-overlay.open .modal-wrap { transform: scale(1); opacity: 1; }
+
+    .modal-box {
+      background: white; flex: 1; min-width: 0;
+      border-radius: 20px; overflow: hidden;
+      display: flex; flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.18);
       scrollbar-width: none; -ms-overflow-style: none;
     }
     @media (min-width: 768px) {
       .modal-overlay { align-items: center; padding: 24px; }
-      .modal-box {
+      .modal-wrap {
         max-width: 100%; height: 90vh;
-        border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.18);
       }
     }
     .modal-box::-webkit-scrollbar { display: none; }
-    .modal-overlay.open .modal-box { transform: scale(1); opacity: 1; }
 
     /* ── Modal inner layout ── */
-    .m-inner { display: flex; flex-direction: column; height: 100%; }
+    .m-inner { display: flex; flex-direction: column; flex: 1; overflow-y: auto; }
     @media (min-width: 768px) {
-      .m-inner { flex-direction: row; }
+      .m-inner { flex-direction: row; overflow: hidden; }
     }
 
     /* Left: content */
-    .m-content { flex: 1; overflow-y: auto; padding: 24px; }
+    .m-content { padding: 24px; flex-shrink: 0; }
     @media (min-width: 768px) {
-      .m-content { padding: 32px; }
+      .m-content { flex: 1; overflow-y: auto; padding: 32px; flex-shrink: 1; }
     }
 
     /* Right: sidebar actions */
     .m-sidebar {
       border-top: 1px solid #f3f4f6; padding: 20px 24px;
-      background: #f9fafb;
+      background: #f9fafb; flex-shrink: 0;
     }
     @media (min-width: 768px) {
       .m-sidebar {
@@ -262,59 +271,171 @@
       }
     }
 
-    /* Close button */
-    .m-close {
-      position: absolute; top: 16px; right: 16px;
-      width: 36px; height: 36px; border-radius: 999px; border: none;
-      background: #f3f4f6; cursor: pointer; z-index: 5;
-      display: flex; align-items: center; justify-content: center;
-      color: #6b7280; transition: all 0.15s;
+    /* ── Vertical pill rail (left edge) ── */
+    .m-dot-rail {
+      width: 130px; flex-shrink: 0;
+      display: none; flex-direction: column; gap: 6px;
+      padding: 12px 10px 12px 0;
     }
-    .m-close:hover { background: #e5e7eb; color: #111827; }
+    @media (min-width: 768px) {
+      .m-dot-rail { display: flex; }
+    }
+    .m-dot {
+      display: flex; align-items: center; gap: 4px;
+      padding: 8px 10px 8px 14px; border-radius: 12px;
+      background: #d1d5db; color: #6b7280;
+      font-size: 0.7rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      border: none; text-align: left;
+    }
+    .m-dot:hover {
+      background: #e5e7eb; color: #374151;
+      transform: translateX(2px);
+    }
+    .m-dot.active {
+      background: #3b82f6; color: white;
+      box-shadow: 0 2px 10px rgba(59,130,246,0.35);
+      transform: translateX(4px);
+    }
+    .m-dot-label {
+      flex: 1; min-width: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .m-dot-x {
+      width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; color: #9ca3af; cursor: pointer;
+      background: transparent; border: none;
+      transition: all 0.1s; opacity: 0;
+    }
+    .m-dot:hover .m-dot-x { opacity: 1; }
+    .m-dot.active .m-dot-x { color: rgba(255,255,255,0.6); }
+    .m-dot-x:hover { background: rgba(0,0,0,0.12); color: #ef4444; }
+
+    /* ── Window controls (top-right circles) ── */
+    .m-win-ctrl {
+      position: absolute; top: 12px; right: 16px;
+      display: flex; gap: 8px; z-index: 10;
+    }
+    .m-win-btn {
+      width: 14px; height: 14px; border-radius: 50%; border: none;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .m-win-min {
+      background: #f59e0b;
+    }
+    .m-win-min:hover { background: #d97706; transform: scale(1.15); }
+    .m-win-close {
+      background: #ef4444;
+    }
+    .m-win-close:hover { background: #dc2626; transform: scale(1.15); }
+
+    /* Minimized dock */
+    .m-dock {
+      position: fixed; right: 16px; bottom: 80px; z-index: 99;
+      display: flex; flex-direction: column-reverse; gap: 10px;
+    }
+    .m-dock-item {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 0.875rem;
+      cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      transition: all 0.2s; position: relative;
+      animation: dockPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .m-dock-item:hover { transform: scale(1.12); box-shadow: 0 6px 24px rgba(0,0,0,0.25); }
+    .m-dock-badge {
+      position: absolute; top: -2px; right: -2px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #ef4444; border: 2px solid white;
+    }
+    .m-dock-tooltip {
+      position: absolute; right: 58px; top: 50%; transform: translateY(-50%);
+      background: #1f2937; color: white; font-size: 0.6875rem;
+      padding: 4px 10px; border-radius: 6px; white-space: nowrap;
+      opacity: 0; pointer-events: none; transition: opacity 0.15s;
+    }
+    .m-dock-item:hover .m-dock-tooltip { opacity: 1; }
+    @keyframes dockPop {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
 
     /* Top meta bar */
-    .m-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; font-size: 0.75rem; color: #9ca3af; }
+    .m-meta {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding-bottom: 16px; margin-bottom: 20px;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 0.75rem; color: #9ca3af;
+    }
 
     /* Subject */
-    .m-subject { font-size: 1.375rem; font-weight: 700; color: #111827; line-height: 1.4; margin-bottom: 16px; }
+    .m-subject {
+      font-size: 1.5rem; font-weight: 800; color: #111827;
+      line-height: 1.35; margin-bottom: 20px; letter-spacing: -0.01em;
+    }
 
-    /* Sender card */
+    /* Sender row */
     .m-sender-card {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 16px; background: #f3f4f6; border-radius: 14px;
-      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 14px;
+      padding-bottom: 20px; margin-bottom: 20px;
+      border-bottom: 1px solid #f3f4f6;
     }
     .m-avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: linear-gradient(135deg, #a78bfa, #7c3aed);
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, #818cf8, #6366f1);
       display: flex; align-items: center; justify-content: center;
-      color: white; font-weight: 700; font-size: 0.875rem; flex-shrink: 0;
+      color: white; font-weight: 700; font-size: 1rem; flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(99,102,241,0.25);
     }
-    .m-sender-name { font-size: 0.875rem; font-weight: 600; color: #111827; }
-    .m-sender-sub { font-size: 0.75rem; color: #6b7280; margin-top: 1px; }
+    .m-sender-name { font-size: 0.9375rem; font-weight: 600; color: #111827; }
+    .m-sender-sub { font-size: 0.75rem; color: #9ca3af; margin-top: 2px; }
+
+    /* Section label */
+    .m-label {
+      font-size: 0.6875rem; font-weight: 600; color: #9ca3af;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
 
     /* Body text */
     .m-body {
-      font-size: 0.9375rem; color: #374151; line-height: 1.8;
+      font-size: 0.9375rem; color: #374151; line-height: 1.85;
       white-space: pre-wrap; word-break: break-word;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     /* Fix text callout */
     .m-fix {
-      padding: 12px 16px; background: #fef3c7; border-radius: 12px;
-      font-size: 0.8125rem; color: #92400e; margin-bottom: 16px;
-      border-left: 3px solid #f59e0b;
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 14px 16px; background: #fffbeb; border-radius: 14px;
+      font-size: 0.8125rem; color: #92400e; margin-bottom: 20px;
+      border: 1px solid #fde68a;
+    }
+    .m-fix-icon {
+      width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
     }
 
-    /* Info chips */
-    .m-info-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-    .m-chip {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 5px 12px; background: #f3f4f6; border-radius: 999px;
-      font-size: 0.6875rem; color: #6b7280;
+    /* Info table */
+    .m-info-table {
+      width: 100%; border-radius: 14px; overflow: hidden;
+      border: 1px solid #f3f4f6; margin-bottom: 8px;
     }
-    .m-chip b { color: #374151; font-weight: 600; }
+    .m-info-row-item {
+      display: flex; border-bottom: 1px solid #f3f4f6;
+    }
+    .m-info-row-item:last-child { border-bottom: none; }
+    .m-info-label {
+      width: 100px; flex-shrink: 0; padding: 10px 14px;
+      font-size: 0.6875rem; font-weight: 600; color: #9ca3af;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      background: #fafafa;
+    }
+    .m-info-val {
+      flex: 1; padding: 10px 14px;
+      font-size: 0.8125rem; color: #111827; font-weight: 500;
+    }
 
     /* Sidebar section */
     .m-sb-section { margin-bottom: 20px; }
@@ -425,7 +546,7 @@
 
     /* Kanban Board */
     .kanban-wrap {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
       min-height: calc(100vh - 200px); align-items: start;
     }
     @media (max-width: 1024px) {
@@ -452,8 +573,9 @@
     }
     .kanban-col[data-status="pending"] .kanban-col-head { border-bottom-color: #f59e0b; }
     .kanban-col[data-status="in_progress"] .kanban-col-head { border-bottom-color: #3b82f6; }
+    .kanban-col[data-status="investigating"] .kanban-col-head { border-bottom-color: #f97316; }
+    .kanban-col[data-status="follow_up"] .kanban-col-head { border-bottom-color: #0ea5e9; }
     .kanban-col[data-status="resolved"] .kanban-col-head { border-bottom-color: #22c55e; }
-    .kanban-col[data-status="closed"] .kanban-col-head { border-bottom-color: #9ca3af; }
     .kanban-cards {
       padding: 8px; overflow-y: auto; flex: 1;
       display: flex; flex-direction: column; gap: 8px;
@@ -675,7 +797,7 @@
     <div id="contentInbox" class="tab-content">
 
     <!-- Stats -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
       <div class="stat-card">
         <div class="stat-icon bg-indigo-50">
           <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -693,6 +815,18 @@
           <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </div>
         <div><div class="stat-val" id="sProgress">-</div><div class="stat-lbl">กำลังดำเนินการ</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#fef3c7">
+          <svg class="w-5 h-5" style="color:#f97316" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+        <div><div class="stat-val" id="sInvestigating">-</div><div class="stat-lbl">กำลังตรวจสอบ</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#f0f9ff">
+          <svg class="w-5 h-5" style="color:#0ea5e9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        </div>
+        <div><div class="stat-val" id="sFollowUp">-</div><div class="stat-lbl">ติดตามผล</div></div>
       </div>
       <div class="stat-card">
         <div class="stat-icon bg-green-50">
@@ -738,8 +872,9 @@
             <option value="">ทุกสถานะ</option>
             <option value="pending">รอดำเนินการ</option>
             <option value="in_progress">กำลังดำเนินการ</option>
+            <option value="investigating">กำลังตรวจสอบ</option>
+            <option value="follow_up">ติดตามผล</option>
             <option value="resolved">เสร็จสิ้น</option>
-            <option value="closed">ปิดแล้ว</option>
           </select>
           <div class="flex items-center gap-1.5">
             <input type="date" id="fDateFrom" onchange="applyFilters()" class="f-select" title="ตั้งแต่วันที่">
@@ -797,17 +932,28 @@
 
   </div><!-- /admin-content -->
   <!-- Detail Modal -->
-  <div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
-    <div class="modal-box" style="position:relative">
-      <button onclick="closeModal()" class="m-close">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-      <div class="m-inner">
-        <div class="m-content" id="mContent"></div>
-        <div class="m-sidebar" id="mSidebar"></div>
+  <div id="detailModal" class="modal-overlay" onclick="if(event.target===this)minimizeActiveTab()">
+    <div class="modal-wrap">
+      <!-- Vertical pill tabs on the left -->
+      <div class="m-dot-rail" id="mDotRail"></div>
+      <!-- Modal box -->
+      <div class="modal-box" style="position:relative">
+        <!-- Window controls top-right -->
+        <div class="m-win-ctrl">
+          <button onclick="minimizeActiveTab()" class="m-win-btn m-win-min" title="ย่อ"></button>
+          <button onclick="closeActiveTab()" class="m-win-btn m-win-close" title="ปิด"></button>
+        </div>
+        <!-- Content area -->
+        <div class="m-inner">
+          <div class="m-content" id="mContent"></div>
+          <div class="m-sidebar" id="mSidebar"></div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Minimized dock -->
+  <div class="m-dock" id="mDock"></div>
 
   <script>
     // ========================================
@@ -1126,10 +1272,11 @@
     // Kanban board render
     function renderBoard() {
       const cols = [
-        { key: 'pending',     label: 'รอดำเนินการ' },
-        { key: 'in_progress', label: 'กำลังดำเนินการ' },
-        { key: 'resolved',    label: 'เสร็จสิ้น' },
-        { key: 'closed',      label: 'ปิดแล้ว' }
+        { key: 'pending',       label: 'รอดำเนินการ' },
+        { key: 'in_progress',   label: 'กำลังดำเนินการ' },
+        { key: 'investigating', label: 'กำลังตรวจสอบ' },
+        { key: 'follow_up',     label: 'ติดตามผล' },
+        { key: 'resolved',      label: 'เสร็จสิ้น' }
       ];
       const board = document.getElementById('kanbanBoard');
       let html = '';
@@ -1225,10 +1372,11 @@
       suggestion: { th: 'เสนอแนะ',   cls: 'b-suggestion' }
     };
     const STATUS = {
-      pending:     'รอดำเนินการ',
-      in_progress: 'กำลังดำเนินการ',
-      resolved:    'เสร็จสิ้น',
-      closed:      'ปิดแล้ว'
+      pending:       'รอดำเนินการ',
+      in_progress:   'กำลังดำเนินการ',
+      investigating: 'กำลังตรวจสอบ',
+      follow_up:     'ติดตามผล',
+      resolved:      'เสร็จสิ้น'
     };
 
     // Format date → DD/MM/YYYY HH:MM
@@ -1286,10 +1434,12 @@
 
     // Stats
     function updateStats() {
-      document.getElementById('sTotal').textContent    = allData.length;
-      document.getElementById('sPending').textContent   = allData.filter(d => d.status === 'pending').length;
-      document.getElementById('sProgress').textContent  = allData.filter(d => d.status === 'in_progress').length;
-      document.getElementById('sResolved').textContent  = allData.filter(d => d.status === 'resolved' || d.status === 'closed').length;
+      document.getElementById('sTotal').textContent         = allData.length;
+      document.getElementById('sPending').textContent       = allData.filter(d => d.status === 'pending').length;
+      document.getElementById('sProgress').textContent      = allData.filter(d => d.status === 'in_progress').length;
+      document.getElementById('sInvestigating').textContent = allData.filter(d => d.status === 'investigating').length;
+      document.getElementById('sFollowUp').textContent      = allData.filter(d => d.status === 'follow_up').length;
+      document.getElementById('sResolved').textContent      = allData.filter(d => d.status === 'resolved').length;
     }
 
     // Filter
@@ -1404,8 +1554,63 @@
       page = p; render();
     }
 
-    // Detail modal
-    function openDetail(id) {
+    // ========================================
+    // Tab-based Modal System
+    // ========================================
+    const openTabs = []; // { id, minimized }
+    let activeTabId = null;
+
+    const TAB_COLORS = {
+      complaint: { bg: 'linear-gradient(135deg,#f87171,#ef4444)', dot: '#ef4444' },
+      suggestion: { bg: 'linear-gradient(135deg,#60a5fa,#3b82f6)', dot: '#3b82f6' },
+      compliment: { bg: 'linear-gradient(135deg,#34d399,#10b981)', dot: '#10b981' },
+    };
+
+    function getTabColor(type) { return TAB_COLORS[type] || { bg: 'linear-gradient(135deg,#9ca3af,#6b7280)', dot: '#6b7280' }; }
+
+    // ── Render pill rail (vertical tab pills) ──
+    function renderTabBar() {
+      const rail = document.getElementById('mDotRail');
+      const visibleTabs = openTabs.filter(t => !t.minimized);
+      let h = '';
+      visibleTabs.forEach(tab => {
+        const item = allData.find(d => String(d.id) === String(tab.id));
+        if (!item) return;
+        const tp = TYPES[item.type] || { th: item.type };
+        const isActive = tab.id === activeTabId;
+        const label = (item.subject || tp.th || 'รายการ').substring(0, 14);
+        h += `<div class="m-dot ${isActive ? 'active' : ''}" onclick="switchModalTab('${tab.id}')">`;
+        h += `<span class="m-dot-label">${label}</span>`;
+        h += `<button class="m-dot-x" onclick="event.stopPropagation(); closeTab('${tab.id}')">✕</button>`;
+        h += `</div>`;
+      });
+      rail.innerHTML = h;
+    }
+
+    // ── Render minimized dock ──
+    function renderDock() {
+      const dock = document.getElementById('mDock');
+      const minimized = openTabs.filter(t => t.minimized);
+      if (!minimized.length) { dock.innerHTML = ''; return; }
+
+      let h = '';
+      minimized.forEach(tab => {
+        const item = allData.find(d => String(d.id) === String(tab.id));
+        if (!item) return;
+        const tp = TYPES[item.type] || { th: item.type };
+        const tc = getTabColor(item.type);
+        const initials = item.is_anonymous ? '?' : ((item.reporter_name || item.subject || '?').charAt(0));
+        const label = (item.subject || tp.th || 'รายการ').substring(0, 30);
+        h += `<div class="m-dock-item" style="background:${tc.bg}" onclick="restoreTab('${tab.id}')">`;
+        h += initials;
+        h += `<span class="m-dock-tooltip">${label}</span>`;
+        h += `</div>`;
+      });
+      dock.innerHTML = h;
+    }
+
+    // ── Render content for a tab ──
+    function renderTabContent(id) {
       const item = allData.find(d => String(d.id) === String(id));
       if (!item) return;
 
@@ -1416,62 +1621,53 @@
       const initials = item.is_anonymous ? '?' : (senderName.charAt(0) || '?');
       const senderSub = [item.reporter_employee_id, item.reporter_station, item.reporter_department].filter(Boolean).join(' · ');
 
-      // ── Left: Content ──
+      // ── Left content ──
       let left = '';
-
-      // Meta badges
       left += '<div class="m-meta">';
       left += `<span class="badge ${tp.cls}">${tp.th}</span>`;
       left += `<span class="s-badge s-${st}"><span class="dot"></span>${STATUS[st]||st}</span>`;
       left += `<span class="trk">${item.tracking_number || ''}</span>`;
       left += `<span style="margin-left:auto">${fmtDate(item.created_at)}</span>`;
       left += '</div>';
-
-      // Subject
       left += `<div class="m-subject">${subject}</div>`;
-
-      // Sender card
       left += '<div class="m-sender-card">';
       left += `<div class="m-avatar">${initials}</div>`;
       left += '<div>';
       left += `<div class="m-sender-name">${senderName}</div>`;
       left += `<div class="m-sender-sub">${senderSub || 'ไม่ระบุข้อมูลผู้ส่ง'}</div>`;
       left += '</div></div>';
-
-      // Body text
       if (item.detail_text) {
+        left += '<div class="m-label">รายละเอียด</div>';
         left += `<div class="m-body">${item.detail_text}</div>`;
       }
-
-      // Fix text callout
       if (item.fix_text) {
-        left += `<div class="m-fix"><strong>สิ่งที่ต้องการแก้ไข:</strong> ${item.fix_text}</div>`;
-      }
-
-      // Info chips
-      const chips = [
-        ['หมวดหมู่', item.category],
-        ['สถานี', item.detail_station],
-        ['ฝ่าย', item.detail_department],
-        ['แผนก', item.detail_section],
-      ].filter(([,v]) => v);
-      if (chips.length) {
-        left += '<div class="m-info-row">';
-        chips.forEach(([l,v]) => { left += `<span class="m-chip">${l}: <b>${v}</b></span>`; });
+        left += '<div class="m-fix">';
+        left += '<svg class="m-fix-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+        left += `<div><strong>สิ่งที่ต้องการแก้ไข</strong><br>${item.fix_text}</div>`;
         left += '</div>';
       }
-
+      const infoItems = [
+        ['หมวดหมู่', item.category], ['สถานี', item.detail_station],
+        ['ฝ่าย', item.detail_department], ['แผนก', item.detail_section],
+      ].filter(([,v]) => v);
+      if (infoItems.length) {
+        left += '<div class="m-label">ข้อมูลเพิ่มเติม</div>';
+        left += '<div class="m-info-table">';
+        infoItems.forEach(([l,v]) => {
+          left += `<div class="m-info-row-item"><div class="m-info-label">${l}</div><div class="m-info-val">${v}</div></div>`;
+        });
+        left += '</div>';
+      }
       document.getElementById('mContent').innerHTML = left;
 
-      // ── Right: Sidebar ──
+      // ── Right sidebar ──
       let right = '';
-
-      // Status
       const statusOpts = [
         { val: 'pending', label: 'รอดำเนินการ' },
         { val: 'in_progress', label: 'กำลังดำเนินการ' },
-        { val: 'resolved', label: 'เสร็จสิ้น' },
-        { val: 'closed', label: 'ปิดแล้ว' }
+        { val: 'investigating', label: 'กำลังตรวจสอบ' },
+        { val: 'follow_up', label: 'ติดตามผล' },
+        { val: 'resolved', label: 'เสร็จสิ้น' }
       ];
       right += '<div class="m-sb-section">';
       right += '<div class="m-sb-label">สถานะ</div>';
@@ -1484,7 +1680,6 @@
       right += '<div id="statusMsg" class="m-sb-msg"></div>';
       right += '</div>';
 
-      // Reply
       right += '<div class="m-sb-section">';
       right += '<div class="m-sb-label">ตอบกลับ</div>';
       right += `<textarea id="mReplyText" class="m-sb-textarea" placeholder="พิมพ์คำตอบหรือบันทึกการดำเนินการ...">${item.admin_response || ''}</textarea>`;
@@ -1492,22 +1687,114 @@
       right += '<div id="replyMsg" class="m-sb-msg"></div>';
       right += '</div>';
 
-      // Quick actions
       const pinned = isPinned(id);
       right += '<div class="m-sb-actions">';
-      right += `<button class="m-act-btn2" onclick="togglePin('${id}'); closeModal(); render()">`;
+      right += `<button class="m-act-btn2" onclick="togglePin('${id}'); render()">`;
       right += `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>`;
       right += `${pinned ? 'เลิกปักมุด' : 'ปักมุด'}</button>`;
-      right += `<button class="m-act-btn2" onclick="markAsUnread('${id}'); closeModal(); render()">`;
+      right += `<button class="m-act-btn2" onclick="markAsUnread('${id}'); closeTab('${id}'); render()">`;
       right += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>';
       right += 'ยังไม่อ่าน</button>';
       right += '</div>';
-
       document.getElementById('mSidebar').innerHTML = right;
+    }
 
+    // ── Open detail (add or switch tab) ──
+    function openDetail(id) {
+      const sid = String(id);
+      const existing = openTabs.find(t => t.id === sid);
+      if (existing) {
+        existing.minimized = false;
+        activeTabId = sid;
+      } else {
+        openTabs.push({ id: sid, minimized: false });
+        activeTabId = sid;
+      }
+
+      // Restore all minimized tabs so they show in the tab bar
+      openTabs.forEach(t => t.minimized = false);
+
+      renderTabContent(activeTabId);
+      renderTabBar();
+      renderDock();
       document.getElementById('detailModal').classList.add('open');
       markAsRead(id);
       render();
+    }
+
+    // ── Switch modal tab ──
+    function switchModalTab(id) {
+      activeTabId = String(id);
+      renderTabContent(activeTabId);
+      renderTabBar();
+    }
+
+    // ── Close tab ──
+    function closeTab(id) {
+      const idx = openTabs.findIndex(t => t.id === String(id));
+      if (idx === -1) return;
+      openTabs.splice(idx, 1);
+
+      if (openTabs.length === 0) {
+        activeTabId = null;
+        document.getElementById('detailModal').classList.remove('open');
+      } else {
+        // Switch to nearest visible tab
+        const visible = openTabs.filter(t => !t.minimized);
+        if (visible.length) {
+          activeTabId = visible[visible.length - 1].id;
+          renderTabContent(activeTabId);
+          renderTabBar();
+        } else {
+          activeTabId = null;
+          document.getElementById('detailModal').classList.remove('open');
+        }
+      }
+      renderTabBar();
+      renderDock();
+    }
+
+    function closeActiveTab() {
+      if (activeTabId) closeTab(activeTabId);
+    }
+
+    // ── Minimize ──
+    function minimizeActiveTab() {
+      if (!activeTabId) return;
+      const tab = openTabs.find(t => t.id === activeTabId);
+      if (tab) tab.minimized = true;
+
+      // Find next visible tab
+      const visible = openTabs.filter(t => !t.minimized);
+      if (visible.length) {
+        activeTabId = visible[visible.length - 1].id;
+        renderTabContent(activeTabId);
+        renderTabBar();
+      } else {
+        activeTabId = null;
+        document.getElementById('detailModal').classList.remove('open');
+      }
+      renderTabBar();
+      renderDock();
+    }
+
+    // ── Restore from dock ──
+    function restoreTab(id) {
+      const tab = openTabs.find(t => t.id === String(id));
+      if (!tab) return;
+      tab.minimized = false;
+      activeTabId = String(id);
+
+      renderTabContent(activeTabId);
+      renderTabBar();
+      renderDock();
+      document.getElementById('detailModal').classList.add('open');
+    }
+
+    // ── Close modal (legacy) ──
+    function closeModal() {
+      if (activeTabId) minimizeActiveTab();
+      else document.getElementById('detailModal').classList.remove('open');
     }
 
     // Status pill selector
@@ -1536,7 +1823,6 @@
         return;
       }
 
-      // Update local data
       const item = allData.find(d => String(d.id) === String(id));
       if (item) item.status = newStatus;
 
@@ -1567,7 +1853,6 @@
         return;
       }
 
-      // Update local data
       const item = allData.find(d => String(d.id) === String(id));
       if (item) item.admin_response = text;
 
@@ -1576,14 +1861,8 @@
       setTimeout(() => { msgEl.textContent = ''; }, 3000);
     }
 
-
-
-    function closeModal() {
-      document.getElementById('detailModal').classList.remove('open');
-    }
-
     // Keyboard
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') minimizeActiveTab(); });
 
     // Refresh
     function refreshData() {
