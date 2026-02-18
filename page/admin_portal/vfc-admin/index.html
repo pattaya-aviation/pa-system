@@ -219,96 +219,155 @@
     }
     .modal-overlay.open { opacity: 1; visibility: visible; }
     .modal-box {
-      background: white; border-radius: 16px; width: 100%; max-width: 900px;
-      max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.18);
-      transform: translateY(20px); transition: transform 0.25s;
+      background: white; width: 100%; max-width: 640px;
+      max-height: 88vh; height: auto;
+      border-radius: 20px; overflow-y: auto;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+      transform: scale(0.96); opacity: 0;
+      transition: transform 0.25s cubic-bezier(0.32,0.72,0,1), opacity 0.25s;
       scrollbar-width: none; -ms-overflow-style: none;
     }
+    @media (min-width: 768px) {
+      .modal-overlay { align-items: center; padding: 24px; }
+      .modal-box {
+        max-width: 100%; height: 90vh;
+        border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.18);
+      }
+    }
     .modal-box::-webkit-scrollbar { display: none; }
-    .modal-overlay.open .modal-box { transform: translateY(0); }
+    .modal-overlay.open .modal-box { transform: scale(1); opacity: 1; }
 
-    /* Email-style header */
-    .email-header {
-      padding: 20px 28px 16px; border-bottom: 1px solid #f3f4f6;
+    /* ── Modal inner layout ── */
+    .m-inner { display: flex; flex-direction: column; height: 100%; }
+    @media (min-width: 768px) {
+      .m-inner { flex-direction: row; }
     }
-    .email-subject {
-      font-size: 1.125rem; font-weight: 700; color: #111827;
-      margin-bottom: 4px; line-height: 1.4;
+
+    /* Left: content */
+    .m-content { flex: 1; overflow-y: auto; padding: 24px; }
+    @media (min-width: 768px) {
+      .m-content { padding: 32px; }
     }
-    .email-meta-row {
-      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-      margin-top: 8px; font-size: 0.75rem; color: #9ca3af;
+
+    /* Right: sidebar actions */
+    .m-sidebar {
+      border-top: 1px solid #f3f4f6; padding: 20px 24px;
+      background: #f9fafb;
     }
-    .email-close {
-      position: absolute; top: 18px; right: 20px;
-      width: 32px; height: 32px; border-radius: 8px; border: none;
-      background: transparent; cursor: pointer;
+    @media (min-width: 768px) {
+      .m-sidebar {
+        width: 40%; flex-shrink: 0; border-top: none;
+        border-left: 1px solid #f3f4f6; overflow-y: auto;
+        border-radius: 0 20px 20px 0;
+      }
+    }
+
+    /* Close button */
+    .m-close {
+      position: absolute; top: 16px; right: 16px;
+      width: 36px; height: 36px; border-radius: 999px; border: none;
+      background: #f3f4f6; cursor: pointer; z-index: 5;
       display: flex; align-items: center; justify-content: center;
-      color: #9ca3af; transition: all 0.15s;
+      color: #6b7280; transition: all 0.15s;
     }
-    .email-close:hover { background: #f3f4f6; color: #374151; }
+    .m-close:hover { background: #e5e7eb; color: #111827; }
 
-    /* Sender info */
-    .email-sender {
-      padding: 14px 28px; display: flex; align-items: center; gap: 12px;
-      border-bottom: 1px solid #f3f4f6;
+    /* Top meta bar */
+    .m-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; font-size: 0.75rem; color: #9ca3af; }
+
+    /* Subject */
+    .m-subject { font-size: 1.375rem; font-weight: 700; color: #111827; line-height: 1.4; margin-bottom: 16px; }
+
+    /* Sender card */
+    .m-sender-card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px; background: #f3f4f6; border-radius: 14px;
+      margin-bottom: 20px;
     }
-    .email-avatar {
+    .m-avatar {
       width: 40px; height: 40px; border-radius: 50%;
       background: linear-gradient(135deg, #a78bfa, #7c3aed);
       display: flex; align-items: center; justify-content: center;
       color: white; font-weight: 700; font-size: 0.875rem; flex-shrink: 0;
     }
-    .email-sender-name { font-size: 0.8125rem; font-weight: 600; color: #111827; }
-    .email-sender-detail { font-size: 0.6875rem; color: #9ca3af; }
+    .m-sender-name { font-size: 0.875rem; font-weight: 600; color: #111827; }
+    .m-sender-sub { font-size: 0.75rem; color: #6b7280; margin-top: 1px; }
 
-    /* Email body */
-    .email-body { padding: 24px 28px; }
-    .email-content {
-      font-size: 0.875rem; color: #374151; line-height: 1.7;
+    /* Body text */
+    .m-body {
+      font-size: 0.9375rem; color: #374151; line-height: 1.8;
       white-space: pre-wrap; word-break: break-word;
+      margin-bottom: 16px;
     }
-    .email-detail-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-      margin-top: 20px; padding: 16px; background: #f9fafb;
-      border-radius: 12px;
-    }
-    @media (max-width: 600px) { .email-detail-grid { grid-template-columns: 1fr; } }
-    .email-detail-item {}
-    .email-detail-label { font-size: 0.6875rem; color: #9ca3af; font-weight: 500; text-transform: uppercase; letter-spacing: 0.03em; }
-    .email-detail-val { font-size: 0.8125rem; color: #111827; font-weight: 500; margin-top: 2px; }
 
-    /* Modal form controls */
-    .modal-section { padding: 16px 28px; border-top: 1px solid #f3f4f6; }
-    .modal-section-title { font-size: 0.8125rem; font-weight: 600; color: #374151; margin-bottom: 10px; }
-    .modal-select {
-      width: 100%; padding: 8px 12px; border-radius: 10px;
-      border: 1.5px solid #e5e7eb; font-size: 0.8125rem;
-      color: #374151; background: white; outline: none; cursor: pointer;
+    /* Fix text callout */
+    .m-fix {
+      padding: 12px 16px; background: #fef3c7; border-radius: 12px;
+      font-size: 0.8125rem; color: #92400e; margin-bottom: 16px;
+      border-left: 3px solid #f59e0b;
     }
-    .modal-select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-    .modal-textarea {
-      width: 100%; padding: 12px 14px; border-radius: 12px;
+
+    /* Info chips */
+    .m-info-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .m-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 5px 12px; background: #f3f4f6; border-radius: 999px;
+      font-size: 0.6875rem; color: #6b7280;
+    }
+    .m-chip b { color: #374151; font-weight: 600; }
+
+    /* Sidebar section */
+    .m-sb-section { margin-bottom: 20px; }
+    .m-sb-section:last-child { margin-bottom: 0; }
+    .m-sb-label {
+      font-size: 0.6875rem; font-weight: 600; color: #9ca3af;
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;
+    }
+
+    /* Status pills */
+    .m-status-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .m-s-pill {
+      padding: 6px 14px; border-radius: 999px; border: 1.5px solid #e5e7eb;
+      font-size: 0.75rem; font-weight: 500; cursor: pointer;
+      background: white; color: #6b7280; transition: all 0.15s;
+    }
+    .m-s-pill:hover { border-color: #3b82f6; color: #3b82f6; }
+    .m-s-pill.active { background: #3b82f6; border-color: #3b82f6; color: white; }
+
+    /* Sidebar button */
+    .m-sb-btn {
+      width: 100%; padding: 10px; border-radius: 12px; border: none;
+      font-size: 0.8125rem; font-weight: 600; cursor: pointer;
+      transition: all 0.15s; background: #3b82f6; color: white;
+    }
+    .m-sb-btn:hover { background: #2563eb; }
+    .m-sb-btn.outline {
+      background: white; color: #374151; border: 1.5px solid #e5e7eb;
+    }
+    .m-sb-btn.outline:hover { border-color: #3b82f6; color: #3b82f6; }
+
+    /* Sidebar textarea */
+    .m-sb-textarea {
+      width: 100%; padding: 10px 12px; border-radius: 12px;
       border: 1.5px solid #e5e7eb; font-size: 0.8125rem;
       color: #374151; outline: none; resize: vertical; min-height: 80px;
-      font-family: inherit; line-height: 1.6;
+      font-family: inherit; line-height: 1.6; background: white;
+      margin-bottom: 8px;
     }
-    .modal-textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-    .modal-save-btn {
-      padding: 8px 20px; border-radius: 10px; border: none;
-      font-size: 0.8125rem; font-weight: 600;
-      cursor: pointer; transition: all 0.2s;
-      background: #3b82f6; color: white;
+    .m-sb-textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+
+    .m-sb-msg { font-size: 0.75rem; margin-top: 6px; min-height: 18px; }
+
+    /* Action bar (bottom of sidebar) */
+    .m-sb-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e7eb; }
+    .m-act-btn2 {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 6px 12px; border-radius: 10px; border: 1.5px solid #e5e7eb;
+      font-size: 0.75rem; cursor: pointer; background: white; color: #6b7280;
+      transition: all 0.15s;
     }
-    .modal-save-btn:hover { background: #2563eb; }
-    .modal-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .modal-save-msg {
-      font-size: 0.75rem; margin-top: 6px; min-height: 18px;
-    }
-    .modal-actions {
-      padding: 14px 28px; border-top: 1px solid #f3f4f6;
-      display: flex; gap: 8px; flex-wrap: wrap;
-    }
+    .m-act-btn2:hover { border-color: #3b82f6; color: #3b82f6; }
+    .m-act-btn2 svg { width: 14px; height: 14px; }
 
     /* Tab bar — underline style */
     .tab-bar {
@@ -740,11 +799,13 @@
   <!-- Detail Modal -->
   <div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
     <div class="modal-box" style="position:relative">
-      <button onclick="closeModal()" class="email-close">
+      <button onclick="closeModal()" class="m-close">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
-      <div id="mEmailContent"></div>
-      <div class="modal-actions" id="mActions"></div>
+      <div class="m-inner">
+        <div class="m-content" id="mContent"></div>
+        <div class="m-sidebar" id="mSidebar"></div>
+      </div>
     </div>
   </div>
 
@@ -1355,104 +1416,110 @@
       const initials = item.is_anonymous ? '?' : (senderName.charAt(0) || '?');
       const senderSub = [item.reporter_employee_id, item.reporter_station, item.reporter_department].filter(Boolean).join(' · ');
 
-      let html = '';
+      // ── Left: Content ──
+      let left = '';
 
-      // ── Email Header ──
-      html += '<div class="email-header">';
-      html += `<div class="email-subject">${subject}</div>`;
-      html += '<div class="email-meta-row">';
-      html += `<span class="badge ${tp.cls}">${tp.th}</span>`;
-      html += `<span class="s-badge s-${st}"><span class="dot"></span>${STATUS[st]||st}</span>`;
-      html += `<span class="trk">${item.tracking_number || ''}</span>`;
-      html += `<span style="margin-left:auto">${fmtDate(item.created_at)}</span>`;
-      html += '</div></div>';
+      // Meta badges
+      left += '<div class="m-meta">';
+      left += `<span class="badge ${tp.cls}">${tp.th}</span>`;
+      left += `<span class="s-badge s-${st}"><span class="dot"></span>${STATUS[st]||st}</span>`;
+      left += `<span class="trk">${item.tracking_number || ''}</span>`;
+      left += `<span style="margin-left:auto">${fmtDate(item.created_at)}</span>`;
+      left += '</div>';
 
-      // ── Sender Info ──
-      html += '<div class="email-sender">';
-      html += `<div class="email-avatar">${initials}</div>`;
-      html += '<div>';
-      html += `<div class="email-sender-name">${senderName}</div>`;
-      html += `<div class="email-sender-detail">${senderSub || 'ไม่ระบุข้อมูลผู้ส่ง'}</div>`;
-      html += '</div></div>';
+      // Subject
+      left += `<div class="m-subject">${subject}</div>`;
 
-      // ── Email Body ──
-      html += '<div class="email-body">';
-      // Main content text
+      // Sender card
+      left += '<div class="m-sender-card">';
+      left += `<div class="m-avatar">${initials}</div>`;
+      left += '<div>';
+      left += `<div class="m-sender-name">${senderName}</div>`;
+      left += `<div class="m-sender-sub">${senderSub || 'ไม่ระบุข้อมูลผู้ส่ง'}</div>`;
+      left += '</div></div>';
+
+      // Body text
       if (item.detail_text) {
-        html += `<div class="email-content">${item.detail_text}</div>`;
+        left += `<div class="m-body">${item.detail_text}</div>`;
       }
+
+      // Fix text callout
       if (item.fix_text) {
-        html += `<div style="margin-top:16px;padding:12px 16px;background:#fef3c7;border-radius:10px;font-size:0.8125rem;color:#92400e;"><strong>สิ่งที่ต้องการแก้ไข:</strong> ${item.fix_text}</div>`;
+        left += `<div class="m-fix"><strong>สิ่งที่ต้องการแก้ไข:</strong> ${item.fix_text}</div>`;
       }
-      // Detail grid
-      const details = [
+
+      // Info chips
+      const chips = [
         ['หมวดหมู่', item.category],
         ['สถานี', item.detail_station],
         ['ฝ่าย', item.detail_department],
         ['แผนก', item.detail_section],
       ].filter(([,v]) => v);
-      if (details.length) {
-        html += '<div class="email-detail-grid">';
-        details.forEach(([l,v]) => {
-          html += `<div class="email-detail-item"><div class="email-detail-label">${l}</div><div class="email-detail-val">${v}</div></div>`;
-        });
-        html += '</div>';
+      if (chips.length) {
+        left += '<div class="m-info-row">';
+        chips.forEach(([l,v]) => { left += `<span class="m-chip">${l}: <b>${v}</b></span>`; });
+        left += '</div>';
       }
-      html += '</div>';
 
-      // ── Status Change ──
+      document.getElementById('mContent').innerHTML = left;
+
+      // ── Right: Sidebar ──
+      let right = '';
+
+      // Status
       const statusOpts = [
         { val: 'pending', label: 'รอดำเนินการ' },
         { val: 'in_progress', label: 'กำลังดำเนินการ' },
         { val: 'resolved', label: 'เสร็จสิ้น' },
         { val: 'closed', label: 'ปิดแล้ว' }
       ];
-      html += '<div class="modal-section">';
-      html += '<div class="modal-section-title">เปลี่ยนสถานะ</div>';
-      html += '<div style="display:flex;gap:8px;align-items:center">';
-      html += '<select id="mStatusSelect" class="modal-select" style="flex:1">';
+      right += '<div class="m-sb-section">';
+      right += '<div class="m-sb-label">สถานะ</div>';
+      right += '<div class="m-status-pills" id="mStatusPills">';
       statusOpts.forEach(o => {
-        html += `<option value="${o.val}"${o.val === st ? ' selected' : ''}>${o.label}</option>`;
+        right += `<button class="m-s-pill ${o.val===st?'active':''}" data-val="${o.val}" onclick="selectStatusPill(this)">${o.label}</button>`;
       });
-      html += '</select>';
-      html += `<button class="modal-save-btn" onclick="updateStatus('${id}')">บันทึก</button>`;
-      html += '</div>';
-      html += '<div id="statusMsg" class="modal-save-msg"></div>';
-      html += '</div>';
+      right += '</div>';
+      right += `<button class="m-sb-btn" onclick="updateStatus('${id}')">บันทึกสถานะ</button>`;
+      right += '<div id="statusMsg" class="m-sb-msg"></div>';
+      right += '</div>';
 
-      // ── Reply Section ──
-      html += '<div class="modal-section">';
-      html += '<div class="modal-section-title">ตอบกลับ / บันทึกการดำเนินการ</div>';
-      html += `<textarea id="mReplyText" class="modal-textarea" placeholder="พิมพ์คำตอบหรือบันทึกการดำเนินการ...">${item.admin_response || ''}</textarea>`;
-      html += '<div style="display:flex;justify-content:flex-end;margin-top:8px">';
-      html += `<button class="modal-save-btn" onclick="saveReply('${id}')">บันทึกคำตอบ</button>`;
-      html += '</div>';
-      html += '<div id="replyMsg" class="modal-save-msg"></div>';
-      html += '</div>';
+      // Reply
+      right += '<div class="m-sb-section">';
+      right += '<div class="m-sb-label">ตอบกลับ</div>';
+      right += `<textarea id="mReplyText" class="m-sb-textarea" placeholder="พิมพ์คำตอบหรือบันทึกการดำเนินการ...">${item.admin_response || ''}</textarea>`;
+      right += `<button class="m-sb-btn" onclick="saveReply('${id}')">บันทึกคำตอบ</button>`;
+      right += '<div id="replyMsg" class="m-sb-msg"></div>';
+      right += '</div>';
 
-      document.getElementById('mEmailContent').innerHTML = html;
-
-      // Action buttons
+      // Quick actions
       const pinned = isPinned(id);
-      document.getElementById('mActions').innerHTML = `
-        <button class="m-act-btn ${pinned ? 'active' : ''}" onclick="togglePin('${id}'); updateModalActions('${id}')">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-          ${pinned ? 'เลิกปักมุด' : 'ปักมุด'}
-        </button>
-        <button class="m-act-btn" onclick="markAsUnread('${id}'); closeModal(); render()">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          ทำเครื่องหมายยังไม่อ่าน
-        </button>
-      `;
+      right += '<div class="m-sb-actions">';
+      right += `<button class="m-act-btn2" onclick="togglePin('${id}'); closeModal(); render()">`;
+      right += `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>`;
+      right += `${pinned ? 'เลิกปักมุด' : 'ปักมุด'}</button>`;
+      right += `<button class="m-act-btn2" onclick="markAsUnread('${id}'); closeModal(); render()">`;
+      right += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>';
+      right += 'ยังไม่อ่าน</button>';
+      right += '</div>';
+
+      document.getElementById('mSidebar').innerHTML = right;
 
       document.getElementById('detailModal').classList.add('open');
       markAsRead(id);
       render();
     }
 
+    // Status pill selector
+    function selectStatusPill(el) {
+      el.closest('.m-status-pills').querySelectorAll('.m-s-pill').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+
     // Update status in Supabase
     async function updateStatus(id) {
-      const newStatus = document.getElementById('mStatusSelect').value;
+      const activeP = document.querySelector('.m-s-pill.active');
+      const newStatus = activeP ? activeP.dataset.val : 'pending';
       const msgEl = document.getElementById('statusMsg');
       msgEl.textContent = 'กำลังบันทึก...';
       msgEl.style.color = '#6b7280';
@@ -1509,18 +1576,7 @@
       setTimeout(() => { msgEl.textContent = ''; }, 3000);
     }
 
-    function updateModalActions(id) {
-      // Refresh modal buttons after toggle pin
-      const pinned = isPinned(id);
-      const btnEl = document.querySelector('#mActions .m-act-btn');
-      if (btnEl) {
-        btnEl.className = `m-act-btn ${pinned ? 'active' : ''}`;
-        btnEl.innerHTML = `
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-          ${pinned ? 'เลิกปักมุด' : 'ปักมุด'}
-        `;
-      }
-    }
+
 
     function closeModal() {
       document.getElementById('detailModal').classList.remove('open');
