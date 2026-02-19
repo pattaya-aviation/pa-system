@@ -234,6 +234,13 @@ function renderMobileMenu(currentPage) {
     `;
 }
 
+// Global logout function — works from any admin page
+function logout() {
+    sessionStorage.removeItem('user');
+    // Navigate to user home page (relative to admin_portal)
+    window.location.href = adminNavBasePath + '../Home/pa-system.html';
+}
+
 // Main render function
 function renderAdminNav(containerId, currentPage = 'home') {
     injectAdminNavStyles();
