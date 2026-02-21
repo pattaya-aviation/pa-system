@@ -5,14 +5,15 @@
  */
 
 // Detect basePath: if inside a subfolder of portal, prefix '../'
+// Supports both /portal/ (local dev) and /admin_portal/ (AWS Amplify legacy path)
 const adminNavBasePath = (function () {
     const path = window.location.pathname;
-    // Check if we're inside a subfolder like /vfc/index.html or /tax/index.html
-    const adminPortalMatch = path.match(/\/portal\/([^/]+)\//);
+    // Match either /portal/subfolder/ or /admin_portal/subfolder/
+    const adminPortalMatch = path.match(/\/(?:admin_portal|portal)\/([^/]+)\//);
     if (adminPortalMatch) {
         return '../'; // We're in a subfolder, go up one level
     }
-    return ''; // We're directly in portal/
+    return ''; // We're directly in the portal root
 })();
 
 // Menu items configuration
