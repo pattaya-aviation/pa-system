@@ -1,14 +1,21 @@
-/* ===================================================
-   VFC Admin — Stylesheet
-   Extracted from: page/portal/vfc/index.html
-   Used by: page/portal/vfc/index.html
-   =================================================== */
+/* =====================================================
+   Page Lock — no page-level scroll, no horizontal overflow
+   ===================================================== */
+html,
+body {
+    overflow: hidden;
+    height: 100%;
+    max-width: 100vw;
+}
 
 /* Layout */
 .admin-content {
     margin-left: 80px;
     padding: 24px 32px;
-    min-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 @media (max-width: 1023px) {
