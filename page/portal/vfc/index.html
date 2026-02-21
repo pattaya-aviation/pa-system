@@ -962,12 +962,29 @@
     }
 
     function deckNext() {
-      if (deckAnimating || deckIdx >= deckCurrentData.length - 1) return;
+      const total = deckCurrentData.length;
+      // At last card: show end animation instead of navigating
+      if (deckIdx >= total - 1) {
+        const cur = document.querySelector('.ic-dc-card.ic-current');
+        if (cur && !deckAnimating) {
+          deckAnimating = true;
+          cur.style.transition = 'transform 0.18s ease';
+          cur.style.transform = 'translateY(18px) scale(0.97)';
+          setTimeout(() => {
+            cur.style.transform = 'translateY(0) scale(1)';
+            setTimeout(() => { deckAnimating = false; }, 200);
+          }, 180);
+          // Show end toast
+          showDeckEndToast();
+        }
+        return;
+      }
+      if (deckAnimating) return;
       deckAnimating = true;
       const cur = document.querySelector('.ic-dc-card.ic-current');
       if (cur) {
         cur.style.transition = 'transform 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.32s';
-        cur.style.transform = 'translateY(-108%) scale(0.88)';
+        cur.style.transform = 'translateY(108%) scale(0.88)';   // exit to BOTTOM ↓
         cur.style.opacity = '0';
       }
       setTimeout(() => { deckIdx++; deckAnimating = false; renderDeck(); }, 300);
@@ -979,10 +996,36 @@
       const cur = document.querySelector('.ic-dc-card.ic-current');
       if (cur) {
         cur.style.transition = 'transform 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.32s';
-        cur.style.transform = 'translateY(108%) scale(0.88)';
+        cur.style.transform = 'translateY(-108%) scale(0.88)';  // exit to TOP ↑
         cur.style.opacity = '0';
       }
       setTimeout(() => { deckIdx--; deckAnimating = false; renderDeck(); }, 300);
+    }
+
+    function showDeckEndToast() {
+      if (document.getElementById('deckEndToast')) return;
+      const toast = document.createElement('div');
+      toast.id = 'deckEndToast';
+      toast.style.cssText = [
+        'position:fixed', 'bottom:90px', 'left:50%', 'transform:translateX(-50%) translateY(16px)',
+        'background:rgba(17,24,39,0.88)', 'backdrop-filter:blur(12px)',
+        'color:white', 'font-size:0.8rem', 'font-weight:600',
+        'padding:10px 22px', 'border-radius:9999px',
+        'box-shadow:0 4px 20px rgba(0,0,0,0.25)',
+        'opacity:0', 'transition:opacity 0.25s, transform 0.25s',
+        'pointer-events:none', 'z-index:9999', 'white-space:nowrap'
+      ].join(';');
+      toast.textContent = '✓ หมดทุกรายการแล้ว';
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+      });
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(8px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 2000);
     }
 
     function attachDeckHandlers() {
