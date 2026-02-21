@@ -1,0 +1,15 @@
+version: 1
+frontend:
+  phases:
+    build:
+      commands:
+        - echo "Static site — no build step required"
+  artifacts:
+    baseDirectory: /
+    files:
+      - "**/*"
+  customHeaders:
+    - pattern: "**/*"
+      headers:
+        - key: Cache-Control
+          value: "no-cache"
