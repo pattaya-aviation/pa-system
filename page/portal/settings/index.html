@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../../../function/shared/css/fonts.css">
     <link rel="stylesheet" href="../../../function/portal/css/admin-base.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../../../function/shared/js/supabase-config.js"></script>
     <script src="../../../function/portal/components/admin-nav.js"></script>
     <style>
         /* Admin content area */
@@ -235,12 +237,21 @@
 
         <!-- Tab Bar -->
         <div class="tab-bar" style="margin-bottom:16px">
-            <button class="tab-btn active" id="tabUsers" onclick="switchTab('users')">
+            <button class="tab-btn active" id="tabApproval" onclick="switchTab('approval')">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                อนุมัติ
+                <span id="pendingBadge"
+                    class="hidden ml-1 px-1.5 py-0.5 text-xs font-bold bg-red-500 text-white rounded-full"></span>
+            </button>
+            <button class="tab-btn" id="tabUsers" onclick="switchTab('users')">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
-                ผู้ใช้งาน
+                ผู้ใช้ทั้งหมด
             </button>
             <button class="tab-btn" id="tabTheme" onclick="switchTab('theme')">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -258,21 +269,49 @@
             </button>
         </div>
 
-        <!-- Tab: Users -->
-        <div id="contentUsers" class="tab-content">
+        <!-- Tab: Approval -->
+        <div id="contentApproval" class="tab-content">
             <div class="settings-card">
-                <h3>รายชื่อผู้ใช้งาน</h3>
-                <p>ผู้ใช้ที่เคยเข้าสู่ระบบ Admin Portal และสิทธิ์การเข้าถึง</p>
+                <h3>คำขออนุมัติเข้าใช้งาน</h3>
+                <p>ผู้ใช้ที่ login ผ่าน Microsoft และรอให้ผู้ดูแลระบบอนุมัติ</p>
                 <div style="overflow-x:auto">
                     <table class="user-table">
                         <thead>
                             <tr>
                                 <th style="width:40px"></th>
-                                <th>ชื่อผู้ใช้</th>
+                                <th>ชื่อ</th>
+                                <th>อีเมล</th>
+                                <th>ขอเข้าเมื่อ</th>
+                                <th>สถานะ</th>
+                                <th style="width:160px">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approvalTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align:center;color:#9ca3af;padding:40px">
+                                    กำลังโหลด...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Users (all) -->
+        <div id="contentUsers" class="tab-content hidden">
+            <div class="settings-card">
+                <h3>รายชื่อผู้ใช้งานทั้งหมด</h3>
+                <p>ผู้ใช้ที่ login ผ่าน Microsoft และสถานะการอนุมัติ</p>
+                <div style="overflow-x:auto">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th style="width:40px"></th>
+                                <th>ชื่อ</th>
                                 <th>อีเมล</th>
                                 <th>เข้าใช้ล่าสุด</th>
-                                <th>สิทธิ์</th>
-                                <th style="width:60px"></th>
+                                <th>สถานะ</th>
+                                <th style="width:120px">จัดการ</th>
                             </tr>
                         </thead>
                         <tbody id="userTableBody">
@@ -346,120 +385,145 @@
             window.location.href = (typeof adminNavBasePath !== 'undefined' ? adminNavBasePath : '../') + '../home/main/pam.html';
         }
 
-        // Tab switching
+        // ── Tab switching ──
         function switchTab(tabName) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
             const btnId = 'tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
             const contentId = 'content' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
-            document.getElementById(btnId).classList.add('active');
-            document.getElementById(contentId).classList.remove('hidden');
+            document.getElementById(btnId)?.classList.add('active');
+            document.getElementById(contentId)?.classList.remove('hidden');
         }
 
-        // ── User Management ──
-        // Use the shared supabase-config.js credentials (loaded via admin page)
-        // supabase-config.js exposes: SUPABASE_URL and SUPABASE_ANON_KEY
-        const _SUPABASE_URL = (typeof SUPABASE_URL !== 'undefined') ? SUPABASE_URL : '';
-        const _SUPABASE_ANON = (typeof SUPABASE_ANON_KEY !== 'undefined') ? SUPABASE_ANON_KEY : '';
+        // ── Supabase client ──
+        const db = window.supabaseClient;
+        const adminUser = JSON.parse(sessionStorage.getItem('user') || '{}');
 
-        async function loadUsers() {
-            try {
-                const res = await fetch(`${_SUPABASE_URL}/rest/v1/admin_users?select=*&order=last_login.desc`, {
-                    headers: {
-                        'apikey': _SUPABASE_ANON,
-                        'Authorization': `Bearer ${_SUPABASE_ANON}`
-                    }
-                });
-                if (!res.ok) {
-                    // Table might not exist yet, show mock data
-                    showMockUsers();
-                    return;
-                }
-                const users = await res.json();
-                if (!users.length) {
-                    showMockUsers();
-                    return;
-                }
-                renderUsers(users);
-            } catch (e) {
-                showMockUsers();
+        // Status badge helper
+        function statusBadge(status) {
+            const map = {
+                pending: ['#fef3c7', '#92400e', 'รอการอนุมัติ'],
+                approved: ['#dcfce7', '#14532d', 'อนุมัติแล้ว'],
+                rejected: ['#fee2e2', '#7f1d1d', 'ถูกปฏิเสธ']
+            };
+            const [bg, color, label] = map[status] || ['#f3f4f6', '#6b7280', status];
+            return `<span style="background:${bg};color:${color};padding:3px 10px;border-radius:999px;font-size:0.6875rem;font-weight:600">${label}</span>`;
+        }
+
+        // ── Load Approval (pending only) ──
+        async function loadApprovals() {
+            if (!db) return;
+            const { data, error } = await db
+                .from('portal_users')
+                .select('*')
+                .eq('status', 'pending')
+                .order('created_at', { ascending: true });
+
+            const tbody = document.getElementById('approvalTableBody');
+            // Update badge
+            const badge = document.getElementById('pendingBadge');
+            if (data && data.length > 0) {
+                badge.textContent = data.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
             }
+
+            if (error || !data || !data.length) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:40px">
+                    <svg style="width:40px;height:40px;margin:0 auto 8px;display:block;color:#d1d5db" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    ไม่มีรายการรอการอนุมัติ</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.map(u => {
+                const initials = (u.name || u.email || '?').charAt(0).toUpperCase();
+                const created = u.created_at ? new Date(u.created_at).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' }) : '-';
+                return `<tr>
+                    <td><div class="user-avatar">${initials}</div></td>
+                    <td style="font-weight:500">${u.name || '-'}</td>
+                    <td style="font-size:0.75rem;color:#6b7280">${u.email || '-'}</td>
+                    <td style="font-size:0.75rem;color:#9ca3af">${created}</td>
+                    <td>${statusBadge(u.status)}</td>
+                    <td>
+                        <div style="display:flex;gap:6px">
+                            <button onclick="setStatus('${u.email}','approved')"
+                                style="padding:5px 12px;background:#22c55e;color:white;border:none;border-radius:999px;font-size:0.75rem;font-weight:600;cursor:pointer">
+                                อนุมัติ
+                            </button>
+                            <button onclick="setStatus('${u.email}','rejected')"
+                                style="padding:5px 12px;background:#f3f4f6;color:#6b7280;border:none;border-radius:999px;font-size:0.75rem;font-weight:600;cursor:pointer">
+                                ปฏิเสธ
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        // ── Load all users ──
+        async function loadUsers() {
+            if (!db) { showMockUsers(); return; }
+            const { data, error } = await db
+                .from('portal_users')
+                .select('*')
+                .order('last_login', { ascending: false });
+
+            if (error || !data || !data.length) { showMockUsers(); return; }
+            renderUsers(data);
         }
 
         function showMockUsers() {
-            // Show current logged-in user as a fallback
-            const currentUser = JSON.parse(sessionStorage.getItem('user') || '{}');
-            const mockUsers = [
-                {
-                    id: 1,
-                    display_name: currentUser.displayName || currentUser.name || 'Admin User',
-                    email: currentUser.email || currentUser.mail || 'admin@pattayaaviation.com',
-                    role: 'admin',
-                    last_login: new Date().toISOString()
-                }
-            ];
-            renderUsers(mockUsers);
+            const u = adminUser;
+            renderUsers([{ name: u.name || 'Admin', email: u.email || 'admin@pa.com', status: 'approved', last_login: new Date().toISOString() }]);
         }
 
         function renderUsers(users) {
             const tbody = document.getElementById('userTableBody');
             tbody.innerHTML = users.map(u => {
-                const initials = (u.display_name || u.email || '?').charAt(0).toUpperCase();
-                const roleClass = u.role === 'admin' ? 'role-admin' : u.role === 'editor' ? 'role-editor' : 'role-viewer';
-                const roleLabel = u.role === 'admin' ? 'แอดมิน' : u.role === 'editor' ? 'แก้ไข' : 'ดูอย่างเดียว';
+                const initials = (u.name || u.email || '?').charAt(0).toUpperCase();
                 const lastLogin = u.last_login ? new Date(u.last_login).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' }) : '-';
                 return `<tr>
-                <td><div class="user-avatar">${initials}</div></td>
-                <td style="font-weight:500">${u.display_name || '-'}</td>
-                <td style="font-size:0.75rem;color:#6b7280">${u.email || '-'}</td>
-                <td style="font-size:0.75rem;color:#9ca3af">${lastLogin}</td>
-                <td>
-                    <select class="role-select" onchange="updateRole('${u.id}', this.value)">
-                        <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>แอดมิน</option>
-                        <option value="editor" ${u.role === 'editor' ? 'selected' : ''}>แก้ไข</option>
-                        <option value="viewer" ${u.role === 'viewer' ? 'selected' : ''}>ดูอย่างเดียว</option>
-                    </select>
-                </td>
-                <td>
-                    <span class="role-badge ${roleClass}">${roleLabel}</span>
-                </td>
-            </tr>`;
+                    <td><div class="user-avatar">${initials}</div></td>
+                    <td style="font-weight:500">${u.name || '-'}</td>
+                    <td style="font-size:0.75rem;color:#6b7280">${u.email || '-'}</td>
+                    <td style="font-size:0.75rem;color:#9ca3af">${lastLogin}</td>
+                    <td>${statusBadge(u.status || 'pending')}</td>
+                    <td>
+                        ${u.status === 'approved'
+                        ? `<button onclick="setStatus('${u.email}','rejected')" style="padding:4px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:999px;font-size:0.7rem;font-weight:600;cursor:pointer">เพิกถอน</button>`
+                        : `<button onclick="setStatus('${u.email}','approved')" style="padding:4px 10px;background:#dcfce7;color:#15803d;border:none;border-radius:999px;font-size:0.7rem;font-weight:600;cursor:pointer">อนุมัติ</button>`
+                    }
+                    </td>
+                </tr>`;
             }).join('');
         }
 
-        async function updateRole(userId, newRole) {
-            try {
-                await fetch(`${_SUPABASE_URL}/rest/v1/admin_users?id=eq.${userId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'apikey': _SUPABASE_ANON,
-                        'Authorization': `Bearer ${_SUPABASE_ANON}`,
-                        'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
-                    },
-                    body: JSON.stringify({ role: newRole })
-                });
-            } catch (e) {
-                console.log('Role update saved locally');
+        // ── Set status (approve / reject) ──
+        async function setStatus(email, status) {
+            if (!db) return;
+            const { error } = await db
+                .from('portal_users')
+                .update({
+                    status,
+                    approved_by: adminUser.email || 'admin',
+                    approved_at: new Date().toISOString()
+                })
+                .eq('email', email);
+
+            if (!error) {
+                loadApprovals();
+                loadUsers();
+            } else {
+                alert('เกิดข้อผิดพลาด: ' + error.message);
             }
         }
 
-        // ── Theme / Dark Mode ──
-        // Issue #9: receive the clicked element explicitly — using implicit global
-        // `event` is non-standard and breaks in strict mode / ES modules
+        // ── Theme ──
         function setTheme(theme, el) {
-            // Remove all theme classes
             document.body.classList.remove('dark-grey', 'dark-navy');
-
-            // Apply new theme
-            if (theme !== 'light') {
-                document.body.classList.add(theme);
-            }
-
-            // Save to localStorage (persists across pages)
+            if (theme !== 'light') document.body.classList.add(theme);
             localStorage.setItem('admin-theme', theme);
-
-            // Update selection UI using the explicitly passed element
             document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('selected'));
             if (el) el.classList.add('selected');
         }
@@ -468,7 +532,6 @@
             const saved = localStorage.getItem('admin-theme');
             if (saved && saved !== 'light') {
                 document.body.classList.add(saved);
-                // Update selected state
                 document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('selected'));
                 const options = document.querySelectorAll('.theme-option');
                 if (saved === 'dark-grey' && options[1]) options[1].classList.add('selected');
@@ -478,6 +541,7 @@
 
         // Init
         document.addEventListener('DOMContentLoaded', () => {
+            loadApprovals();
             loadUsers();
             loadTheme();
         });
