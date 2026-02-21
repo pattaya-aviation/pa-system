@@ -19,7 +19,7 @@
 
 </head>
 
-<body class="bg-white min-h-screen">
+<body class="bg-white overflow-hidden h-screen">
   <!-- Admin Navigation -->
   <div id="adminNavContainer" data-admin-nav="vfc"></div>
 
@@ -990,22 +990,28 @@
       if (!view) return;
       const THRESHOLD = 65;
       let startY = 0, curY = 0, dragging = false;
+      // Track if the gesture started on the body text (should scroll, not swipe)
+      let touchOnBody = false;
 
       const getCur = () => document.querySelector('.ic-dc-card.ic-current');
 
-      const onStart = (y) => {
+      const onStart = (y, target) => {
         if (deckAnimating) return;
+        // If touch started inside .ic-dc-body, let it scroll — don't swipe
+        touchOnBody = !!(target && target.closest('.ic-dc-body'));
+        if (touchOnBody) return;
         startY = curY = y; dragging = true;
         const c = getCur(); if (c) c.style.transition = 'none';
       };
       const onMove = (y) => {
-        if (!dragging) return;
+        if (!dragging || touchOnBody) return;
         curY = y;
         const dy = curY - startY;
         const c = getCur();
         if (c) c.style.transform = `translateY(${dy * 0.55}px) scale(${1 - Math.min(Math.abs(dy) * 0.0003, 0.06)})`;
       };
       const onEnd = () => {
+        if (touchOnBody) { touchOnBody = false; return; }
         if (!dragging) return; dragging = false;
         const dy = curY - startY;
         const c = getCur();
@@ -1019,14 +1025,16 @@
         }
       };
 
-      view.addEventListener('touchstart', e => onStart(e.touches[0].clientY), { passive: true });
-      view.addEventListener('touchmove', e => { if (dragging) onMove(e.touches[0].clientY); }, { passive: true });
+      view.addEventListener('touchstart', e => onStart(e.touches[0].clientY, e.target), { passive: true });
+      view.addEventListener('touchmove', e => { if (dragging && !touchOnBody) onMove(e.touches[0].clientY); }, { passive: true });
       view.addEventListener('touchend', onEnd);
-      view.addEventListener('mousedown', e => { if (!e.target.closest('button,a')) onStart(e.clientY); });
-      window.addEventListener('mousemove', e => { if (dragging) onMove(e.clientY); });
+      view.addEventListener('mousedown', e => { if (!e.target.closest('button,a')) onStart(e.clientY, e.target); });
+      window.addEventListener('mousemove', e => { if (dragging && !touchOnBody) onMove(e.clientY); });
       window.addEventListener('mouseup', onEnd);
       view.addEventListener('wheel', e => {
         if (deckAnimating) return;
+        // If wheel is on .ic-dc-body, let it scroll content — don't navigate
+        if (e.target.closest('.ic-dc-body')) return;
         e.preventDefault();
         if (e.deltaY > 20) deckNext();
         else if (e.deltaY < -20) deckPrev();
