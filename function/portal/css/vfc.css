@@ -1857,7 +1857,7 @@ body {
 
 .kanban-card {
     background: white;
-    border-radius: 0;
+    border-radius: 32px;
     padding: 16px;
     border: 1px solid #e8e8e8;
     cursor: grab;
@@ -1884,8 +1884,8 @@ body {
 
 .kanban-card-tag {
     display: inline-block;
-    padding: 3px 10px;
-    border-radius: 0;
+    padding: 3px 12px;
+    border-radius: 999px;
     font-size: 0.68rem;
     font-weight: 600;
     margin-bottom: 10px;
