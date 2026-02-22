@@ -940,51 +940,17 @@
       const total = data.length;
       const i = deckIdx;
 
-      const DECK_STATUSES = [
-        { val: '', label: 'ทั้งหมด', color: '#6b7280' },
-        { val: 'pending', label: 'รอดำเนินการ', color: '#f59e0b' },
-        { val: 'in_progress', label: 'กำลังดำเนินการ', color: '#3b82f6' },
-        { val: 'resolved', label: 'เสร็จสิ้น', color: '#22c55e' },
-        { val: 'closed', label: 'ปิดแล้ว', color: '#9ca3af' },
-      ];
-      const activeSt = DECK_STATUSES.find(s => s.val === deckStatusFilter) || DECK_STATUSES[0];
-      const statusMenuItems = DECK_STATUSES.map(s => `
-        <button onclick="filterDeckByStatus('${s.val}')" style="display:flex;align-items:center;gap:8px;
-          padding:8px 14px;width:100%;background:${s.val === deckStatusFilter ? s.color + '18' : 'none'};
-          border:none;cursor:pointer;font-size:0.82rem;color:${s.val === deckStatusFilter ? s.color : '#374151'};
-          font-weight:${s.val === deckStatusFilter ? '700' : '500'};text-align:left;white-space:nowrap">
-          <span style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0"></span>
-          ${s.label}
-        </button>`).join('');
-
-      const hasDate = deckDateFilter ? `<span style="font-size:0.7rem;color:#3b82f6;font-weight:600">${deckDateFilter.split('-').slice(1).reverse().join('/')}</span>` : '';
+      const hasActiveFilter = deckDateFilter || deckStatusFilter;
 
       grid.innerHTML = `
       <div class="ic-deck-view" id="icDeckView">
         <div class="ic-deck-nav">
-          <!-- Status filter button -->
-          <div style="position:relative">
-            <button class="ic-nav-btn" onclick="document.getElementById('deckStatusMenu').classList.toggle('hidden')"
-              title="กรองตามสถานะ" style="${deckStatusFilter ? 'border-color:' + activeSt.color + ';color:' + activeSt.color : ''}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
-            </button>
-            <div id="deckStatusMenu" class="hidden" style="position:absolute;top:48px;left:0;
-              background:white;border-radius:14px;border:1.5px solid #e5e7eb;
-              box-shadow:0 8px 24px rgba(0,0,0,0.10);overflow:hidden;z-index:999;min-width:160px;padding:4px 0">
-              ${statusMenuItems}
-            </div>
-          </div>
-          ${deckStatusFilter ? `<button class="ic-nav-btn" onclick="filterDeckByStatus('')" title="ล้างสถานะ" style="font-size:0.7rem;font-weight:700;color:#6b7280;min-width:28px;width:28px;height:28px">✕</button>` : ''}
-
-          <!-- Date filter button -->
-          <div style="position:relative">
-            <button class="ic-nav-btn ${deckDateFilter ? 'ic-btn-date-active' : ''}" onclick="document.getElementById('deckDateInput').showPicker ? document.getElementById('deckDateInput').showPicker() : document.getElementById('deckDateInput').click()" title="กรองตามวันที่" style="${deckDateFilter ? 'border-color:#3b82f6;color:#3b82f6' : ''}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            </button>
-            <input type="date" id="deckDateInput" value="${deckDateFilter}" onchange="filterDeckByDate(this.value)"
-              style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:1">
-          </div>
-          ${deckDateFilter ? `<button class="ic-nav-btn" onclick="clearDeckDate()" title="ล้างวันที่" style="font-size:0.7rem;font-weight:700;color:#6b7280;min-width:28px;width:28px;height:28px">✕</button>` : ''}
+          <!-- Single Filter button -->
+          <button class="ic-nav-btn" onclick="openDeckFilterModal()" title="ตัวกรอง"
+            style="${hasActiveFilter ? 'border-color:#3b82f6;color:#3b82f6;position:relative' : 'position:relative'}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+            ${hasActiveFilter ? `<span style="position:absolute;top:4px;right:4px;width:7px;height:7px;background:#3b82f6;border-radius:50%;border:1.5px solid white"></span>` : ''}
+          </button>
 
           <button class="ic-nav-btn" onclick="deckPrev()" ${i === 0 ? 'disabled' : ''} title="ก่อนหน้า">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
@@ -1003,6 +969,136 @@
 
       attachDeckHandlers();
     }
+
+    // ── Deck Filter Modal ──
+    const DECK_STATUSES = [
+      { val: '', label: 'ทั้งหมด', color: '#6b7280' },
+      { val: 'pending', label: 'รอดำเนินการ', color: '#f59e0b' },
+      { val: 'in_progress', label: 'กำลังดำเนินการ', color: '#3b82f6' },
+      { val: 'resolved', label: 'เสร็จสิ้น', color: '#22c55e' },
+      { val: 'closed', label: 'ปิดแล้ว', color: '#9ca3af' },
+    ];
+
+    function openDeckFilterModal() {
+      // Build modal HTML
+      const statusPills = DECK_STATUSES.map(s => `
+        <button onclick="deckModalSelectStatus('${s.val}')" id="dfsBtn_${s.val || 'all'}"
+          style="padding:7px 16px;border-radius:999px;border:1.5px solid;cursor:pointer;
+                 font-size:0.8rem;font-weight:600;transition:all 0.15s;
+                 background:${deckStatusFilter === s.val ? s.color : 'white'};
+                 color:${deckStatusFilter === s.val ? 'white' : s.color};
+                 border-color:${s.color}">
+          <span style="display:inline-flex;align-items:center;gap:6px">
+            <span style="width:7px;height:7px;border-radius:50%;background:${deckStatusFilter === s.val ? 'white' : s.color}"></span>
+            ${s.label}
+          </span>
+        </button>`).join('');
+
+      const modal = document.createElement('div');
+      modal.id = 'deckFilterModal';
+      modal.style.cssText = `position:fixed;inset:0;z-index:1000;display:flex;align-items:flex-end;justify-content:center`;
+      modal.innerHTML = `
+        <!-- Backdrop -->
+        <div onclick="closeDeckFilterModal()" style="position:absolute;inset:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px)"></div>
+        <!-- Sheet -->
+        <div style="position:relative;background:white;border-radius:24px 24px 0 0;width:100%;max-width:560px;
+                    padding:24px 24px 32px;box-shadow:0 -8px 40px rgba(0,0,0,0.12);
+                    animation:slideUp 0.25s cubic-bezier(0.4,0,0.2,1)">
+          <!-- Handle -->
+          <div style="width:40px;height:4px;background:#e5e7eb;border-radius:999px;margin:0 auto 20px"></div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+            <span style="font-size:1rem;font-weight:700;color:#111827">ตัวกรองการ์ด</span>
+            <button onclick="closeDeckFilterModal()" style="background:none;border:none;cursor:pointer;padding:4px;color:#9ca3af">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <!-- Date -->
+          <div style="margin-bottom:20px">
+            <label style="display:block;font-size:0.8rem;font-weight:600;color:#6b7280;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em">วันที่</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input type="date" id="deckModalDate" value="${deckDateFilter}"
+                style="flex:1;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:12px;
+                       font-size:0.875rem;color:#374151;outline:none;background:white">
+              ${deckDateFilter ? `<button onclick="document.getElementById('deckModalDate').value=''" style="background:none;border:none;color:#9ca3af;cursor:pointer;font-size:0.8rem">ล้าง</button>` : ''}
+            </div>
+          </div>
+
+          <!-- Status -->
+          <div style="margin-bottom:28px">
+            <label style="display:block;font-size:0.8rem;font-weight:600;color:#6b7280;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em">สถานะ</label>
+            <div style="display:flex;flex-wrap:wrap;gap:8px" id="deckStatusPills">
+              ${statusPills}
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div style="display:flex;gap:10px">
+            <button onclick="clearAllDeckFilters()" style="flex:1;padding:12px;border:1.5px solid #e5e7eb;border-radius:14px;
+              background:white;color:#6b7280;font-size:0.875rem;font-weight:600;cursor:pointer">
+              ล้างทั้งหมด
+            </button>
+            <button onclick="applyDeckFilters()" style="flex:2;padding:12px;border:none;border-radius:14px;
+              background:#3b82f6;color:white;font-size:0.875rem;font-weight:700;cursor:pointer;
+              box-shadow:0 4px 12px rgba(59,130,246,0.3)">
+              กรอง
+            </button>
+          </div>
+        </div>
+        <style>@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}</style>`;
+
+      document.body.appendChild(modal);
+    }
+
+    function deckModalSelectStatus(val) {
+      // Toggle: click same = deselect
+      const current = window._deckModalStatus ?? deckStatusFilter;
+      window._deckModalStatus = current === val ? '' : val;
+      // Re-highlight pills
+      DECK_STATUSES.forEach(s => {
+        const btn = document.getElementById('dfsBtn_' + (s.val || 'all'));
+        if (!btn) return;
+        const active = window._deckModalStatus === s.val;
+        btn.style.background = active ? s.color : 'white';
+        btn.style.color = active ? 'white' : s.color;
+        btn.querySelector('span > span').style.background = active ? 'white' : s.color;
+      });
+    }
+
+    function closeDeckFilterModal() {
+      const m = document.getElementById('deckFilterModal');
+      if (m) m.remove();
+      window._deckModalStatus = undefined;
+    }
+
+    function applyDeckFilters() {
+      const dateInput = document.getElementById('deckModalDate');
+      const newDate = dateInput ? dateInput.value : deckDateFilter;
+      const newStatus = window._deckModalStatus !== undefined ? window._deckModalStatus : deckStatusFilter;
+
+      deckDateFilter = newDate;
+      deckStatusFilter = newStatus;
+      deckIdx = 0;
+
+      const base = filtered.length ? filtered : allData;
+      let data = newStatus ? base.filter(r => (r.status || 'pending') === newStatus) : base;
+      if (newDate) data = data.filter(r => (r.created_at || '').slice(0, 10) === newDate);
+      deckCurrentData = data;
+
+      closeDeckFilterModal();
+      renderDeck();
+    }
+
+    function clearAllDeckFilters() {
+      deckDateFilter = '';
+      deckStatusFilter = '';
+      deckIdx = 0;
+      deckCurrentData = filtered.length ? filtered : allData;
+      closeDeckFilterModal();
+      renderDeck();
+    }
+
 
     function filterDeckByStatus(statusStr) {
       deckStatusFilter = statusStr;
