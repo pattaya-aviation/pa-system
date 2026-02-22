@@ -1574,19 +1574,15 @@ body {
     }
 }
 
-/* Mobile: text tabs from left */
+/* Mobile: same as desktop, scrollable if overflow */
 @media (max-width: 640px) {
     .tab-bar {
         justify-content: flex-start;
     }
 
     .tab-btn {
-        padding: 10px 14px;
-        font-size: 0.75rem;
-    }
-
-    .tab-btn svg {
-        display: none;
+        padding: 7px 14px;
+        font-size: 0.8125rem;
     }
 }
 
