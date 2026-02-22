@@ -368,7 +368,7 @@
     let trashData = JSON.parse(localStorage.getItem('vfc_trash') || '[]');
     const PER = 20;
     // ── Deck state ──
-    let deckIdx = 0, deckAnimating = false, deckCurrentData = [];
+    let deckIdx = 0, deckAnimating = false, deckCurrentData = [], deckDateFilter = '', deckStatusFilter = '';
 
     // Category EN → TH mapping
     const CATEGORIES = {
@@ -940,9 +940,52 @@
       const total = data.length;
       const i = deckIdx;
 
+      const DECK_STATUSES = [
+        { val: '', label: 'ทั้งหมด', color: '#6b7280' },
+        { val: 'pending', label: 'รอดำเนินการ', color: '#f59e0b' },
+        { val: 'in_progress', label: 'กำลังดำเนินการ', color: '#3b82f6' },
+        { val: 'resolved', label: 'เสร็จสิ้น', color: '#22c55e' },
+        { val: 'closed', label: 'ปิดแล้ว', color: '#9ca3af' },
+      ];
+      const activeSt = DECK_STATUSES.find(s => s.val === deckStatusFilter) || DECK_STATUSES[0];
+      const statusMenuItems = DECK_STATUSES.map(s => `
+        <button onclick="filterDeckByStatus('${s.val}')" style="display:flex;align-items:center;gap:8px;
+          padding:8px 14px;width:100%;background:${s.val === deckStatusFilter ? s.color + '18' : 'none'};
+          border:none;cursor:pointer;font-size:0.82rem;color:${s.val === deckStatusFilter ? s.color : '#374151'};
+          font-weight:${s.val === deckStatusFilter ? '700' : '500'};text-align:left;white-space:nowrap">
+          <span style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0"></span>
+          ${s.label}
+        </button>`).join('');
+
+      const hasDate = deckDateFilter ? `<span style="font-size:0.7rem;color:#3b82f6;font-weight:600">${deckDateFilter.split('-').slice(1).reverse().join('/')}</span>` : '';
+
       grid.innerHTML = `
       <div class="ic-deck-view" id="icDeckView">
         <div class="ic-deck-nav">
+          <!-- Status filter button -->
+          <div style="position:relative">
+            <button class="ic-nav-btn" onclick="document.getElementById('deckStatusMenu').classList.toggle('hidden')"
+              title="กรองตามสถานะ" style="${deckStatusFilter ? 'border-color:' + activeSt.color + ';color:' + activeSt.color : ''}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+            </button>
+            <div id="deckStatusMenu" class="hidden" style="position:absolute;top:48px;left:0;
+              background:white;border-radius:14px;border:1.5px solid #e5e7eb;
+              box-shadow:0 8px 24px rgba(0,0,0,0.10);overflow:hidden;z-index:999;min-width:160px;padding:4px 0">
+              ${statusMenuItems}
+            </div>
+          </div>
+          ${deckStatusFilter ? `<button class="ic-nav-btn" onclick="filterDeckByStatus('')" title="ล้างสถานะ" style="font-size:0.7rem;font-weight:700;color:#6b7280;min-width:28px;width:28px;height:28px">✕</button>` : ''}
+
+          <!-- Date filter button -->
+          <div style="position:relative">
+            <button class="ic-nav-btn ${deckDateFilter ? 'ic-btn-date-active' : ''}" onclick="document.getElementById('deckDateInput').showPicker ? document.getElementById('deckDateInput').showPicker() : document.getElementById('deckDateInput').click()" title="กรองตามวันที่" style="${deckDateFilter ? 'border-color:#3b82f6;color:#3b82f6' : ''}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </button>
+            <input type="date" id="deckDateInput" value="${deckDateFilter}" onchange="filterDeckByDate(this.value)"
+              style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:1">
+          </div>
+          ${deckDateFilter ? `<button class="ic-nav-btn" onclick="clearDeckDate()" title="ล้างวันที่" style="font-size:0.7rem;font-weight:700;color:#6b7280;min-width:28px;width:28px;height:28px">✕</button>` : ''}
+
           <button class="ic-nav-btn" onclick="deckPrev()" ${i === 0 ? 'disabled' : ''} title="ก่อนหน้า">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
           </button>
@@ -958,8 +1001,43 @@
         </div>
       </div>`;
 
-
       attachDeckHandlers();
+    }
+
+    function filterDeckByStatus(statusStr) {
+      deckStatusFilter = statusStr;
+      deckIdx = 0;
+      const base = filtered.length ? filtered : allData;
+      let data = deckDateFilter ? base.filter(r => (r.created_at || '').slice(0, 10) === deckDateFilter) : base;
+      if (statusStr) {
+        data = data.filter(r => (r.status || 'pending') === statusStr);
+      }
+      deckCurrentData = data;
+      // Close menu
+      const menu = document.getElementById('deckStatusMenu');
+      if (menu) menu.classList.add('hidden');
+      renderDeck();
+    }
+
+    function filterDeckByDate(dateStr) {
+      deckDateFilter = dateStr;
+      deckIdx = 0;
+      const base = filtered.length ? filtered : allData;
+      let data = deckStatusFilter ? base.filter(r => (r.status || 'pending') === deckStatusFilter) : base;
+      if (!dateStr) {
+        deckCurrentData = data;
+      } else {
+        deckCurrentData = data.filter(r => (r.created_at || '').slice(0, 10) === dateStr);
+      }
+      renderDeck();
+    }
+
+    function clearDeckDate() {
+      deckDateFilter = '';
+      const base = filtered.length ? filtered : allData;
+      deckCurrentData = deckStatusFilter ? base.filter(r => (r.status || 'pending') === deckStatusFilter) : base;
+      deckIdx = 0;
+      renderDeck();
     }
 
     function deckNext() {
