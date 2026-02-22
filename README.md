@@ -182,3 +182,61 @@ pa-system/
 - [ ] ลบ Test credentials ออกจาก `navbar.js` ก่อน deploy
 - [ ] พัฒนา Tax Admin (`page/admin_portal/tax-admin/index.html`) ให้ครบฟังก์ชัน
 - [ ] Extract Personal Info Card HTML จาก VFC forms 3 ไฟล์เป็น component ใน `vfc-form.js`
+
+---
+
+## 🔄 Migration Plan — React + Node.js
+
+> 🗓️ วางแผน: 22 กุมภาพันธ์ 2569  
+> สถานะ: **Draft / ยังไม่เริ่ม**
+
+### เป้าหมาย
+
+ย้ายโปรเจกต์จาก Vanilla HTML/JS ไปสู่ stack ใหม่:
+
+| Layer | ปัจจุบัน | เป้าหมาย |
+|---|---|---|
+| Frontend | Vanilla JS + Tailwind CDN | **React** (Vite) |
+| Backend | ไม่มี (Supabase SDK ตรงจาก client) | **Node.js** (Express) |
+| Database | Supabase (PostgreSQL) | Supabase เดิม ✅ |
+| Deploy | AWS Amplify | TBD |
+
+### เหตุผล
+
+- Component reuse — ลด code ซ้ำ (navbar, forms, cards)
+- State management ที่ดีขึ้น (React hooks แทน global variables)
+- Node.js backend — ซ่อน service key, business logic, future webhook/jobs
+- Type safety (TypeScript)
+
+### ขอบเขต (Pages to Migrate)
+
+| หน้า | ขนาด | ความซับซ้อน |
+|---|---|---|
+| `page/home/main/pam.html` | เล็ก | ต่ำ |
+| `page/home/vfc/*.html` (5 ไฟล์) | กลาง | กลาง |
+| `page/home/tax/*.html` (3 ไฟล์) | กลาง | กลาง |
+| `page/portal/vfc/index.html` | ใหญ่ (~2,300 บรรทัด) | สูง |
+| `page/portal/tax/index.html` | กลาง | กลาง |
+| `page/portal/settings/index.html` | เล็ก | ต่ำ |
+| Auth flow (auth-callback, pending) | เล็ก | กลาง |
+
+### ประมาณการเวลา
+
+| งาน | เวลา |
+|---|---|
+| Project setup (Vite + React + TS + Router) | 0.5 วัน |
+| Node.js backend (Express + Supabase proxy) | 1–2 วัน |
+| Home pages → React components | 2–3 วัน |
+| Admin Portal (VFC, TAX, Settings) | 4–6 วัน |
+| Auth flow | 1 วัน |
+| CSS migration (CSS Modules / Tailwind) | 1–2 วัน |
+| Testing & Deploy config | 1 วัน |
+| **รวม** | **~10–15 วัน** |
+
+### สิ่งที่ต้องตัดสินใจก่อนเริ่ม
+
+- [ ] React framework: **Vite SPA** หรือ **Next.js**?
+- [ ] Node.js framework: **Express** หรือ **Fastify**?
+- [ ] CSS: **CSS Modules** หรือ **Tailwind v4**?
+- [ ] State: **Zustand** หรือ **React Context**?
+- [ ] Deploy: **Vercel** หรือ **AWS Amplify** (เดิม)?
