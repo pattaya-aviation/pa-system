@@ -994,18 +994,24 @@
           </span>
         </button>`).join('');
 
+      const isDesktop = window.innerWidth >= 640;
       const modal = document.createElement('div');
       modal.id = 'deckFilterModal';
-      modal.style.cssText = `position:fixed;inset:0;z-index:1000;display:flex;align-items:flex-end;justify-content:center`;
+      modal.style.cssText = `position:fixed;inset:0;z-index:1000;display:flex;
+        align-items:${isDesktop ? 'center' : 'flex-end'};justify-content:center`;
       modal.innerHTML = `
         <!-- Backdrop -->
         <div onclick="closeDeckFilterModal()" style="position:absolute;inset:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px)"></div>
         <!-- Sheet -->
-        <div style="position:relative;background:white;border-radius:24px 24px 0 0;width:100%;max-width:560px;
-                    padding:24px 24px 32px;box-shadow:0 -8px 40px rgba(0,0,0,0.12);
-                    animation:slideUp 0.25s cubic-bezier(0.4,0,0.2,1)">
-          <!-- Handle -->
-          <div style="width:40px;height:4px;background:#e5e7eb;border-radius:999px;margin:0 auto 20px"></div>
+        <div style="position:relative;background:white;
+                    border-radius:${isDesktop ? '20px' : '24px 24px 0 0'};
+                    width:${isDesktop ? 'auto' : '100%'};min-width:${isDesktop ? '400px' : 'unset'};
+                    max-width:${isDesktop ? '460px' : '560px'};
+                    padding:${isDesktop ? '28px 28px 28px' : '24px 24px 32px'};
+                    box-shadow:${isDesktop ? '0 20px 60px rgba(0,0,0,0.2)' : '0 -8px 40px rgba(0,0,0,0.12)'};
+                    animation:${isDesktop ? 'fadeScaleIn 0.2s ease' : 'slideUp 0.25s cubic-bezier(0.4,0,0.2,1)'}">
+          <!-- Handle (mobile only) -->
+          ${isDesktop ? '' : '<div style="width:40px;height:4px;background:#e5e7eb;border-radius:999px;margin:0 auto 20px"></div>'}
 
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
             <span style="font-size:1rem;font-weight:700;color:#111827">ตัวกรองการ์ด</span>
@@ -1046,7 +1052,10 @@
             </button>
           </div>
         </div>
-        <style>@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}</style>`;
+        <style>
+          @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+          @keyframes fadeScaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+        </style>`;
 
       document.body.appendChild(modal);
     }
