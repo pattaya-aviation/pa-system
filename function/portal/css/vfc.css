@@ -2586,11 +2586,12 @@ body {
     }
 }
 
-/* Mobile — even more compact */
+/* Mobile — match actual content height above cards */
 @media (max-width: 640px) {
     .cards-grid {
-        height: calc(100vh - 260px);
+        height: calc(100vh - 195px);
         min-height: 360px;
+        padding: 0 0 8px;
     }
 }
 
