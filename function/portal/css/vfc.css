@@ -2661,18 +2661,45 @@ body {
     overflow: hidden;
 }
 
-/* Nav bar */
+/* Nav bar — mobile: horizontal above card */
 .ic-deck-nav {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
     padding: 10px 0 16px;
-
     flex-shrink: 0;
     max-width: 520px;
     margin: 0 auto;
     width: 100%;
+}
+
+/* Desktop: flip deck-view to row, nav goes right as vertical column */
+@media (min-width: 1024px) {
+    .ic-deck-view {
+        flex-direction: row;
+        align-items: stretch;
+        gap: 12px;
+        padding: 0;
+    }
+
+    .ic-deck-stage {
+        flex: 1;
+        margin: 0;
+        max-width: none;
+    }
+
+    .ic-deck-nav {
+        flex-direction: column;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+        width: auto;
+        max-width: none;
+        gap: 10px;
+        order: 2;
+        /* nav on the right */
+    }
 }
 
 .ic-nav-btn {
