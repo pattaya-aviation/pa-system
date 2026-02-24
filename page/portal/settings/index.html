@@ -426,6 +426,119 @@
             font-weight: 600;
             cursor: pointer;
         }
+
+        /* ── Add User Modal ── */
+        .add-user-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-user-overlay.open {
+            display: flex;
+        }
+
+        .add-user-modal {
+            background: white;
+            border-radius: 20px;
+            width: min(420px, 95vw);
+            padding: 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .add-user-modal h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .add-user-modal p {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .add-user-field {
+            margin-bottom: 14px;
+        }
+
+        .add-user-field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .add-user-field input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.15s;
+            box-sizing: border-box;
+        }
+
+        .add-user-field input:focus {
+            border-color: #3b82f6;
+        }
+
+        .add-user-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-add-confirm {
+            flex: 1;
+            padding: 10px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .btn-add-confirm:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-add-confirm:disabled {
+            background: #93c5fd;
+            cursor: not-allowed;
+        }
+
+        .btn-add-cancel {
+            flex: 1;
+            padding: 10px;
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .add-user-msg {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+            min-height: 18px;
+        }
     </style>
 </head>
 
@@ -474,8 +587,33 @@
         <!-- Tab: Approval -->
         <div id="contentApproval" class="tab-content">
             <div class="settings-card">
-                <h3>คำขออนุมัติเข้าใช้งาน</h3>
-                <p>ผู้ใช้ที่ login ผ่าน Microsoft และรอให้ผู้ดูแลระบบอนุมัติ</p>
+                <div
+                    style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap">
+                    <div>
+                        <h3 style="margin-bottom:3px">คำขออนุมัติเข้าใช้งาน</h3>
+                        <p style="margin-bottom:0">ผู้ใช้ที่ login ผ่าน Microsoft และรอให้ผู้ดูแลระบบอนุมัติ</p>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-shrink:0">
+                        <button onclick="loadApprovals()"
+                            style="padding:6px 14px;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"
+                            title="โหลดใหม่">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            รีเฟรช
+                        </button>
+                        <button onclick="openAddUserModal()"
+                            style="padding:6px 14px;background:#2563eb;color:white;border:none;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"
+                            title="เพิ่มผู้ใช้ด้วยมือ">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4" />
+                            </svg>
+                            เพิ่มผู้ใช้
+                        </button>
+                    </div>
+                </div>
                 <div style="overflow-x:auto">
                     <table class="user-table">
                         <thead>
@@ -485,7 +623,7 @@
                                 <th>อีเมล</th>
                                 <th>ขอเข้าเมื่อ</th>
                                 <th>สถานะ</th>
-                                <th style="width:160px">จัดการ</th>
+                                <th style="width:180px">จัดการ</th>
                             </tr>
                         </thead>
                         <tbody id="approvalTableBody">
@@ -566,6 +704,36 @@
                     <p>Coming soon</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- ══ Add User Modal ══ -->
+    <div class="add-user-overlay" id="addUserOverlay" onclick="if(event.target===this)closeAddUserModal()">
+        <div class="add-user-modal">
+            <button class="perm-close" onclick="closeAddUserModal()">✕</button>
+            <h3>เพิ่มผู้ใช้ด้วยมือ</h3>
+            <p>สำหรับกรณีที่ระบบ auto-insert ไม่สำเร็จ — กรอกข้อมูลผู้ใช้เพื่ออนุมัติทันที</p>
+            <div class="add-user-field">
+                <label>ชื่อ-นามสกุล</label>
+                <input type="text" id="addUserName" placeholder="เช่น All HD-S">
+            </div>
+            <div class="add-user-field">
+                <label>อีเมล <span style="color:#ef4444">*</span></label>
+                <input type="email" id="addUserEmail" placeholder="เช่น hr.strategic@pattayaaviation.com">
+            </div>
+            <div class="add-user-field">
+                <label>สถานะเริ่มต้น</label>
+                <select id="addUserStatus"
+                    style="width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.875rem;outline:none;background:white;box-sizing:border-box">
+                    <option value="approved">✅ อนุมัติทันที (approved)</option>
+                    <option value="pending">⏳ รอการอนุมัติ (pending)</option>
+                </select>
+            </div>
+            <div class="add-user-actions">
+                <button class="btn-add-cancel" onclick="closeAddUserModal()">ยกเลิก</button>
+                <button class="btn-add-confirm" id="addUserConfirmBtn" onclick="confirmAddUser()">✅ เพิ่มผู้ใช้</button>
+            </div>
+            <div class="add-user-msg" id="addUserMsg"></div>
         </div>
     </div>
 
@@ -808,6 +976,64 @@
                 .eq('email', email);
             if (!error) { loadApprovals(); loadUsers(); }
             else alert('เกิดข้อผิดพลาด: ' + error.message);
+        }
+
+        // ── Add User Modal ──────────────────────────────────────
+        function openAddUserModal() {
+            document.getElementById('addUserName').value = '';
+            document.getElementById('addUserEmail').value = '';
+            document.getElementById('addUserStatus').value = 'approved';
+            document.getElementById('addUserMsg').textContent = '';
+            document.getElementById('addUserConfirmBtn').disabled = false;
+            document.getElementById('addUserOverlay').classList.add('open');
+            setTimeout(() => document.getElementById('addUserName').focus(), 100);
+        }
+
+        function closeAddUserModal() {
+            document.getElementById('addUserOverlay').classList.remove('open');
+        }
+
+        async function confirmAddUser() {
+            if (!db) return;
+            const name = document.getElementById('addUserName').value.trim();
+            const email = document.getElementById('addUserEmail').value.trim().toLowerCase();
+            const status = document.getElementById('addUserStatus').value;
+            const msg = document.getElementById('addUserMsg');
+            const btn = document.getElementById('addUserConfirmBtn');
+
+            if (!email) {
+                msg.style.color = '#ef4444';
+                msg.textContent = '❌ กรุณากรอกอีเมล';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'กำลังบันทึก...';
+            msg.textContent = '';
+
+            // upsert: insert ถ้ายังไม่มี, update status ถ้ามีอยู่แล้ว
+            const { error } = await db.from('portal_users').upsert({
+                email,
+                name: name || email,
+                status,
+                approved_by: status === 'approved' ? (adminUser.email || 'admin') : null,
+                approved_at: status === 'approved' ? new Date().toISOString() : null,
+                last_login: new Date().toISOString()
+            }, { onConflict: 'email' });
+
+            btn.disabled = false;
+            btn.textContent = '✅ เพิ่มผู้ใช้';
+
+            if (error) {
+                msg.style.color = '#ef4444';
+                msg.textContent = '❌ ' + error.message;
+            } else {
+                msg.style.color = '#22c55e';
+                msg.textContent = status === 'approved'
+                    ? `✅ อนุมัติ ${email} เรียบร้อยแล้ว`
+                    : `✅ เพิ่ม ${email} เป็น pending แล้ว`;
+                setTimeout(() => { closeAddUserModal(); loadApprovals(); loadUsers(); }, 1500);
+            }
         }
 
         function setTheme(theme, el) {
