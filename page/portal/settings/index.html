@@ -12,7 +12,6 @@
     <script src="../../../function/shared/js/supabase-config.js"></script>
     <script src="../../../function/portal/components/admin-nav.js"></script>
     <style>
-        /* Admin content area */
         .admin-content {
             margin-left: 80px;
             padding: 24px 32px;
@@ -25,7 +24,7 @@
             }
         }
 
-        /* Tab bar — underline style */
+        /* Tab bar */
         .tab-bar {
             display: flex;
             align-items: center;
@@ -129,30 +128,7 @@
             color: #3b82f6;
         }
 
-        .role-badge {
-            padding: 3px 10px;
-            border-radius: 999px;
-            font-size: 0.6875rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .role-admin {
-            background: #dbeafe;
-            color: #1d4ed8;
-        }
-
-        .role-viewer {
-            background: #f3f4f6;
-            color: #6b7280;
-        }
-
-        .role-editor {
-            background: #dcfce7;
-            color: #15803d;
-        }
-
-        /* Theme option cards */
+        /* Theme */
         .theme-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -200,21 +176,212 @@
             margin-top: 2px;
         }
 
-        /* Role select */
-        .role-select {
-            padding: 4px 8px;
-            border-radius: 8px;
-            border: 1.5px solid #e5e7eb;
-            font-size: 0.75rem;
-            color: #374151;
-            background: white;
-            cursor: pointer;
-            outline: none;
+        /* ── Permission Modal ── */
+        .perm-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
         }
 
-        .role-select:focus {
+        .perm-overlay.open {
+            display: flex;
+        }
+
+        .perm-modal {
+            background: white;
+            border-radius: 20px;
+            width: min(640px, 95vw);
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 28px 28px 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .perm-modal-title {
+            font-size: 1.0625rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .perm-modal-sub {
+            font-size: 0.8125rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .perm-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #6b7280;
+            transition: background 0.15s;
+        }
+
+        .perm-close:hover {
+            background: #e5e7eb;
+        }
+
+        /* Page + Tab permission blocks */
+        .perm-page-block {
+            border: 1.5px solid #e5e7eb;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .perm-page-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: #f8fafc;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .perm-page-header:hover {
+            background: #f1f5f9;
+        }
+
+        .perm-page-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .perm-page-label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #111827;
+            flex: 1;
+        }
+
+        .perm-page-toggle {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .perm-page-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .perm-slider {
+            position: absolute;
+            inset: 0;
+            background: #d1d5db;
+            border-radius: 999px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .perm-slider:before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            left: 3px;
+            top: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+
+        input:checked+.perm-slider {
+            background: #3b82f6;
+        }
+
+        input:checked+.perm-slider:before {
+            transform: translateX(18px);
+        }
+
+        .perm-tabs-area {
+            padding: 12px 16px 14px;
+            border-top: 1px solid #f3f4f6;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .perm-tab-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1.5px solid #e5e7eb;
+            background: white;
+            cursor: pointer;
+            color: #6b7280;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .perm-tab-chip.checked {
+            background: #eff6ff;
             border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+        }
+
+        .perm-tab-chip input {
+            display: none;
+        }
+
+        .perm-save-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .perm-save-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .perm-save-btn:disabled {
+            background: #93c5fd;
+            cursor: not-allowed;
+        }
+
+        .perm-msg {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            min-height: 20px;
         }
     </style>
 </head>
@@ -223,12 +390,8 @@
     <!-- Admin Navigation -->
     <div id="adminNavContainer" data-admin-nav="settings"></div>
 
-
-
-
     <!-- Main Content -->
     <div class="admin-content">
-
         <!-- Header -->
         <div class="mb-4">
             <h1 class="text-xl font-bold text-gray-900">ตั้งค่าระบบ</h1>
@@ -288,8 +451,7 @@
                         </thead>
                         <tbody id="approvalTableBody">
                             <tr>
-                                <td colspan="6" style="text-align:center;color:#9ca3af;padding:40px">
-                                    กำลังโหลด...</td>
+                                <td colspan="6" style="text-align:center;color:#9ca3af;padding:40px">กำลังโหลด...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -301,7 +463,7 @@
         <div id="contentUsers" class="tab-content hidden">
             <div class="settings-card">
                 <h3>รายชื่อผู้ใช้งานทั้งหมด</h3>
-                <p>ผู้ใช้ที่ login ผ่าน Microsoft และสถานะการอนุมัติ</p>
+                <p>จัดการสิทธิ์การเข้าถึงหน้าและแท็บของผู้ใช้แต่ละคน</p>
                 <div style="overflow-x:auto">
                     <table class="user-table">
                         <thead>
@@ -311,7 +473,7 @@
                                 <th>อีเมล</th>
                                 <th>เข้าใช้ล่าสุด</th>
                                 <th>สถานะ</th>
-                                <th style="width:120px">จัดการ</th>
+                                <th style="width:200px">จัดการ</th>
                             </tr>
                         </thead>
                         <tbody id="userTableBody">
@@ -331,26 +493,20 @@
                 <h3>ธีมการแสดงผล</h3>
                 <p>เลือกธีมสำหรับ Admin Portal ทั้งระบบ</p>
                 <div class="theme-grid" id="themeGrid">
-                    <!-- Light -->
                     <div class="theme-option selected" onclick="setTheme('light', this)">
-                        <div class="theme-preview" style="background:#ffffff;border:1px solid #e5e7eb;">
-                            <span style="color:#111827">Aa</span>
-                        </div>
+                        <div class="theme-preview" style="background:#ffffff;border:1px solid #e5e7eb;"><span
+                                style="color:#111827">Aa</span></div>
                         <div class="theme-label">Light</div>
                         <div class="theme-sub">สว่าง — ค่าเริ่มต้น</div>
                     </div>
-                    <!-- Dark Grey -->
                     <div class="theme-option" onclick="setTheme('dark-grey', this)">
-                        <div class="theme-preview" style="background:#1e1e1e;">
-                            <span style="color:#ffffff">Aa</span>
+                        <div class="theme-preview" style="background:#1e1e1e;"><span style="color:#ffffff">Aa</span>
                         </div>
                         <div class="theme-label">Dark Grey</div>
                         <div class="theme-sub">เทาเข้ม — ตัวอักษรขาว</div>
                     </div>
-                    <!-- Navy -->
                     <div class="theme-option" onclick="setTheme('dark-navy', this)">
-                        <div class="theme-preview" style="background:#0f172a;">
-                            <span style="color:#ffffff">Aa</span>
+                        <div class="theme-preview" style="background:#0f172a;"><span style="color:#ffffff">Aa</span>
                         </div>
                         <div class="theme-label">Navy</div>
                         <div class="theme-sub">กรมท่า — ตัวอักษรขาว</div>
@@ -365,7 +521,7 @@
                 <h3>ตั้งค่าทั่วไป</h3>
                 <p>การตั้งค่าทั่วไปของระบบ</p>
                 <div style="text-align:center;padding:40px;color:#9ca3af">
-                    <svg style="width:48px;height:48px;margin:0 auto 12px;color:#d1d5db" fill="none"
+                    <svg style="width:48px;height:48px;margin:0 auto 12px;display:block;color:#d1d5db" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                             d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
@@ -374,14 +530,26 @@
                 </div>
             </div>
         </div>
-
     </div><!-- /admin-content -->
 
+    <!-- ══ Permission Modal ══ -->
+    <div class="perm-overlay" id="permOverlay" onclick="if(event.target===this)closePermModal()">
+        <div class="perm-modal">
+            <button class="perm-close" onclick="closePermModal()">✕</button>
+            <div class="perm-modal-title" id="permModalTitle">ตั้งค่าสิทธิ์</div>
+            <div class="perm-modal-sub" id="permModalSub">กำหนดหน้าและแท็บที่ผู้ใช้สามารถเข้าถึงได้</div>
+
+            <div id="permPageList"></div>
+
+            <button class="perm-save-btn" id="permSaveBtn" onclick="savePermissions()">💾 บันทึกสิทธิ์</button>
+            <div class="perm-msg" id="permMsg"></div>
+        </div>
+    </div>
+
     <script>
-        // Auth check — logout() is provided by admin-nav.js, do NOT redeclare here
+        // ── Auth check ──
         const user = sessionStorage.getItem('user');
         if (!user) {
-            // adminNavBasePath is defined by admin-nav.js which is loaded before this script
             window.location.href = (typeof adminNavBasePath !== 'undefined' ? adminNavBasePath : '../') + '../home/main/pam.html';
         }
 
@@ -389,17 +557,181 @@
         function switchTab(tabName) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-            const btnId = 'tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
-            const contentId = 'content' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
-            document.getElementById(btnId)?.classList.add('active');
-            document.getElementById(contentId)?.classList.remove('hidden');
+            document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1))?.classList.add('active');
+            document.getElementById('content' + tabName.charAt(0).toUpperCase() + tabName.slice(1))?.classList.remove('hidden');
         }
 
-        // ── Supabase client ──
         const db = window.supabaseClient;
         const adminUser = JSON.parse(sessionStorage.getItem('user') || '{}');
 
-        // Status badge helper
+        // ── Permission Page/Tab Config ──
+        const PAGE_CONFIG = [
+            {
+                id: 'vfc',
+                label: 'Voice for Change',
+                icon: '🎤',
+                iconBg: '#eff6ff',
+                tabs: [
+                    { id: 'inbox', label: 'หน้าแรก' },
+                    { id: 'cards', label: 'การ์ด' },
+                    { id: 'board', label: 'กระดาน' },
+                    { id: 'table', label: 'รายการ' },
+                    { id: 'calendar', label: 'ปฏิทิน' },
+                    { id: 'trash', label: 'ถังขยะ' },
+                    { id: 'settings', label: 'ตั้งค่า' },
+                ]
+            },
+            {
+                id: 'tax',
+                label: 'ภาษี',
+                icon: '🧾',
+                iconBg: '#f0fdf4',
+                tabs: [
+                    { id: 'overview', label: 'ภาพรวม' },
+                    { id: 'calculator', label: 'คำนวณภาษี' },
+                    { id: 'ly01', label: 'ลดหย่อน (ล.ย.01)' },
+                ]
+            },
+            {
+                id: 'settings',
+                label: 'ตั้งค่าระบบ',
+                icon: '⚙️',
+                iconBg: '#fafaf9',
+                tabs: [
+                    { id: 'approval', label: 'อนุมัติ' },
+                    { id: 'users', label: 'ผู้ใช้ทั้งหมด' },
+                    { id: 'theme', label: 'ธีม' },
+                    { id: 'general', label: 'ทั่วไป' },
+                ]
+            },
+        ];
+
+        // Default permissions = full access
+        function defaultPerms() {
+            const p = {};
+            PAGE_CONFIG.forEach(page => {
+                p[page.id] = { access: true, tabs: {} };
+                page.tabs.forEach(tab => { p[page.id].tabs[tab.id] = true; });
+            });
+            return p;
+        }
+
+        // ── Current target user for modal ──
+        let permTarget = null; // { email, name, perms }
+
+        function openPermModal(email, name, existingPerms) {
+            permTarget = { email, name };
+            const perms = existingPerms || defaultPerms();
+
+            document.getElementById('permModalTitle').textContent = `สิทธิ์ของ ${name || email}`;
+            document.getElementById('permModalSub').textContent = email;
+            document.getElementById('permMsg').textContent = '';
+
+            // Build page list
+            const list = document.getElementById('permPageList');
+            list.innerHTML = '';
+
+            PAGE_CONFIG.forEach(page => {
+                const pagePerms = perms[page.id] || { access: false, tabs: {} };
+                const hasAccess = pagePerms.access !== false;
+
+                const block = document.createElement('div');
+                block.className = 'perm-page-block';
+                block.id = `permBlock_${page.id}`;
+
+                // Header row
+                const header = document.createElement('div');
+                header.className = 'perm-page-header';
+                header.onclick = () => {
+                    const chk = document.getElementById(`pageChk_${page.id}`);
+                    chk.checked = !chk.checked;
+                    updatePageBlock(page.id);
+                };
+
+                header.innerHTML = `
+                    <div class="perm-page-icon" style="background:${page.iconBg};font-size:1.1rem">${page.icon}</div>
+                    <span class="perm-page-label">${page.label}</span>
+                    <label class="perm-page-toggle" onclick="event.stopPropagation()">
+                        <input type="checkbox" id="pageChk_${page.id}" ${hasAccess ? 'checked' : ''}
+                            onchange="updatePageBlock('${page.id}')">
+                        <span class="perm-slider"></span>
+                    </label>
+                `;
+                block.appendChild(header);
+
+                // Tabs area
+                const tabsArea = document.createElement('div');
+                tabsArea.className = 'perm-tabs-area';
+                tabsArea.id = `tabsArea_${page.id}`;
+                if (!hasAccess) tabsArea.style.display = 'none';
+
+                page.tabs.forEach(tab => {
+                    const tabChecked = (pagePerms.tabs && pagePerms.tabs[tab.id] !== false);
+                    const chip = document.createElement('label');
+                    chip.className = 'perm-tab-chip' + (tabChecked ? ' checked' : '');
+                    chip.innerHTML = `
+                        <input type="checkbox" id="tabChk_${page.id}_${tab.id}" ${tabChecked ? 'checked' : ''}
+                            onchange="this.closest('.perm-tab-chip').classList.toggle('checked', this.checked)">
+                        ${tab.label}
+                    `;
+                    tabsArea.appendChild(chip);
+                });
+
+                block.appendChild(tabsArea);
+                list.appendChild(block);
+            });
+
+            document.getElementById('permOverlay').classList.add('open');
+        }
+
+        function updatePageBlock(pageId) {
+            const chk = document.getElementById(`pageChk_${pageId}`);
+            const area = document.getElementById(`tabsArea_${pageId}`);
+            area.style.display = chk.checked ? '' : 'none';
+        }
+
+        function closePermModal() {
+            document.getElementById('permOverlay').classList.remove('open');
+            permTarget = null;
+        }
+
+        async function savePermissions() {
+            if (!permTarget || !db) return;
+            const btn = document.getElementById('permSaveBtn');
+            const msg = document.getElementById('permMsg');
+            btn.disabled = true;
+            btn.textContent = 'กำลังบันทึก...';
+
+            // Collect permissions from UI
+            const perms = {};
+            PAGE_CONFIG.forEach(page => {
+                const pageChecked = document.getElementById(`pageChk_${page.id}`)?.checked;
+                const tabs = {};
+                page.tabs.forEach(tab => {
+                    tabs[tab.id] = document.getElementById(`tabChk_${page.id}_${tab.id}`)?.checked ?? true;
+                });
+                perms[page.id] = { access: !!pageChecked, tabs };
+            });
+
+            const { error } = await db
+                .from('portal_users')
+                .update({ permissions: perms })
+                .eq('email', permTarget.email);
+
+            btn.disabled = false;
+            btn.textContent = '💾 บันทึกสิทธิ์';
+
+            if (error) {
+                msg.style.color = '#ef4444';
+                msg.textContent = '❌ เกิดข้อผิดพลาด: ' + error.message;
+            } else {
+                msg.style.color = '#22c55e';
+                msg.textContent = '✅ บันทึกสิทธิ์เรียบร้อยแล้ว';
+                setTimeout(() => { closePermModal(); loadUsers(); }, 1200);
+            }
+        }
+
+        // ── Status badge ──
         function statusBadge(status) {
             const map = {
                 pending: ['#fef3c7', '#92400e', 'รอการอนุมัติ'],
@@ -410,26 +742,31 @@
             return `<span style="background:${bg};color:${color};padding:3px 10px;border-radius:999px;font-size:0.6875rem;font-weight:600">${label}</span>`;
         }
 
-        // ── Load Approval (pending only) ──
+        // ── Permission summary badge ──
+        function permSummary(perms) {
+            if (!perms) return `<span style="color:#9ca3af;font-size:0.75rem">ไม่ได้ตั้งค่า</span>`;
+            const pages = PAGE_CONFIG.filter(p => perms[p.id]?.access);
+            if (!pages.length) return `<span style="color:#ef4444;font-size:0.75rem">ไม่มีสิทธิ์</span>`;
+            return pages.map(p =>
+                `<span style="background:#eff6ff;color:#2563eb;padding:2px 8px;border-radius:999px;font-size:0.6875rem;font-weight:600;margin-right:4px">${p.icon} ${p.label}</span>`
+            ).join('');
+        }
+
+        // ── Load Approvals ──
         async function loadApprovals() {
             if (!db) return;
-            const { data, error } = await db
+            const { data } = await db
                 .from('portal_users')
                 .select('*')
                 .eq('status', 'pending')
                 .order('created_at', { ascending: true });
 
             const tbody = document.getElementById('approvalTableBody');
-            // Update badge
             const badge = document.getElementById('pendingBadge');
-            if (data && data.length > 0) {
-                badge.textContent = data.length;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
+            if (data?.length > 0) { badge.textContent = data.length; badge.classList.remove('hidden'); }
+            else badge.classList.add('hidden');
 
-            if (error || !data || !data.length) {
+            if (!data?.length) {
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:40px">
                     <svg style="width:40px;height:40px;margin:0 auto 8px;display:block;color:#d1d5db" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     ไม่มีรายการรอการอนุมัติ</td></tr>`;
@@ -448,13 +785,9 @@
                     <td>
                         <div style="display:flex;gap:6px">
                             <button onclick="setStatus('${u.email}','approved')"
-                                style="padding:5px 12px;background:#22c55e;color:white;border:none;border-radius:999px;font-size:0.75rem;font-weight:600;cursor:pointer">
-                                อนุมัติ
-                            </button>
+                                style="padding:5px 12px;background:#22c55e;color:white;border:none;border-radius:999px;font-size:0.75rem;font-weight:600;cursor:pointer">อนุมัติ</button>
                             <button onclick="setStatus('${u.email}','rejected')"
-                                style="padding:5px 12px;background:#f3f4f6;color:#6b7280;border:none;border-radius:999px;font-size:0.75rem;font-weight:600;cursor:pointer">
-                                ปฏิเสธ
-                            </button>
+                                style="padding:5px 12px;background:#f3f4f6;color:#6b7280;border:none;border-radius:999px;font-size:0.75rem;font-weight:600;cursor:pointer">ปฏิเสธ</button>
                         </div>
                     </td>
                 </tr>`;
@@ -469,13 +802,13 @@
                 .select('*')
                 .order('last_login', { ascending: false });
 
-            if (error || !data || !data.length) { showMockUsers(); return; }
+            if (error || !data?.length) { showMockUsers(); return; }
             renderUsers(data);
         }
 
         function showMockUsers() {
             const u = adminUser;
-            renderUsers([{ name: u.name || 'Admin', email: u.email || 'admin@pa.com', status: 'approved', last_login: new Date().toISOString() }]);
+            renderUsers([{ name: u.name || 'Admin', email: u.email || 'admin@pa.com', status: 'approved', last_login: new Date().toISOString(), permissions: null }]);
         }
 
         function renderUsers(users) {
@@ -483,6 +816,7 @@
             tbody.innerHTML = users.map(u => {
                 const initials = (u.name || u.email || '?').charAt(0).toUpperCase();
                 const lastLogin = u.last_login ? new Date(u.last_login).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' }) : '-';
+                const permsJson = JSON.stringify(u.permissions || '').replace(/'/g, "\\'");
                 return `<tr>
                     <td><div class="user-avatar">${initials}</div></td>
                     <td style="font-weight:500">${u.name || '-'}</td>
@@ -490,33 +824,31 @@
                     <td style="font-size:0.75rem;color:#9ca3af">${lastLogin}</td>
                     <td>${statusBadge(u.status || 'pending')}</td>
                     <td>
-                        ${u.status === 'approved'
+                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+                            <button onclick='openPermModal("${u.email}","${(u.name || '').replace(/"/g, "'")}",${JSON.stringify(u.permissions || null)})'
+                                style="padding:4px 12px;background:#eff6ff;color:#2563eb;border:1.5px solid #bfdbfe;border-radius:999px;font-size:0.75rem;font-weight:600;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                สิทธิ์
+                            </button>
+                            ${u.status === 'approved'
                         ? `<button onclick="setStatus('${u.email}','rejected')" style="padding:4px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:999px;font-size:0.7rem;font-weight:600;cursor:pointer">เพิกถอน</button>`
                         : `<button onclick="setStatus('${u.email}','approved')" style="padding:4px 10px;background:#dcfce7;color:#15803d;border:none;border-radius:999px;font-size:0.7rem;font-weight:600;cursor:pointer">อนุมัติ</button>`
                     }
+                        </div>
                     </td>
                 </tr>`;
             }).join('');
         }
 
-        // ── Set status (approve / reject) ──
+        // ── Set status ──
         async function setStatus(email, status) {
             if (!db) return;
             const { error } = await db
                 .from('portal_users')
-                .update({
-                    status,
-                    approved_by: adminUser.email || 'admin',
-                    approved_at: new Date().toISOString()
-                })
+                .update({ status, approved_by: adminUser.email || 'admin', approved_at: new Date().toISOString() })
                 .eq('email', email);
-
-            if (!error) {
-                loadApprovals();
-                loadUsers();
-            } else {
-                alert('เกิดข้อผิดพลาด: ' + error.message);
-            }
+            if (!error) { loadApprovals(); loadUsers(); }
+            else alert('เกิดข้อผิดพลาด: ' + error.message);
         }
 
         // ── Theme ──
@@ -539,7 +871,7 @@
             }
         }
 
-        // Init
+        // ── Init ──
         document.addEventListener('DOMContentLoaded', () => {
             loadApprovals();
             loadUsers();
