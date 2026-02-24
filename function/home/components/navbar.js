@@ -467,14 +467,11 @@
 
         // Use a fixed redirect URI on production (must match Azure App Registration)
         // On localhost, use current page so any local page can handle the redirect
-        const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
         const msalConfig = {
             auth: {
                 clientId: "478683b2-7ba3-4fee-98b7-02c15ae1b798",
                 authority: "https://login.microsoftonline.com/b8ae9d92-ae64-4dfc-8861-6b09242355ae",
-                redirectUri: isLocalhost
-                    ? window.location.origin + window.location.pathname
-                    : 'https://main.d4m7qyq17nw5s.amplifyapp.com/page/home/main/pam.html'
+                redirectUri: window.location.origin + window.location.pathname
             },
             cache: {
                 cacheLocation: "sessionStorage",
@@ -640,7 +637,7 @@
                     const password = document.getElementById('modalPassword').value;
 
                     // ✅ Test credentials — localhost + Amplify preview (not for final production)
-                    const IS_DEV = ['localhost', '127.0.0.1', 'main.d4m7qyq17nw5s.amplifyapp.com']
+                    const IS_DEV = ['localhost', '127.0.0.1', 'main.d3pcpig1wsoers.amplifyapp.com']
                         .includes(window.location.hostname);
                     if (IS_DEV && email === 'test' && password === '1234') {
                         sessionStorage.setItem('user', JSON.stringify({
