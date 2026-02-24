@@ -1,12 +1,37 @@
-# PA System
+# 🛩️ PAM — Pattaya Aviation System Management
 
-> 📁 Project: `c:\dev\pa-system`  
-> 🗓️ Last updated: 21 กุมภาพันธ์ 2569
+> ระบบบริหารจัดการภายในของ Pattaya Aviation Co., Ltd.  
+> เวอร์ชัน Static HTML + Supabase Backend | อัปเดตล่าสุด: 20 กุมภาพันธ์ 2569
 
-ระบบ Internal Web Portal ของ Pattaya Aviation ประกอบด้วยระบบย่อย 3 ระบบ:
-- **VFC** (Voice for Change) — รับ complaint / compliment / suggestion จากพนักงาน
-- **Tax** — คำนวณภาษีและจัดการเอกสาร
-- **Admin Portal** — จัดการข้อมูลจากระบบย่อยทั้งหมด
+---
+
+## 📋 สารบัญ
+
+- [ภาพรวมระบบ](#-ภาพรวมระบบ)
+- [โครงสร้างโปรเจกต์](#-โครงสร้างโปรเจกต์)
+- [เทคโนโลยีที่ใช้](#-เทคโนโลยีที่ใช้)
+- [โมดูลหลัก](#-โมดูลหลัก)
+- [ข้อดีของระบบ](#-ข้อดีของระบบ--strengths)
+- [จุดที่แก้ไขแล้ว](#-จุดที่แก้ไขแล้ว--fixed)
+- [จุดที่ต้องดำเนินการเพิ่มเติม](#-จุดที่ต้องดำเนินการเพิ่มเติม--remaining)
+- [ฐานข้อมูล](#-ฐานข้อมูล-supabase)
+- [การติดตั้งและรัน](#-การติดตั้งและรัน)
+
+---
+
+## 🔭 ภาพรวมระบบ
+
+PAM เป็นระบบเว็บภายในองค์กรสำหรับ Pattaya Aviation ประกอบด้วย **3 ส่วนหลัก**:
+
+| ส่วน | คำอธิบาย | สถานะ |
+|------|----------|-------|
+| **Voice for Change (VFC)** | ระบบรับข้อร้องเรียน / ข้อเสนอแนะ / ชมเชย พร้อมติดตามสถานะ | ✅ ใช้งานได้ |
+| **Tax System** | เครื่องมือคำนวณภาษีเงินได้บุคคลธรรมดา + แบบ ล.ย.01 | ✅ ใช้งานได้ |
+| **Admin Portal** | แดชบอร์ดจัดการข้อมูล VFC, ตั้งค่าผู้ใช้, ธีม | ✅ ใช้งานได้ |
+
+ระบบแบ่งเป็น **2 ฝั่ง** ชัดเจน:
+- **User Portal** — หน้าที่พนักงานทั่วไปเข้าใช้ (ไม่ต้อง login)
+- **Admin Portal** — หน้าจัดการสำหรับแอดมิน (ต้อง login ด้วย Microsoft Entra ID หรือ test user)
 
 ---
 
@@ -14,229 +39,328 @@
 
 ```
 pa-system/
-├── .agent/
-│   └── workflows/               ← AI agent workflows
-│       └── admin-page-standard.md
-│
-├── function/                    ← Shared JS / CSS components
-│   ├── portal/
+├── function/                     # ฟังก์ชันและ Components ที่ใช้ร่วมกัน
+│   ├── shared/                   # ใช้ทั้ง User + Admin
+│   │   ├── css/fonts.css         # ฟอนต์ Sarabun + ซ่อน scrollbar
+│   │   ├── js/supabase-config.js # Supabase client initialization (centralized)
+│   │   └── logo/                 # โลโก้บริษัท
+│   ├── user/                     # เฉพาะ User Portal
 │   │   ├── components/
-│   │   │   └── admin-nav.js     ← Admin navbar (auth, routing, logout)
-│   │   └── css/
-│   │       ├── admin-base.css   ← Admin-wide base styles
-│   │       └── vfc.css          ← VFC Admin page styles (extracted)
-│   ├── shared/
-│   │   ├── css/fonts.css
-│   │   ├── js/supabase-config.js  ← Supabase client (shared ทุกหน้า)
-│   │   └── logo/Pattaya Aviation.png
-│   └── home/
+│   │   │   ├── navbar.js         # Navbar component (Desktop pill + Mobile hamburger)
+│   │   │   └── vfc-form.js       # VFC form logic + validation + file upload
+│   │   ├── css/
+│   │   │   ├── user-base.css     # Base styles (bg-wrapper, fullscreen)
+│   │   │   └── vfc-form.css      # Choices.js override + form z-index
+│   │   └── wallpaper/            # Background images
+│   └── admin/                    # เฉพาะ Admin Portal
 │       ├── components/
-│       │   ├── navbar.js        ← User navbar (login modal, routing)
-│       │   └── vfc-form.js      ← VFC form logic (shared ทุก form)
+│       │   ├── admin-nav.js      # Floating sidebar + mobile nav + logout
+│       │   └── vfc-admin.js      # VFC management + Supabase data + admin response
 │       └── css/
-│           ├── user-base.css    ← User portal base styles + gradient themes
-│           └── vfc-form.css     ← VFC form styles
+│           └── admin-base.css    # Admin base + dark mode themes
 │
-└── page/
-    ├── home/                    ← User-facing pages
-    │   ├── main/
-    │   │   └── pam.html         ← หน้าแรก (landing page)
-    │   ├── vfc/
-    │   │   ├── vfc-home.html    ← VFC landing page
-    │   │   ├── complaint.html   ← แบบฟอร์มร้องเรียน
-    │   │   ├── compliment.html  ← แบบฟอร์มชมเชย
-    │   │   ├── suggestion.html  ← แบบฟอร์มเสนอแนะ
-    │   │   └── track.html       ← ติดตามสถานะ
-    │   └── tax/
-    │       ├── tax.html         ← Tax system landing page
-    │       └── tax-calculator.html ← คำนวณภาษี
-    └── portal/                  ← Admin-only pages
-        ├── index.html           ← Admin portal entry (auth gate)
-        ├── vfc/
-        │   └── index.html       ← VFC Admin dashboard
-        └── settings/
-            └── index.html       ← Admin settings
+├── page/                         # หน้าเว็บทั้งหมด (HTML)
+│   ├── Home/
+│   │   └── pa-system.html        # หน้าแรกของระบบ
+│   ├── vfc/                      # Voice for Change (User)
+│   │   ├── vfc-home.html         # เมนูหลัก VFC (4 cards)
+│   │   ├── complaint.html        # ฟอร์มร้องเรียน
+│   │   ├── suggestion.html       # ฟอร์มข้อเสนอแนะ
+│   │   ├── compliment.html       # ฟอร์มชมเชย
+│   │   └── track.html            # ติดตามสถานะ (QR Code support)
+│   ├── tax/                      # Tax System (User)
+│   │   ├── tax-home.html         # เมนูหลักภาษี
+│   │   ├── tax-calculator.html   # เครื่องคำนวณภาษี
+│   │   └── pa-ly01.html          # ฟอร์ม ล.ย.01
+│   └── admin_portal/             # Admin Portal
+│       ├── index.html            # หน้าหลัก Admin
+│       ├── vfc-admin/
+│       │   └── index.html        # จัดการ VFC (Inbox/Table/Kanban/Dashboard)
+│       └── settings/
+│           └── index.html        # ตั้งค่า (ผู้ใช้/ธีม/ทั่วไป)
+│
+└── dont'use/                     # ไฟล์เก่าที่ไม่ได้ใช้แล้ว
 ```
 
 ---
 
-## 🔧 Dependencies (CDN)
+## 🛠 เทคโนโลยีที่ใช้
 
-| Library | ใช้ใน | วัตถุประสงค์ |
-|---|---|---|
-| Tailwind CSS v3 | ทุกหน้า | Utility CSS |
-| Font Awesome 6 | ทุกหน้า | Icons |
-| Supabase JS v2 | ทุกหน้าที่ดึงข้อมูล | Database client |
-| Choices.js | VFC forms | Dropdown component |
-
----
-
-## 🗂️ Component Map
-
-### `function/shared/js/supabase-config.js`
-- Initialize `window.supabaseClient` จาก URL + ANON_KEY
-- แสดง error banner สีแดงที่บนสุดหน้าถ้า init ล้มเหลว
-- Validate ว่า key เป็น JWT format (3 ส่วนคั่นด้วย `.`) ก่อน init
-
-### `function/admin/components/admin-nav.js`
-- Render sidebar navigation สำหรับ Admin Portal ทุกหน้า
-- คำนวณ `adminNavBasePath` อัตโนมัติจาก folder depth
-- จัดการ `logout()` — ลบ session และ redirect ไป `page/userpage/main/pam.html`
-- **เป็น single source of truth สำหรับ admin logout** — ห้ามนิยาม `logout()` ซ้ำในไฟล์อื่น
-
-### `function/user/components/navbar.js`
-- Render top navbar สำหรับ user portal ทุกหน้า
-- จัดการ login modal (Microsoft SSO + test login)
-- Export `window.toggleMobileMenu`, `window.toggleSubmenu` สำหรับ inline onclick
-- **ห้ามนิยาม `toggleMobileMenu()` ซ้ำในหน้า HTML** (เคยซ้ำใน `tax-home.html` แก้แล้ว)
-
-### `function/user/components/vfc-form.js`
-- Shared logic สำหรับ VFC forms ทั้ง 3 (complaint/compliment/suggestion)
-- `init(options)` — entry point, ตั้งค่า dropdown groups และ form submit handler
-- `getSections(station, department)` — ดึง sections จาก Supabase พร้อม generic fallback
-- `generateTrackingNumber(prefix)` — สร้างเลขติดตาม
-- Form ต้องมี `id="vfcForm"` เพื่อให้ `getElementById('vfcForm')` ทำงานถูกต้อง
+| เทคโนโลยี | การใช้งาน |
+|-----------|----------|
+| **HTML5** | โครงสร้างหน้า (Static HTML — ไม่มี Build Tool) |
+| **Tailwind CSS (CDN)** | สไตล์หลัก (utility-first) |
+| **Vanilla CSS** | Custom styles (admin-base.css, vfc-form.css) |
+| **JavaScript (Vanilla)** | Logic ทั้งหมด (ไม่ใช้ Framework) |
+| **Supabase** | Backend-as-a-Service (DB + Auth + Storage) |
+| **Choices.js** | Searchable dropdown (cascade: สถานี → ฝ่าย → แผนก) |
+| **Font Awesome** | ไอคอน (User Portal) |
+| **Google Fonts (Sarabun)** | ฟอนต์หลักทั้งระบบ |
+| **MSAL.js** | Microsoft Entra ID authentication (Admin) |
+| **QR Code API** | สร้าง + อ่าน QR Code สำหรับ tracking |
 
 ---
 
-## 🎨 Background Gradient Themes
+## 📦 โมดูลหลัก
 
-หน้า user portal ใช้ CSS gradient แทนรูปภาพ Wallpaper — กำหนดใน `user-base.css`:
+### 1. 🎤 Voice for Change (VFC)
 
-| Class | ใช้ใน | สี |
-|---|---|---|
-| `.bg-wrapper` (default) | `vfc-home.html`, `tax-home.html` | Blue → Purple |
-| `.bg-complaint` | `complaint.html` | Red → Orange |
-| `.bg-compliment` | `compliment.html` | Green → Teal |
-| `.bg-suggestion` | `suggestion.html` | Blue → Indigo |
-| `.bg-track` | `track.html` | Purple → Pink |
-| `.bg-tax` | `tax-calculator.html`, `pa-ly01.html` | Teal → Indigo |
+**ฝั่ง User:**
+- ฟอร์ม 3 ประเภท: **ร้องเรียน**, **ข้อเสนอแนะ**, **ชมเชย**
+- ✅ **Form Validation** — ตรวจสอบ subject, category, detail ก่อนส่ง พร้อม highlight border แดง
+- ✅ **File Upload** — อัปโหลดไฟล์ไปยัง Supabase Storage (bucket: `vfc-attachments`)
+- ✅ **Loading State** — ปุ่มส่งแสดง spinner ระหว่างส่งข้อมูล ป้องกัน double-submit
+- รองรับ **ไม่ระบุตัวตน** (anonymous toggle)
+- Cascade dropdown: สถานี → ฝ่าย → แผนก (ดึงจาก Supabase)
+- สร้าง **Tracking Number** (VFC-XXXXXXXX) + QR Code
+- หน้า **ติดตามสถานะ** — ค้นหาด้วย tracking number หรือ QR Code
 
-**วิธีใช้:**
-```html
-<div class="bg-wrapper bg-complaint"></div>
+**ฝั่ง Admin:**
+- ✅ **เชื่อมข้อมูลจริงจาก Supabase** — ดึงจาก `vfc_submissions` table (mock data เป็น fallback)
+- ✅ **Admin Response** — ฟังก์ชัน `submitAdminResponse()` ส่งคำตอบกลับไป Supabase
+- ✅ **Status Update** — ฟังก์ชัน `updateSubmissionStatus()` เปลี่ยนสถานะ
+- **Inbox view** — ดูข้อความแบบ email client (split panel)
+- **Table view** — ตารางพร้อม filter (ประเภท / สถานะ)
+- **Kanban view** — จัดกลุ่มตามสถานะ
+- **Dashboard** — สรุปสถิติ
+- Multi-window modal (เปิดหลายข้อความพร้อมกัน + minimize ได้)
+
+### 2. 💰 Tax System
+
+- **คำนวณภาษี** — รายได้, หักค่าใช้จ่าย, ลดหย่อน, ประกัน, กองทุน, บ้าน, เงินบริจาค
+- **แบบ ล.ย.01** — ฟอร์มแจ้งรายการหักลดหย่อน + validation ข้อมูลส่วนตัว
+
+### 3. ⚙️ Admin Portal
+
+- **Authentication** — Microsoft Entra ID (MSAL.js) + Test user (development)
+- **Floating Sidebar Nav** — เมนูลอยซ้ายมือแบบ macOS Dock
+- ✅ **Settings** — ใช้ shared Supabase config (ไม่มี hardcoded keys แล้ว)
+- **Dark Mode** — 3 ธีม (Light, Dark Grey, Dark Navy) persist ผ่าน localStorage
+
+---
+
+## ✅ ข้อดีของระบบ — Strengths
+
+### 🎨 1. UI/UX Design ที่ดีมาก
+- ดีไซน์ **Glassmorphism** (backdrop-blur + semi-transparent white) ทั้งระบบ
+- การ์ดมุมโค้งใหญ่ (`rounded-[2rem]`, `rounded-[2.5rem]`) ให้ความรู้สึก modern
+- Gradient shadows สีตาม context (shadow-red, shadow-blue, shadow-green)
+- **Responsive Design** — รองรับทั้ง Desktop + Mobile + Tablet
+- รองรับ iOS compatibility (bg-wrapper แบบ fixed, `viewport-fit=cover`, `100dvh`)
+
+### 🧩 2. Component Architecture ดี
+- **Navbar** (`navbar.js`) — reusable ทุกหน้า, auto-detect sub-page/home
+- **VFC Form** (`vfc-form.js`) — shared logic สำหรับ 3 ฟอร์ม + validation + file upload
+- **Admin Nav** (`admin-nav.js`) — auto-detect subfolder depth, รวม logout function
+- แยก CSS เป็น layer: `fonts.css` → `user-base.css` → `vfc-form.css`
+
+### 🔗 3. Supabase Integration
+- Centralized config (`supabase-config.js`) — ใช้ project เดียวกันทั้งระบบ
+- Cache mechanism สำหรับ Organization data
+- Error handling ครบ (try/catch, console.error, user alerts)
+
+### 🔐 4. Authentication ครอบคลุม
+- Microsoft Entra ID (production) + Test user (development)
+- Session-based auth (`sessionStorage`) — หมดอายุเมื่อปิด browser
+- Auth guard ทุกหน้า admin
+
+### 🌙 5. Dark Mode ระดับ Enterprise
+- 3 ธีม: Light, Dark Grey, Dark Navy
+- Persist ข้ามหน้า, apply ก่อน DOMContentLoaded (ไม่มี white flash)
+
+### 📱 6. Mobile Experience ดีเยี่ยม
+- Navbar แยก Desktop (floating pill) vs Mobile (fixed top + hamburger)
+- File upload + camera capture บน mobile
+- QR Code scan จากรูปภาพ
+
+### 🏷️ 7. Tracking System ฉลาด
+- Tracking number สุ่มด้วย `crypto.getRandomValues()`
+- สร้าง QR Code + save เป็น PNG
+- Timeline visualization สำหรับ tracking status
+
+---
+
+## 🔧 จุดที่แก้ไขแล้ว — Fixed
+
+### ✅ 1. Form Validation (vfc-form.js)
+- **ปัญหา:** ฟอร์ม VFC ไม่มี required fields validation
+- **แก้ไข:** เพิ่มฟังก์ชัน `validateForm()` ตรวจสอบ subject, category, detail ก่อนส่ง
+- **ผลลัพธ์:** border สีแดงบน field ที่ไม่ได้กรอก + alert แจ้งรายการที่ขาด
+
+### ✅ 2. File Upload (vfc-form.js)
+- **ปัญหา:** มี UI แนบไฟล์แต่ไม่มีโค้ดอัปโหลดจริง
+- **แก้ไข:** เพิ่มฟังก์ชัน `uploadFiles()` อัปโหลดไปยัง Supabase Storage (`vfc-attachments` bucket)
+- **ผลลัพธ์:** ไฟล์ถูกอัปโหลดจริง, URLs เก็บใน field `attachments` (JSON)
+- **จำกัด:** ไฟล์ขนาดสูงสุด 10MB ต่อไฟล์
+
+### ✅ 3. Loading State (vfc-form.js)
+- **ปัญหา:** ไม่มี feedback ระหว่างส่งข้อมูล, อาจกดซ้ำได้
+- **แก้ไข:** เพิ่มฟังก์ชัน `setSubmitLoading()` แสดง spinner + disable ปุ่ม
+- **ผลลัพธ์:** ป้องกัน double-submit, มี visual feedback
+
+### ✅ 4. Supabase Project Consolidation (settings/index.html)
+- **ปัญหา:** Settings page ใช้ hardcoded Supabase keys จากคนละ project
+- **แก้ไข:** เปลี่ยนไปใช้ shared `supabase-config.js` + `window.supabaseClient`
+- **ผลลัพธ์:** ข้อมูลใช้ project เดียวกัน, ไม่มี API keys เปิดเผยเพิ่มเติม
+
+### ✅ 5. Admin VFC — เชื่อมข้อมูลจริง (vfc-admin.js)
+- **ปัญหา:** ใช้ mockup data 6 รายการ ไม่ดึงข้อมูลจริง
+- **แก้ไข:** เพิ่ม `loadSubmissions()`, `transformSubmission()` ดึงจาก `vfc_submissions`
+- **ผลลัพธ์:** แสดงข้อมูลจริงจาก Supabase, mock data เป็น fallback
+
+### ✅ 6. Admin Response & Status Update (vfc-admin.js)
+- **ปัญหา:** Admin ไม่สามารถตอบกลับหรือเปลี่ยนสถานะได้
+- **แก้ไข:** เพิ่ม `submitAdminResponse()` และ `updateSubmissionStatus()` เขียนกลับ Supabase
+- **ผลลัพธ์:** Admin สามารถตอบกลับ + เปลี่ยนสถานะจาก pending → in_progress → done
+
+### ✅ 7. Duplicate Functions Removed
+- **ปัญหา:** ฟังก์ชันซ้ำซ้อนข้ามไฟล์ (logout, toggleMobileMenu, toggleSubmenu)
+- **แก้ไข:**
+  - ลบ `logout()` ซ้ำจาก `admin_portal/index.html` และ `settings/index.html` (ใช้จาก `admin-nav.js`)
+  - ลบ `toggleMobileMenu()` + `toggleSubmenu()` จาก `tax-home.html` (ใช้จาก `navbar.js`)
+
+### ✅ 8. SEO Meta Tags — ทุกหน้า
+- **ปัญหา:** ไม่มี `<meta name="description">` ในทุกหน้า
+- **แก้ไข:** เพิ่ม meta description ที่สื่อความหมายให้ทุก 12 หน้า
+- **ไฟล์ที่แก้:** pa-system.html, vfc-home.html, complaint.html, suggestion.html, compliment.html, track.html, tax-home.html, tax-calculator.html, pa-ly01.html, admin_portal/index.html, settings/index.html
+
+### ✅ 9. Accessibility Fixes
+- **ปัญหา:** `maximum-scale=1.0, user-scalable=no` ปิดการ zoom สำหรับผู้พิการ
+- **แก้ไข:** ลบ `maximum-scale=1.0` และ `user-scalable=no` จากทุก viewport meta
+- **ไฟล์ที่แก้:** 9 ไฟล์ใน User Portal (pa-system, vfc-*, tax-*)
+
+### ✅ 10. Aria Labels
+- **ปัญหา:** ไม่มี `aria-label` บนลิงก์/ปุ่มที่ไม่มี text ชัดเจน
+- **แก้ไข:** เพิ่ม `aria-label` บนลิงก์การ์ดใน `vfc-home.html` (4 cards) และ `tax-home.html` (2 cards)
+
+---
+
+## ⚠️ จุดที่ต้องดำเนินการเพิ่มเติม — Remaining
+
+### 🔴 ต้องทำบน Supabase Dashboard
+
+| รายการ | คำอธิบาย | วิธีแก้ |
+|--------|----------|--------|
+| **RLS Policies** | API Keys ยังเข้าถึงได้จาก frontend — ต้องตั้ง Row Level Security | ไป Supabase Dashboard → ตั้ง RLS ทุก table |
+| **Storage Bucket** | ต้องสร้าง bucket `vfc-attachments` | Supabase Dashboard → Storage → New Bucket |
+| **`attachments` Column** | ต้องเพิ่ม column `attachments` (jsonb) ใน `vfc_submissions` | Supabase Dashboard → Table Editor |
+| **`admin_response` Column** | ตรวจสอบว่ามี column `admin_response` (text) ใน `vfc_submissions` | Supabase Dashboard → Table Editor |
+| **Test User** | `test/1234` ยังอยู่ — ต้องลบใน production | ลบ test user condition จาก pa-system.html |
+
+### 🟡 แนะนำปรับปรุง
+
+| รายการ | คำอธิบาย |
+|--------|----------|
+| **Tailwind CDN → Build** | ย้ายจาก CDN ไปใช้ Tailwind CLI + Vite (เร็วกว่า, purge unused CSS) |
+| **Loading Skeletons** | เพิ่ม skeleton loading UI เมื่อดึงข้อมูลจาก Supabase |
+| **HTML Deduplication** | complaint/suggestion/compliment HTML ซ้ำกัน ~80% — ควรรวมเป็น template |
+| **Font Awesome → SVG** | เปลี่ยนจากโหลดทั้ง library ไปใช้ inline SVG เพื่อ performance |
+| **Admin Search** | implement full-text search ใน Admin Portal (ปัจจุบันแสดง "Coming soon") |
+| **E2E Testing** | เพิ่ม automated testing (Playwright / Cypress) |
+| **`dont'use` Folder** | ลบ deprecated files ออก, ใช้ Git branches เก็บ history |
+
+---
+
+## 🗄️ ฐานข้อมูล (Supabase)
+
+### Tables:
+
+| Table | คำอธิบาย | ใช้ใน |
+|-------|----------|-------|
+| `stations` | รายชื่อสถานี | VFC Form dropdowns |
+| `departments` | รายชื่อฝ่าย | VFC Form dropdowns |
+| `sections` | รายชื่อแผนก | VFC Form dropdowns |
+| `vfc_submissions` | ข้อมูลจากฟอร์ม VFC | VFC Submit + Track + Admin |
+| `admin_users` | รายชื่อผู้ใช้ Admin | Settings page |
+
+### VFC Submissions Schema:
+
+```sql
+tracking_number      : text       -- VFC-XXXXXXXX
+type                 : text       -- complaint / compliment / suggestion
+subject              : text
+category             : text
+is_anonymous         : boolean
+reporter_name        : text
+reporter_employee_id : text
+reporter_station     : text
+reporter_department  : text
+reporter_section     : text
+detail_station       : text
+detail_department    : text
+detail_section       : text
+detail_text          : text
+fix_text             : text
+attachments          : jsonb      -- [{ name, url, size, type }] ← NEW
+status               : text       -- pending / in_progress / done
+admin_response       : text       -- คำตอบจาก Admin
+created_at           : timestamptz
 ```
 
 ---
 
-## 🔐 Authentication Flow
+## 🚀 การติดตั้งและรัน
 
-```
-ผู้ใช้เปิด page/userpage/main/pam.html
-    → คลิก Login (navbar.js แสดง modal)
-    → Login สำเร็จ (Microsoft SSO หรือ test: test/1234)
-    → sessionStorage.setItem('user', JSON.stringify({...}))
-    → redirect → page/adminpage/index.html
-        → ตรวจ sessionStorage (admin-nav.js)
-        → ไม่มี session → redirect กลับ page/userpage/main/pam.html
-        → มี session → แสดง Admin Portal
-```
+### Prerequisites
+- เว็บเบราว์เซอร์ที่รองรับ ES6+ (Chrome, Firefox, Safari, Edge)
+- ไม่ต้องติดตั้ง Node.js หรือ build tools
 
-> ⚠️ **Security Note:** Test credentials `test/1234` ยังอยู่ใน `navbar.js` — ควรลบออกก่อน deploy production  
-> ดู: `function/user/components/navbar.js` บรรทัดที่มี `email === 'test'`
+### วิธีรัน
+1. เปิดไฟล์ `page/Home/pa-system.html` ด้วยเว็บเบราว์เซอร์
+2. หรือใช้ Local Server:
+   ```bash
+   # Python
+   python -m http.server 8080
 
----
+   # Node.js
+   npx serve .
 
-## 🛡️ Security Notes
+   # VS Code — ติดตั้ง Live Server extension
+   ```
 
-| รายการ | สถานะ | รายละเอียด |
-|---|---|---|
-| XSS ใน `track.html` | ✅ แก้แล้ว | ใช้ `esc()` sanitize ข้อมูลจาก DB ก่อน innerHTML |
-| Test credentials | ⚠️ ยังอยู่ | `navbar.js` — ลบออกก่อน production |
-| Supabase key validation | ✅ แก้แล้ว | `supabase-config.js` ตรวจ JWT format ก่อน init |
+### Supabase Setup (ถ้ายังไม่มี)
+1. สร้าง Storage Bucket ชื่อ `vfc-attachments` (public read)
+2. เพิ่ม column `attachments` (jsonb, nullable) ใน `vfc_submissions`
+3. ตรวจสอบว่ามี column `admin_response` (text, nullable) ใน `vfc_submissions`
+4. ตั้ง RLS policies ทุก table
 
----
-
-## 📝 Refactor Log (2569-02-21)
-
-### ไฟล์ที่แก้ไขหลักๆ
-
-| ไฟล์ | สิ่งที่ทำ |
-|---|---|
-| `function/user/css/user-base.css` | เพิ่ม gradient themes 6 แบบ แทน wallpaper image |
-| `function/admin/css/vfc-admin.css` | **ใหม่** — Extract CSS จาก `vfc-admin/index.html` (977 บรรทัด) |
-| `function/shared/js/supabase-config.js` | เพิ่ม JWT validation + error banner |
-| `function/user/components/vfc-form.js` | แก้ `getSections()` generic fallback, form ID selector |
-| `page/vfc/*.html` | ลบ wallpaper CSS เสีย, เพิ่ม `id="vfcForm"`, gradient class |
-| `page/tax/*.html` | ลบ wallpaper CSS เสีย, เพิ่ม `.bg-tax` class |
-| `page/admin_portal/vfc-admin/index.html` | ลด 2824 → 1930 บรรทัด (CSS ย้ายออก) |
-| `page/tax/tax-home.html` | ลบ `toggleMobileMenu()` ซ้ำ (navbar.js จัดการแล้ว) |
-| `function/portal/css/vfc.css` | **UI** — Deck card: scrollbar ย้ายเข้าใน body text, ปุ่ม action ใหญ่ขึ้น (34→44px) |
-
-### โครงสร้างที่เปลี่ยน
-
-| ก่อน | หลัง | เหตุผล |
-|---|---|---|
-| `page/home/` | `page/userpage/home/` | Group user pages ใต้ `userpage/` folder |
-| `page/vfc/` | `page/userpage/vfc/` | เหตุผลเดียวกัน |
-| `page/tax/` | `page/userpage/tax/` | เหตุผลเดียวกัน |
-| `page/admin_portal/` | `page/adminpage/` | Rename ให้สั้น + ชัดขึ้น |
-| `dont'use/` (root) | ลบทิ้ง | Apostrophe ในชื่อ folder + เป็น archive เก่า |
-| `page/admin_portal/don't use/` | ลบทิ้ง | เหตุผลเดียวกัน |
-| `function/admin/components/vfc-admin.js` | ลบทิ้ง | Dead code — ไม่ถูก include ในหน้าไหนเลย |
+### Admin Portal
+1. คลิก **"เข้าสู่ระบบ"** ที่ Navbar
+2. ใช้ Microsoft account หรือ Test user:
+   - Email: `test` / Password: `1234`
 
 ---
 
-## 🚀 ขั้นตอนต่อไป (TODO)
+## 📊 สรุปสถิติโค้ด
 
-- [ ] ลบ Test credentials ออกจาก `navbar.js` ก่อน deploy
-- [ ] พัฒนา Tax Admin (`page/admin_portal/tax-admin/index.html`) ให้ครบฟังก์ชัน
-- [ ] Extract Personal Info Card HTML จาก VFC forms 3 ไฟล์เป็น component ใน `vfc-form.js`
+| รายการ | จำนวน |
+|--------|-------|
+| ไฟล์ HTML | 12 ไฟล์ |
+| ไฟล์ JavaScript | 5 ไฟล์ |
+| ไฟล์ CSS | 4 ไฟล์ |
+| บรรทัดโค้ดรวม | ~7,000+ บรรทัด |
 
 ---
 
-## 🔄 Migration Plan — React + Node.js
+## � Changelog
 
-> 🗓️ วางแผน: 22 กุมภาพันธ์ 2569  
-> สถานะ: **Draft / ยังไม่เริ่ม**
+### v1.1 — 20 ก.พ. 2569
+- ✅ เพิ่ม Form Validation ใน VFC (subject, category, detail required)
+- ✅ เพิ่ม File Upload ไปยัง Supabase Storage
+- ✅ เพิ่ม Loading State ป้องกัน double-submit
+- ✅ เชื่อม Admin VFC กับข้อมูลจริงจาก Supabase
+- ✅ เพิ่มฟังก์ชัน Admin Response + Status Update
+- ✅ รวม Supabase config เป็น project เดียว (ลบ hardcoded keys จาก settings)
+- ✅ ลบฟังก์ชันซ้ำซ้อน (logout, toggleMobileMenu, toggleSubmenu)
+- ✅ เพิ่ม meta description ทุก 12 หน้า
+- ✅ แก้ viewport accessibility (ลบ user-scalable=no)
+- ✅ เพิ่ม aria-label บนลิงก์การ์ดหลัก
 
-### เป้าหมาย
+### v1.0 — Initial Release
+- Voice for Change (VFC) — User + Admin
+- Tax System — Calculator + ล.ย.01
+- Admin Portal — Settings + Dark Mode
 
-ย้ายโปรเจกต์จาก Vanilla HTML/JS ไปสู่ stack ใหม่:
+---
 
-| Layer | ปัจจุบัน | เป้าหมาย |
-|---|---|---|
-| Frontend | Vanilla JS + Tailwind CDN | **React** (Vite) |
-| Backend | ไม่มี (Supabase SDK ตรงจาก client) | **Node.js** (Express) |
-| Database | Supabase (PostgreSQL) | Supabase เดิม ✅ |
-| Deploy | AWS Amplify | TBD |
-
-### เหตุผล
-
-- Component reuse — ลด code ซ้ำ (navbar, forms, cards)
-- State management ที่ดีขึ้น (React hooks แทน global variables)
-- Node.js backend — ซ่อน service key, business logic, future webhook/jobs
-- Type safety (TypeScript)
-
-### ขอบเขต (Pages to Migrate)
-
-| หน้า | ขนาด | ความซับซ้อน |
-|---|---|---|
-| `page/home/main/pam.html` | เล็ก | ต่ำ |
-| `page/home/vfc/*.html` (5 ไฟล์) | กลาง | กลาง |
-| `page/home/tax/*.html` (3 ไฟล์) | กลาง | กลาง |
-| `page/portal/vfc/index.html` | ใหญ่ (~2,300 บรรทัด) | สูง |
-| `page/portal/tax/index.html` | กลาง | กลาง |
-| `page/portal/settings/index.html` | เล็ก | ต่ำ |
-| Auth flow (auth-callback, pending) | เล็ก | กลาง |
-
-### ประมาณการเวลา
-
-| งาน | เวลา |
-|---|---|
-| Project setup (Vite + React + TS + Router) | 0.5 วัน |
-| Node.js backend (Express + Supabase proxy) | 1–2 วัน |
-| Home pages → React components | 2–3 วัน |
-| Admin Portal (VFC, TAX, Settings) | 4–6 วัน |
-| Auth flow | 1 วัน |
-| CSS migration (CSS Modules / Tailwind) | 1–2 วัน |
-| Testing & Deploy config | 1 วัน |
-| **รวม** | **~10–15 วัน** |
-
-### สิ่งที่ต้องตัดสินใจก่อนเริ่ม
-
-- [ ] React framework: **Vite SPA** หรือ **Next.js**?
-- [ ] Node.js framework: **Express** หรือ **Fastify**?
-- [ ] CSS: **CSS Modules** หรือ **Tailwind v4**?
-- [ ] State: **Zustand** หรือ **React Context**?
-- [ ] Deploy: **Vercel** หรือ **AWS Amplify** (เดิม)?
+> 📝 สร้างและอัปเดตโดย AI Analysis — 20 ก.พ. 2569

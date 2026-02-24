@@ -312,6 +312,130 @@ const VFCForm = (function () {
     }
 
     // ========================================
+    // Form Validation
+    // ========================================
+
+    function validateForm() {
+        const errors = [];
+        const highlight = (id) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.borderColor = '#ef4444';
+                el.addEventListener('input', () => { el.style.borderColor = ''; }, { once: true });
+                el.addEventListener('change', () => { el.style.borderColor = ''; }, { once: true });
+            }
+            const wrapper = el?.closest('.choices');
+            if (wrapper) {
+                const inner = wrapper.querySelector('.choices__inner');
+                if (inner) inner.style.borderColor = '#ef4444';
+            }
+        };
+
+        const subject = document.getElementById('subjectInput');
+        if (subject && !subject.value.trim()) {
+            errors.push('กรุณากรอกหัวข้อ');
+            highlight('subjectInput');
+        }
+
+        const category = document.getElementById('selectedCategory');
+        if (category && !category.value) {
+            errors.push('กรุณาเลือกหมวดหมู่');
+        }
+
+        const detail = document.getElementById('detailText');
+        if (detail && !detail.value.trim()) {
+            errors.push('กรุณากรอกรายละเอียด');
+            highlight('detailText');
+        }
+
+        if (category && category.value === 'other') {
+            const otherInput = document.getElementById('otherCategoryInput');
+            if (otherInput && !otherInput.value.trim()) {
+                errors.push('กรุณาระบุหมวดหมู่อื่นๆ');
+                highlight('otherCategoryInput');
+            }
+        }
+
+        if (errors.length > 0) {
+            alert('⚠️ กรุณากรอกข้อมูลให้ครบ:\n\n• ' + errors.join('\n• '));
+            return false;
+        }
+        return true;
+    }
+
+    // ========================================
+    // File Upload
+    // ========================================
+
+    async function uploadFiles(trackingNum) {
+        const fileItems = document.querySelectorAll('.file-item');
+        const attachments = [];
+
+        for (const item of fileItems) {
+            const fileInput = item.querySelector('input[type="file"]');
+            const nameInput = item.querySelector('input[type="text"]');
+            if (fileInput && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                if (file.size > 10 * 1024 * 1024) {
+                    console.warn('File too large, skipping:', file.name);
+                    continue;
+                }
+                const customName = nameInput ? nameInput.value.trim() : '';
+                const ext = file.name.split('.').pop();
+                const fileName = `${trackingNum}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+
+                try {
+                    const { data, error } = await sb()
+                        .storage
+                        .from('vfc-attachments')
+                        .upload(fileName, file);
+
+                    if (error) {
+                        console.error('File upload error:', error);
+                        continue;
+                    }
+
+                    const { data: urlData } = sb()
+                        .storage
+                        .from('vfc-attachments')
+                        .getPublicUrl(fileName);
+
+                    attachments.push({
+                        name: customName || file.name,
+                        url: urlData.publicUrl,
+                        size: file.size,
+                        type: file.type
+                    });
+                } catch (err) {
+                    console.error('File upload error:', err);
+                }
+            }
+        }
+        return attachments;
+    }
+
+    // ========================================
+    // Submit Loading State
+    // ========================================
+
+    function setSubmitLoading(loading) {
+        const btn = document.querySelector('button[type="submit"]');
+        if (!btn) return;
+        if (loading) {
+            btn.disabled = true;
+            btn._originalHTML = btn.innerHTML;
+            btn.innerHTML = '<svg class="animate-spin w-5 h-5 inline mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>กำลังส่ง...';
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'not-allowed';
+        } else {
+            btn.disabled = false;
+            if (btn._originalHTML) btn.innerHTML = btn._originalHTML;
+            btn.style.opacity = '';
+            btn.style.cursor = '';
+        }
+    }
+
+    // ========================================
     // Tracking Modal
     // ========================================
 
@@ -488,6 +612,12 @@ const VFCForm = (function () {
                 form.addEventListener('submit', async function (e) {
                     e.preventDefault();
 
+                    // Validate form
+                    if (!validateForm()) return;
+
+                    // Show loading state
+                    setSubmitLoading(true);
+
                     // Collect data
                     const isAnonymous = !document.getElementById('identityToggle')?.checked;
                     const trackingNum = generateTrackingNumber(prefix);
@@ -512,6 +642,14 @@ const VFCForm = (function () {
                     const category = getValue('selectedCategory');
                     const otherCategory = getValue('otherCategoryInput');
 
+                    // Upload files
+                    let attachments = [];
+                    try {
+                        attachments = await uploadFiles(trackingNum);
+                    } catch (uploadErr) {
+                        console.warn('File upload failed, continuing without attachments:', uploadErr);
+                    }
+
                     const data = {
                         tracking_number: trackingNum,
                         type: prefix,
@@ -528,12 +666,14 @@ const VFCForm = (function () {
                         detail_section: getSelectText(detailSectionId) || null,
                         detail_text: getValue('detailText') || null,
                         fix_text: getValue('fixText') || null,
+                        attachments: attachments.length > 0 ? JSON.stringify(attachments) : null,
                         status: 'pending'
                     };
 
                     // Submit to Supabase
                     try {
                         if (!window.supabaseClient) {
+                            setSubmitLoading(false);
                             alert('Supabase ยังไม่พร้อม กรุณารีเฟรชหน้า');
                             return;
                         }
@@ -543,13 +683,16 @@ const VFCForm = (function () {
                             .insert([data]);
 
                         if (error) {
+                            setSubmitLoading(false);
                             console.error('Supabase error:', error);
                             alert('เกิดข้อผิดพลาด: ' + error.message + '\n\nCode: ' + (error.code || 'N/A'));
                             return;
                         }
 
+                        setSubmitLoading(false);
                         showTrackingModal(trackingNum);
                     } catch (err) {
+                        setSubmitLoading(false);
                         console.error('Submit error:', err);
                         alert('ไม่สามารถส่งข้อมูลได้: ' + err.message);
                     }
