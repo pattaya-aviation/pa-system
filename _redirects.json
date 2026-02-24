@@ -1,0 +1,17 @@
+[
+  {
+    "source": "/",
+    "target": "/page/home/main/pam.html",
+    "status": "302"
+  },
+  {
+    "source": "/page/admin_portal/<*>",
+    "target": "/page/portal/<*>",
+    "status": "301"
+  },
+  {
+    "source": "/<*>",
+    "target": "/page/home/main/pam.html",
+    "status": "404"
+  }
+]
