@@ -9,13 +9,13 @@
  *   </script>
  */
 
-const VFCForm = (function() {
+const VFCForm = (function () {
     'use strict';
 
     // ========================================
     // Organization Data (from Supabase)
     // ========================================
-    
+
     // Cache to avoid repeated API calls
     let _stationsCache = null;
     let _departmentsCache = null;
@@ -127,7 +127,7 @@ const VFCForm = (function() {
     // ========================================
     // Shared Choices.js Config
     // ========================================
-    
+
     const CHOICES_CONFIG = {
         searchEnabled: true,
         searchPlaceholderValue: 'พิมพ์เพื่อค้นหา...',
@@ -202,11 +202,11 @@ const VFCForm = (function() {
         const fields = document.getElementById('identityFields');
         const divider = document.getElementById('identityDivider');
         const label = document.getElementById('identityLabel');
-        
+
         if (toggle.checked) {
             label.textContent = 'ระบุตัวตน';
             label.className = 'text-sm text-gray-900 font-medium';
-            
+
             fields.style.visibility = 'visible';
             fields.style.pointerEvents = 'auto';
             fields.style.maxHeight = fields.scrollHeight + 'px';
@@ -219,7 +219,7 @@ const VFCForm = (function() {
         } else {
             label.textContent = 'ไม่ระบุตัวตน';
             label.className = 'text-sm text-gray-600';
-            
+
             fields.style.maxHeight = fields.scrollHeight + 'px';
             divider.style.opacity = '0';
             divider.style.maxHeight = '0';
@@ -240,7 +240,7 @@ const VFCForm = (function() {
     function selectCategory(btn, value) {
         const activeClasses = ['bg-gray-900', 'text-white', 'border-gray-900'];
         const inactiveClasses = ['bg-white', 'text-gray-600', 'border-gray-200'];
-        
+
         document.querySelectorAll('.category-pill').forEach(pill => {
             pill.classList.remove(...activeClasses);
             pill.classList.add(...inactiveClasses);
@@ -248,7 +248,7 @@ const VFCForm = (function() {
         btn.classList.remove(...inactiveClasses);
         btn.classList.add(...activeClasses);
         document.getElementById('selectedCategory').value = value;
-        
+
         const otherContainer = document.getElementById('otherCategoryContainer');
         const otherInput = document.getElementById('otherCategoryInput');
         if (value === 'other') {
@@ -300,6 +300,130 @@ const VFCForm = (function() {
         } else {
             span.textContent = 'ยังไม่ได้เลือกไฟล์';
             span.className = 'file-name text-xs text-red-500 pl-1';
+        }
+    }
+
+    // ========================================
+    // Form Validation
+    // ========================================
+
+    function validateForm() {
+        const errors = [];
+        const highlight = (id) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.borderColor = '#ef4444';
+                el.addEventListener('input', () => { el.style.borderColor = ''; }, { once: true });
+                el.addEventListener('change', () => { el.style.borderColor = ''; }, { once: true });
+            }
+            const wrapper = el?.closest('.choices');
+            if (wrapper) {
+                const inner = wrapper.querySelector('.choices__inner');
+                if (inner) inner.style.borderColor = '#ef4444';
+            }
+        };
+
+        const subject = document.getElementById('subjectInput');
+        if (subject && !subject.value.trim()) {
+            errors.push('กรุณากรอกหัวข้อ');
+            highlight('subjectInput');
+        }
+
+        const category = document.getElementById('selectedCategory');
+        if (category && !category.value) {
+            errors.push('กรุณาเลือกหมวดหมู่');
+        }
+
+        const detail = document.getElementById('detailText');
+        if (detail && !detail.value.trim()) {
+            errors.push('กรุณากรอกรายละเอียด');
+            highlight('detailText');
+        }
+
+        if (category && category.value === 'other') {
+            const otherInput = document.getElementById('otherCategoryInput');
+            if (otherInput && !otherInput.value.trim()) {
+                errors.push('กรุณาระบุหมวดหมู่อื่นๆ');
+                highlight('otherCategoryInput');
+            }
+        }
+
+        if (errors.length > 0) {
+            alert('⚠️ กรุณากรอกข้อมูลให้ครบ:\n\n• ' + errors.join('\n• '));
+            return false;
+        }
+        return true;
+    }
+
+    // ========================================
+    // File Upload
+    // ========================================
+
+    async function uploadFiles(trackingNum) {
+        const fileItems = document.querySelectorAll('.file-item');
+        const attachments = [];
+
+        for (const item of fileItems) {
+            const fileInput = item.querySelector('input[type="file"]');
+            const nameInput = item.querySelector('input[type="text"]');
+            if (fileInput && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                if (file.size > 10 * 1024 * 1024) {
+                    console.warn('File too large, skipping:', file.name);
+                    continue;
+                }
+                const customName = nameInput ? nameInput.value.trim() : '';
+                const ext = file.name.split('.').pop();
+                const fileName = `${trackingNum}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+
+                try {
+                    const { data, error } = await sb()
+                        .storage
+                        .from('vfc-attachments')
+                        .upload(fileName, file);
+
+                    if (error) {
+                        console.error('File upload error:', error);
+                        continue;
+                    }
+
+                    const { data: urlData } = sb()
+                        .storage
+                        .from('vfc-attachments')
+                        .getPublicUrl(fileName);
+
+                    attachments.push({
+                        name: customName || file.name,
+                        url: urlData.publicUrl,
+                        size: file.size,
+                        type: file.type
+                    });
+                } catch (err) {
+                    console.error('File upload error:', err);
+                }
+            }
+        }
+        return attachments;
+    }
+
+    // ========================================
+    // Submit Loading State
+    // ========================================
+
+    function setSubmitLoading(loading) {
+        const btn = document.querySelector('button[type="submit"]');
+        if (!btn) return;
+        if (loading) {
+            btn.disabled = true;
+            btn._originalHTML = btn.innerHTML;
+            btn.innerHTML = '<svg class="animate-spin w-5 h-5 inline mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>กำลังส่ง...';
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'not-allowed';
+        } else {
+            btn.disabled = false;
+            if (btn._originalHTML) btn.innerHTML = btn._originalHTML;
+            btn.style.opacity = '';
+            btn.style.cursor = '';
         }
     }
 
@@ -405,7 +529,7 @@ const VFCForm = (function() {
         // Draw QR code
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        img.onload = function() {
+        img.onload = function () {
             ctx.drawImage(img, padding, padding + textHeight, qrSize, qrSize);
             // Download
             const link = document.createElement('a');
@@ -413,7 +537,7 @@ const VFCForm = (function() {
             link.href = canvas.toDataURL('image/png');
             link.click();
         };
-        img.onerror = function() {
+        img.onerror = function () {
             // Fallback: download just the text as image
             const link = document.createElement('a');
             link.download = trackingNum + '.png';
@@ -426,7 +550,7 @@ const VFCForm = (function() {
     // ========================================
     // Initialization
     // ========================================
-    
+
     /**
      * Initialize VFC Form
      * @param {Object} options
@@ -435,7 +559,7 @@ const VFCForm = (function() {
     function init(options = {}) {
         const prefix = options.detailPrefix || 'suggestion';
 
-        document.addEventListener('DOMContentLoaded', async function() {
+        document.addEventListener('DOMContentLoaded', async function () {
             // Personal Info dropdown group
             const personalGroup = createDropdownGroup('stationSelect', 'departmentSelect', 'sectionSelect');
             await personalGroup.initChoices();
@@ -476,8 +600,14 @@ const VFCForm = (function() {
             // Form submit handler
             const form = document.querySelector('form');
             if (form) {
-                form.addEventListener('submit', async function(e) {
+                form.addEventListener('submit', async function (e) {
                     e.preventDefault();
+
+                    // Validate form
+                    if (!validateForm()) return;
+
+                    // Show loading state
+                    setSubmitLoading(true);
 
                     // Collect data
                     const isAnonymous = !document.getElementById('identityToggle')?.checked;
@@ -503,6 +633,14 @@ const VFCForm = (function() {
                     const category = getValue('selectedCategory');
                     const otherCategory = getValue('otherCategoryInput');
 
+                    // Upload files
+                    let attachments = [];
+                    try {
+                        attachments = await uploadFiles(trackingNum);
+                    } catch (uploadErr) {
+                        console.warn('File upload failed, continuing without attachments:', uploadErr);
+                    }
+
                     const data = {
                         tracking_number: trackingNum,
                         type: prefix,
@@ -519,12 +657,14 @@ const VFCForm = (function() {
                         detail_section: getSelectText(detailSectionId) || null,
                         detail_text: getValue('detailText') || null,
                         fix_text: getValue('fixText') || null,
+                        attachments: attachments.length > 0 ? JSON.stringify(attachments) : null,
                         status: 'pending'
                     };
 
                     // Submit to Supabase
                     try {
                         if (!window.supabaseClient) {
+                            setSubmitLoading(false);
                             alert('Supabase ยังไม่พร้อม กรุณารีเฟรชหน้า');
                             return;
                         }
@@ -534,13 +674,16 @@ const VFCForm = (function() {
                             .insert([data]);
 
                         if (error) {
+                            setSubmitLoading(false);
                             console.error('Supabase error:', error);
                             alert('เกิดข้อผิดพลาด: ' + error.message + '\n\nCode: ' + (error.code || 'N/A'));
                             return;
                         }
 
+                        setSubmitLoading(false);
                         showTrackingModal(trackingNum);
                     } catch (err) {
+                        setSubmitLoading(false);
                         console.error('Submit error:', err);
                         alert('ไม่สามารถส่งข้อมูลได้: ' + err.message);
                     }
@@ -552,7 +695,7 @@ const VFCForm = (function() {
     // ========================================
     // Public API
     // ========================================
-    
+
     return {
         init,
         toggleIdentityFields,
