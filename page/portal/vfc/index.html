@@ -370,6 +370,70 @@
     // ── Deck state ──
     let deckIdx = 0, deckAnimating = false, deckCurrentData = [], deckDateFilter = '', deckStatusFilter = '';
 
+    // ── Tab ID → permission key mapping ──
+    const TAB_PERM_MAP = {
+      tabInbox: 'inbox',
+      tabCards: 'cards',
+      tabBoard: 'board',
+      tabTable: 'table',
+      tabCalendar: 'calendar',
+      tabTrash: 'trash',
+      tabSettings: 'settings',
+    };
+
+    // ── Apply permissions: hide tabs user cannot access ──
+    async function applyTabPermissions() {
+      try {
+        const sessionUser = JSON.parse(sessionStorage.getItem('user') || '{}');
+        if (!sessionUser.email) return;
+
+        // Wait for Supabase
+        const client = await waitSB();
+        const { data, error } = await client
+          .from('portal_users')
+          .select('permissions')
+          .eq('email', sessionUser.email)
+          .single();
+
+        if (error || !data || !data.permissions) return; // NULL = full access
+
+        const vfcPerms = data.permissions?.vfc;
+        if (!vfcPerms) return;
+
+        // If no VFC access at all — redirect to portal index
+        if (vfcPerms.access === false) {
+          window.location.href = '../index.html';
+          return;
+        }
+
+        const tabPerms = vfcPerms.tabs || {};
+        let firstAllowedTab = null;
+
+        Object.entries(TAB_PERM_MAP).forEach(([btnId, permKey]) => {
+          const allowed = tabPerms[permKey] !== false; // default true
+          const btn = document.getElementById(btnId);
+          if (!btn) return;
+          if (!allowed) {
+            btn.style.display = 'none';
+          } else if (!firstAllowedTab) {
+            firstAllowedTab = permKey;
+          }
+        });
+
+        // If current active tab is hidden, switch to first allowed tab
+        const activeBtn = document.querySelector('.tab-btn.active');
+        const activeBtnId = activeBtn?.id;
+        if (activeBtnId && TAB_PERM_MAP[activeBtnId]) {
+          const activeKey = TAB_PERM_MAP[activeBtnId];
+          if (tabPerms[activeKey] === false && firstAllowedTab) {
+            switchTab(firstAllowedTab);
+          }
+        }
+      } catch (e) {
+        console.warn('Permission check failed (non-critical):', e);
+      }
+    }
+
     // Category EN → TH mapping
     const CATEGORIES = {
       // Complaint
@@ -2358,6 +2422,7 @@
     document.addEventListener('DOMContentLoaded', async () => {
       await fetchData();
       updateNotifDot();
+      applyTabPermissions(); // Apply after data loaded
     });
   </script>
 </body>
