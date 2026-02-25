@@ -178,35 +178,35 @@
         </div>
     </nav>
     
-    <!-- Mobile Navbar (Floating Pill Style) -->
-    <nav class="lg:hidden fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm">
-        <div class="bg-white/70 backdrop-blur-xl rounded-full px-3 py-2 flex items-center justify-between border border-gray-200/50 shadow-lg">
+    <!-- Mobile Navbar (Top Fixed Style) -->
+    <nav class="lg:hidden fixed top-0 left-0 right-0 z-50">
+        <div class="bg-white/40 backdrop-blur-2xl px-4 py-3 flex items-center justify-between border-b border-white/30 shadow-sm">
             <!-- Logo -->
-            <a href="${paths.home}" class="shrink-0 ml-1" id="mobileLogoLink">
-                <img src="${paths.logo}" alt="Logo" class="h-7 object-contain" id="navbarLogo">
+            <a href="${paths.home}" class="shrink-0" id="mobileLogoLink">
+                <img src="${paths.logo}" alt="Logo" class="h-8 object-contain" id="navbarLogo">
             </a>
-
+            
             <!-- Right Side Buttons -->
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-2">
                 <!-- Login Button -->
-                <button onclick="openLoginModal()" class="px-3.5 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors font-medium text-sm">
+                <button onclick="openLoginModal()" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors font-medium text-sm">
                     เข้าสู่ระบบ
                 </button>
-
+                
                 <!-- Hamburger Button -->
-                <button id="menuToggle" onclick="toggleMobileMenu()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100/80 transition-colors">
-                    <svg id="hamburgerIcon" class="w-4.5 h-4.5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
+                <button id="menuToggle" onclick="toggleMobileMenu()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100/70 transition-colors">
+                    <svg id="hamburgerIcon" class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
-                    <svg id="closeIcon" class="w-4.5 h-4.5 text-gray-700 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                    <svg id="closeIcon" class="w-5 h-5 text-gray-700 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
         </div>
-
-        <!-- Mobile Dropdown Menu (drops below the pill) -->
-        <div id="dropdownMenu" class="hidden mt-2 bg-white/80 backdrop-blur-2xl rounded-3xl shadow-xl border border-gray-200/50 py-3 max-h-[calc(100vh-6rem)] overflow-y-auto">
+        
+        <!-- Mobile Dropdown Menu -->
+        <div id="dropdownMenu" class="hidden bg-white/40 backdrop-blur-2xl rounded-b-3xl shadow-xl border-x border-b border-white/30 py-3 max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div class="flex flex-col">
                 <a href="${paths.home}" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-50/70 rounded-xl mx-2 transition-colors">
                     <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,7 +214,7 @@
                     </svg>
                     <span class="text-gray-800 font-medium">หน้าหลัก</span>
                 </a>
-
+                
                 <!-- Voice for Change Section -->
                 <div class="border-t border-gray-100/50 mt-2 pt-2 mx-2">
                     <div class="flex items-center justify-between hover:bg-gray-50/70 rounded-xl transition-colors">
@@ -258,7 +258,7 @@
                         </a>
                     </div>
                 </div>
-
+                
                 <!-- Tax Section -->
                 <div class="border-t border-gray-100/50 mt-2 pt-2 mx-2">
                     <div class="flex items-center justify-between hover:bg-gray-50/70 rounded-xl transition-colors">
