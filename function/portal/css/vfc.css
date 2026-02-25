@@ -20,27 +20,20 @@ body {
 
 @media (max-width: 1023px) {
 
-    /* Navbar in normal flow — not fixed */
-    #navbar-container nav {
-        position: relative !important;
-        top: auto !important;
-        left: auto !important;
-        right: auto !important;
-        transform: none !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        border-radius: 0 !important;
-        margin: 0 !important;
+    /* Mobile: unlock page scroll so navbar scrolls away naturally */
+    html,
+    body {
+        overflow: auto !important;
+        height: auto !important;
     }
 
-    #navbar-container nav>div:first-child {
-        border-radius: 0 !important;
-    }
-
+    /* admin-content: normal block, not a fixed-height scroll container */
     .admin-content {
         margin-left: 0;
         padding: 16px 16px 24px;
-        height: calc(100vh - 56px);
+        height: auto !important;
+        overflow-y: visible !important;
+        min-height: 0 !important;
     }
 }
 
