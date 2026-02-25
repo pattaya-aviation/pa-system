@@ -171,10 +171,6 @@
                 </div>
             </div>
             
-            <!-- Login Button -->
-            <button onclick="openLoginModal()" class="ml-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors font-medium text-sm">
-                เข้าสู่ระบบ
-            </button>
         </div>
     </nav>
     
@@ -188,11 +184,6 @@
             
             <!-- Right Side Buttons -->
             <div class="flex items-center gap-2">
-                <!-- Login Button -->
-                <button onclick="openLoginModal()" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors font-medium text-sm">
-                    เข้าสู่ระบบ
-                </button>
-                
                 <!-- Hamburger Button -->
                 <button id="menuToggle" onclick="toggleMobileMenu()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100/70 transition-colors">
                     <svg id="hamburgerIcon" class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
