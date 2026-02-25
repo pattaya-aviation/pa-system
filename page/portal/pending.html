@@ -164,22 +164,21 @@
             btn.textContent = 'กำลังตรวจสอบ...';
 
             try {
+                // ใช้ window.supabaseClient ที่มี session ของ user อยู่แล้ว
                 const db = window.supabaseClient;
                 if (!db) throw new Error('no client');
 
-                // ใช้ RPC (security definer) → ไม่พึ่ง session หรือ RLS
-                const { data: rpcData, error: rpcErr } = await db.rpc(
-                    'register_pending_user',
-                    { p_email: user.email, p_name: user.name || user.email }
-                );
+                const { data, error } = await db
+                    .from('portal_users')
+                    .select('status')
+                    .eq('email', user.email)
+                    .single();
 
-                if (rpcErr) throw rpcErr;
+                if (error) throw error;
 
-                const status = rpcData?.status || 'pending';
-
-                if (status === 'approved') {
+                if (data.status === 'approved') {
                     window.location.href = '../../page/portal/index.html';
-                } else if (status === 'rejected') {
+                } else if (data.status === 'rejected') {
                     showRejected();
                 } else {
                     btn.textContent = 'ยังรออยู่ — ลองอีกครั้ง';
@@ -203,9 +202,6 @@
 
         // Auto-check ทุก 30 วินาที
         setInterval(checkStatus, 30000);
-
-        // ตรวจสอบทันทีเมื่อโหลดหน้า
-        checkStatus();
     </script>
 </body>
 
