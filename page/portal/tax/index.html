@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="../../../function/shared/css/fonts.css">
     <link rel="stylesheet" href="../../../function/portal/css/admin-base.css">
     <script src="../../../function/portal/components/admin-nav.js"></script>
+    <!-- Home Navbar (mobile pill) -->
+    <script>window.NAVBAR_PORTAL_MODE = true;</script>
+    <script src="../../../function/home/components/navbar.js"></script>
     <style>
         .admin-content {
             margin-left: 80px;
@@ -18,7 +21,8 @@
         @media (max-width: 1023px) {
             .admin-content {
                 margin-left: 0;
-                padding: 20px 16px 24px;
+                padding: 16px;
+                min-height: calc(100vh - 56px);
             }
         }
     </style>
@@ -28,6 +32,8 @@
 
     <!-- Admin Navigation -->
     <div id="adminNavContainer" data-admin-nav="tax"></div>
+    <div id="navbar-container"></div>
+    <script>renderNavbar();</script>
 
     <!-- Main Content -->
     <div class="admin-content">
