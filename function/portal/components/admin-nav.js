@@ -254,6 +254,16 @@ document.addEventListener('DOMContentLoaded', function () {
     if (navContainer) {
         const currentPage = navContainer.dataset.adminNav || 'home';
         renderAdminNav(navContainer.id, currentPage);
+
+        // Inject floating hamburger on pages that don't already have one (e.g. Tax, Settings, Home)
+        if (!document.querySelector('.tab-hamburger')) {
+            var floatHamburger = document.createElement('button');
+            floatHamburger.className = 'tab-hamburger admin-float-hamburger';
+            floatHamburger.onclick = function () { toggleAdminMobileMenu(); };
+            floatHamburger.title = 'เมนู';
+            floatHamburger.innerHTML = '<svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>';
+            document.body.appendChild(floatHamburger);
+        }
     }
     const savedTheme = localStorage.getItem('admin-theme') || 'dark-grey';
     if (savedTheme !== 'light') {
