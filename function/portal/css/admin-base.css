@@ -41,11 +41,6 @@ body {
         z-index: 200 !important;
         border-radius: 0 0 1.5rem 1.5rem !important;
     }
-
-    /* Hide old admin mobile nav (navbar.js handles mobile) */
-    .admin-mobile-nav {
-        display: none !important;
-    }
 }
 
 /* Hide desktop navbar from navbar.js on all portal pages:
@@ -372,4 +367,357 @@ body.dark-navy {
     border-bottom-color: var(--dm-border) !important;
 }
 
-:is(body.dark-grey, body
+/* Dashboard cards */
+:is(body.dark-grey, body.dark-navy) .dash-card {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .dash-card-title {
+    color: var(--dm-text-primary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .dash-card-sub {
+    color: var(--dm-text-muted) !important;
+}
+
+/* Dashboard filter selects (inline style background:white) */
+:is(body.dark-grey, body.dark-navy) .dash-filter-bar select {
+    background: var(--dm-input-bg) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .dash-card-head select {
+    background: var(--dm-input-bg) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+/* Dash filter pills */
+:is(body.dark-grey, body.dark-navy) .dash-filter-pill {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-muted) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .dash-filter-pill:hover {
+    border-color: var(--dm-filter-pill-hover-border) !important;
+    background: var(--dm-surface-3) !important;
+}
+
+/* MoM / YoY cards */
+:is(body.dark-grey, body.dark-navy) .mom-card {
+    background: var(--dm-surface-2) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .mom-label {
+    color: var(--dm-text-muted) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .mom-val {
+    color: var(--dm-text-primary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .mom-desc {
+    color: var(--dm-text-subtle) !important;
+}
+
+/* Donut */
+:is(body.dark-grey, body.dark-navy) .donut-center {
+    fill: var(--dm-text-primary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .donut-center-lbl {
+    fill: var(--dm-text-muted) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .donut-legend-item {
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .donut-legend-val {
+    color: var(--dm-text-primary) !important;
+}
+
+/* Bar chart */
+:is(body.dark-grey, body.dark-navy) .bar-val {
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .bar-lbl {
+    color: var(--dm-text-muted) !important;
+}
+
+/* Horizontal bars */
+:is(body.dark-grey, body.dark-navy) .hbar-label {
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .hbar-track {
+    background: var(--dm-surface-3) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .hbar-val {
+    color: var(--dm-text-primary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .hbar-pct {
+    color: var(--dm-text-muted) !important;
+}
+
+/* Progress bar */
+:is(body.dark-grey, body.dark-navy) .prog-bar {
+    background: var(--dm-surface-3) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .prog-item .plbl {
+    color: var(--dm-text-muted) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .prog-item .pval {
+    color: var(--dm-text-primary) !important;
+}
+
+/* Filter select & search */
+:is(body.dark-grey, body.dark-navy) .f-select {
+    background: var(--dm-input-bg) !important;
+    border-color: var(--dm-input-border) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .f-search {
+    background: var(--dm-input-bg) !important;
+    border-color: var(--dm-input-border) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+/* Pagination buttons */
+:is(body.dark-grey, body.dark-navy) .pg-btn {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .pg-btn:hover {
+    background: var(--dm-surface-3) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .pgn {
+    border-top-color: var(--dm-border) !important;
+}
+
+/* Refresh button */
+:is(body.dark-grey, body.dark-navy) .btn-ref {
+    background: var(--dm-surface) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .btn-ref:hover {
+    background: var(--dm-surface-3) !important;
+}
+
+/* Table */
+:is(body.dark-grey, body.dark-navy) .dtbl thead th {
+    color: var(--dm-text-muted) !important;
+    border-bottom-color: var(--dm-border) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .dtbl tbody tr {
+    border-bottom-color: var(--dm-border-light) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .dtbl tbody tr:hover {
+    background: var(--dm-surface-3) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .dtbl tbody td {
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .row-unread {
+    background: var(--dm-row-unread) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .row-unread:hover {
+    background: var(--dm-row-unread-hover) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .row-pinned {
+    background: var(--dm-row-pinned) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .row-pinned:hover {
+    background: var(--dm-row-pinned-hover) !important;
+}
+
+/* Action buttons */
+:is(body.dark-grey, body.dark-navy) .act-btn {
+    color: var(--dm-text-muted) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .act-btn:hover {
+    background: var(--dm-surface-3) !important;
+    color: var(--dm-text-primary) !important;
+}
+
+/* Floating tab bar */
+:is(body.dark-grey, body.dark-navy) #navbarTabBar {
+    background: var(--dm-nav-btn-bg) !important;
+    border-color: var(--dm-nav-btn-border) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .tab-btn {
+    color: var(--dm-text-muted) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .tab-btn:hover {
+    background: var(--dm-surface-3) !important;
+    color: var(--dm-text-primary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .tab-btn.active {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #60a5fa !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Sidebar tooltip */
+:is(body.dark-grey, body.dark-navy) .menu-item .menu-text {
+    background: var(--dm-dropdown-bg) !important;
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+/* Hamburger circle button */
+:is(body.dark-grey, body.dark-navy) .tab-hamburger {
+    background: var(--dm-nav-btn-bg) !important;
+    border-color: var(--dm-nav-btn-border) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .tab-hamburger:hover {
+    background: var(--dm-surface-3) !important;
+    color: var(--dm-text-primary) !important;
+}
+
+/* Profile pill */
+:is(body.dark-grey, body.dark-navy) .admin-profile-pill {
+    background: var(--dm-nav-btn-bg) !important;
+    border-color: var(--dm-nav-btn-border) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .pill-name {
+    color: var(--dm-text-primary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .pill-email {
+    color: var(--dm-text-muted) !important;
+}
+
+/* Calendar buttons (inline styles) */
+:is(body.dark-grey, body.dark-navy) #calendarView button {
+    border-color: var(--dm-border) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+/* Kanban */
+:is(body.dark-grey, body.dark-navy) .kanban-col {
+    background: var(--dm-kanban-col) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .kanban-card {
+    background: var(--dm-kanban-card) !important;
+    border-color: var(--dm-border) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .kanban-card:hover {
+    border-color: var(--dm-kanban-card-hover-border) !important;
+}
+
+/* MoM badges in dark mode */
+:is(body.dark-grey, body.dark-navy) .mom-flat {
+    background: var(--dm-surface-3) !important;
+    color: var(--dm-text-muted) !important;
+}
+
+/* Message row placeholder */
+:is(body.dark-grey, body.dark-navy) .msg-row td {
+    color: var(--dm-text-muted) !important;
+}
+
+/* Tab placeholder */
+:is(body.dark-grey, body.dark-navy) .tab-placeholder {
+    color: var(--dm-text-muted) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .tab-placeholder p {
+    color: var(--dm-text-muted) !important;
+}
+
+/* Mobile Navbar (from navbar.js) */
+:is(body.dark-grey, body.dark-navy) .lg\:hidden>div:first-child {
+    background: var(--dm-nav-btn-bg) !important;
+    border-color: var(--dm-border) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .lg\:hidden .text-gray-900 {
+    color: var(--dm-text-primary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .lg\:hidden .text-gray-800 {
+    color: var(--dm-text-primary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .lg\:hidden .text-gray-700 {
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .lg\:hidden .text-gray-600 {
+    color: var(--dm-text-muted) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) #dropdownMenu {
+    background: var(--dm-dropdown-bg) !important;
+    border-color: var(--dm-border) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) #dropdownMenu a:hover,
+:is(body.dark-grey, body.dark-navy) #dropdownMenu button:hover {
+    background: var(--dm-surface-3) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) #dropdownMenu .border-t,
+:is(body.dark-grey, body.dark-navy) #dropdownMenu .border-gray-100\/50 {
+    border-color: var(--dm-border) !important;
+}
+
+/* Admin mobile dropdown menu */
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown {
+    background: var(--dm-dropdown-bg) !important;
+    border-color: var(--dm-border) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown a {
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown a:hover {
+    background: var(--dm-surface-3) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown [style*="border-bottom"],
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown [style*="border-top"] {
+    border-color: var(--dm-border) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown [style*="color:#111827"],
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown [style*="color: #111827"] {
+    color: var(--dm-text-primary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown [style*="color:#6b7280"],
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown [style*="color: #6b7280"] {
+    color: var(--dm-text-muted) !important;
+}
