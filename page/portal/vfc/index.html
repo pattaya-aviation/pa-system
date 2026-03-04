@@ -9,13 +9,6 @@
   <link rel="stylesheet" href="../../../function/shared/css/fonts.css" />
   <link rel="stylesheet" href="../../../function/portal/css/admin-base.css" />
   <script src="../../../function/portal/components/admin-nav.js"></script>
-  <!-- Home Navbar (for mobile pill — identical to pam.html) -->
-  <script>
-    window.NAVBAR_PORTAL_MODE = true;
-    window.NAVBAR_PAGE_TITLE = 'Voice for Change';
-    window.NAVBAR_PAGE_SUBTITLE = 'จัดการคำร้องเรียน ชมเชย และข้อเสนอแนะ';
-  </script>
-  <script src="../../../function/home/components/navbar.js"></script>
 
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -35,8 +28,6 @@
 <body class="bg-white overflow-hidden h-screen">
   <!-- Admin Navigation -->
   <div id="adminNavContainer" data-admin-nav="vfc"></div>
-  <div id="navbar-container"></div>
-  <script>renderNavbar();</script>
 
   <!-- Main Content -->
   <div class="admin-content">
