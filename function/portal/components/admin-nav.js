@@ -94,8 +94,12 @@ function injectAdminNavStyles() {
 // Toggle mobile menu
 function toggleAdminMobileMenu() {
     const mobileMenu = document.getElementById('adminMobileMenu');
+    const backdrop = document.getElementById('adminMobileBackdrop');
     if (mobileMenu) {
         mobileMenu.classList.toggle('hidden');
+    }
+    if (backdrop) {
+        backdrop.classList.toggle('hidden');
     }
 }
 
@@ -155,15 +159,12 @@ function renderMobileMenu(currentPage) {
         const isActive = currentPage === item.id;
         const activeBg = isActive ? '#eff6ff' : 'transparent';
         const activeClr = isActive ? '#1d4ed8' : '#374151';
-        const iconClr = isActive ? '#3b82f6' : '#6b7280';
         menuItems +=
-            '<a href="' + item.href + '" style="display:flex;align-items:center;gap:12px;padding:11px 16px;' +
+            '<a href="' + item.href + '" style="display:flex;align-items:center;padding:11px 20px;' +
             'background:' + activeBg + ';font-weight:' + (isActive ? '600' : '400') + ';' +
-            'text-decoration:none;color:' + activeClr + ';transition:background 0.15s"' +
+            'text-decoration:none;color:' + activeClr + ';transition:background 0.15s;font-size:0.875rem"' +
             ' onmouseover="this.style.background=\'#f9fafb\'" onmouseout="this.style.background=\'' + activeBg + '\'">' +
-            '<span style="color:' + iconClr + ';flex-shrink:0;display:flex">' +
-            item.icon.replace(/w-6 h-6/g, 'w-5 h-5') + '</span>' +
-            '<span style="font-size:0.875rem">' + item.label + '</span>' +
+            item.label +
             '</a>';
     });
 
@@ -187,41 +188,30 @@ function renderMobileMenu(currentPage) {
 
         '</div>' + // end pill
 
+        // ── Backdrop (dim + blur) ────────────────────────────────────
+        '<div id="adminMobileBackdrop" class="hidden" onclick="toggleAdminMobileMenu()"' +
+        ' style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);' +
+        'backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:998;transition:opacity 0.2s"></div>' +
+
         // ── Dropdown ─────────────────────────────────────────────────
-        '<div id="adminMobileMenu" class="admin-mobile-dropdown hidden">' +
+        '<div id="adminMobileMenu" class="admin-mobile-dropdown hidden" style="position:relative;z-index:999">' +
 
-        // Close button
-        '<div style="display:flex;justify-content:flex-end;padding:16px 16px 0">' +
-        '<button onclick="toggleAdminMobileMenu()" style="width:40px;height:40px;border-radius:50%;border:none;' +
-        'background:rgba(128,128,128,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;' +
-        'color:#6b7280;transition:all 0.15s"' +
-        ' onmouseover="this.style.background=\'rgba(128,128,128,0.25)\'"' +
-        ' onmouseout="this.style.background=\'rgba(128,128,128,0.15)\'">' +
-        '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
-        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>' +
-        '</svg></button></div>' +
+        // User header (no avatar)
+        '<div style="padding:16px 20px 12px;border-bottom:1px solid rgba(229,231,235,0.6)">' +
+        '<div style="font-size:0.9rem;font-weight:700;color:#111827">' + name + '</div>' +
+        '<div style="font-size:0.72rem;color:#6b7280;margin-top:2px">' + email + '</div>' +
+        '</div>' +
 
-        // User header
-        '<div style="display:flex;align-items:center;gap:12px;padding:14px 16px 12px;border-bottom:1px solid rgba(229,231,235,0.6)">' +
-        '<div class="pill-avatar" style="width:40px;height:40px;flex-shrink:0;background:linear-gradient(135deg,#3b82f6,#2563eb)">' +
-        getUserAvatarHTML() + '</div>' +
-        '<div style="min-width:0;flex:1">' +
-        '<div style="font-size:0.875rem;font-weight:700;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + name + '</div>' +
-        '<div style="font-size:0.72rem;color:#6b7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px">' + email + '</div>' +
-        '</div></div>' +
-
-        // Nav items
+        // Nav items (no icons)
         '<nav style="padding:6px 0">' + menuItems + '</nav>' +
 
-        // Logout
+        // Logout (no icon)
         '<div style="border-top:1px solid rgba(229,231,235,0.6);padding:4px 0">' +
-        '<button onclick="logout()" style="display:flex;align-items:center;gap:12px;padding:11px 16px;width:100%;' +
+        '<button onclick="logout()" style="display:flex;align-items:center;padding:11px 20px;width:100%;' +
         'border:none;background:transparent;cursor:pointer;font-size:0.875rem;color:#9ca3af;text-align:left;transition:background 0.15s,color 0.15s"' +
         ' onmouseover="this.style.background=\'#fef2f2\';this.style.color=\'#ef4444\'"' +
         ' onmouseout="this.style.background=\'transparent\';this.style.color=\'#9ca3af\'">' +
-        '<svg style="flex-shrink:0" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
-        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>' +
-        '</svg>ออกจากระบบ' +
+        'ออกจากระบบ' +
         '</button></div>' +
 
         '</div>' + // end dropdown
