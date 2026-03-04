@@ -707,6 +707,13 @@ body.dark-navy {
     background: var(--dm-surface-3) !important;
 }
 
+/* Active menu item */
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown a[style*="background:#eff6ff"],
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown a[style*="background: #eff6ff"] {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #60a5fa !important;
+}
+
 :is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown [style*="border-bottom"],
 :is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown [style*="border-top"] {
     border-color: var(--dm-border) !important;
@@ -719,5 +726,9 @@ body.dark-navy {
 
 :is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown [style*="color:#6b7280"],
 :is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown [style*="color: #6b7280"] {
+    color: var(--dm-text-muted) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .admin-mobile-dropdown button {
     color: var(--dm-text-muted) !important;
 }
