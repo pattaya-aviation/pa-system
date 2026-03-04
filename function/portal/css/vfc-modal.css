@@ -1108,47 +1108,18 @@
 
     /* Reposition the mobile nav so dropdown falls below the tab bar */
     .admin-mobile-nav {
-        top: 0 !important;
-        right: 0 !important;
-        left: 0 !important;
-        bottom: 0 !important;
+        top: 64px !important;
+        right: 16px !important;
+        left: auto !important;
         transform: none !important;
-        width: 100% !important;
-        max-width: none !important;
+        width: calc(100% - 2rem) !important;
+        max-width: 320px !important;
         z-index: 999 !important;
         pointer-events: none !important;
     }
 
     .admin-mobile-nav .admin-mobile-dropdown {
         pointer-events: auto !important;
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin-top: 0 !important;
-        border-radius: 0 !important;
-        display: flex;
-        flex-direction: column;
-        animation: slideDown 0.3s ease-out;
-        overflow-y: auto;
-    }
-
-    .admin-mobile-nav .admin-mobile-dropdown.hidden {
-        display: none !important;
-        animation: none;
-    }
-}
-
-@keyframes slideDown {
-    from {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
     }
 }
 
