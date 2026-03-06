@@ -1846,26 +1846,22 @@
       rail.innerHTML = h;
     }
 
-    // ── Render minimized dock ──
+    // ── Render minimized dock (single FAB circle with badge) ──
     function renderDock() {
       const dock = document.getElementById('mDock');
       const minimized = openTabs.filter(t => t.minimized);
       if (!minimized.length) { dock.innerHTML = ''; return; }
 
-      let h = '';
-      minimized.forEach(tab => {
-        const item = allData.find(d => String(d.id) === String(tab.id));
-        if (!item) return;
-        const tp = TYPES[item.type] || { th: item.type };
-        const tc = getTabColor(item.type);
-        const initials = item.is_anonymous ? '?' : ((item.reporter_name || item.subject || '?').charAt(0));
-        const label = (item.subject || tp.th || 'รายการ').substring(0, 20);
-        h += `<div class="m-dock-item" onclick="restoreTab('${tab.id}')">`;
-        h += `<span class="m-dock-icon" style="background:${tc.bg}">${initials}</span>`;
-        h += `<span class="m-dock-label">${label}</span>`;
-        h += `</div>`;
-      });
-      dock.innerHTML = h;
+      dock.innerHTML = `<div class="m-dock-fab" onclick="restoreFirstMinimized()" title="เปิดรายการที่ย่อไว้ (${minimized.length})">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+        <span class="m-dock-badge">${minimized.length}</span>
+      </div>`;
+    }
+
+    // Restore the most recent minimized tab
+    function restoreFirstMinimized() {
+      const minimized = openTabs.filter(t => t.minimized);
+      if (minimized.length) restoreTab(minimized[minimized.length - 1].id);
     }
 
     // ── Render content for a tab ──
