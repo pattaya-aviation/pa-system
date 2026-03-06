@@ -33,15 +33,6 @@ function getUserEmail(user) {
 // Menu items configuration
 const adminMenuItems = [
     {
-        id: 'home',
-        href: adminNavBasePath + 'index.html',
-        label: 'หน้าหลัก',
-        hoverWidth: '140px',
-        icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>',
-        iconColor: '#3b82f6',
-        iconBg: 'rgba(59, 130, 246, 0.1)'
-    },
-    {
         id: 'vfc',
         href: adminNavBasePath + 'vfc/index.html',
         label: 'Voice for Change',
@@ -51,22 +42,13 @@ const adminMenuItems = [
         iconBg: 'rgba(99, 102, 241, 0.1)'
     },
     {
-        id: 'tax',
-        href: adminNavBasePath + 'tax/index.html',
-        label: 'Tax System',
-        hoverWidth: '155px',
-        icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>',
-        iconColor: '#10b981',
-        iconBg: 'rgba(16, 185, 129, 0.1)'
-    },
-    {
         id: 'settings',
         href: adminNavBasePath + 'settings/index.html',
-        label: 'ตั้งค่าระบบ',
-        hoverWidth: '160px',
+        label: 'ตั้งค่า',
+        hoverWidth: '130px',
         icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
-        iconColor: '#f59e0b',
-        iconBg: 'rgba(245, 158, 11, 0.1)'
+        iconColor: '#6b7280',
+        iconBg: 'rgba(107, 114, 128, 0.1)'
     }
 ];
 
@@ -94,12 +76,8 @@ function injectAdminNavStyles() {
 // Toggle mobile menu
 function toggleAdminMobileMenu() {
     const mobileMenu = document.getElementById('adminMobileMenu');
-    const backdrop = document.getElementById('adminMobileBackdrop');
     if (mobileMenu) {
         mobileMenu.classList.toggle('hidden');
-    }
-    if (backdrop) {
-        backdrop.classList.toggle('hidden');
     }
 }
 
@@ -115,13 +93,13 @@ function renderDesktopMenu(currentPage) {
         const iconStyle = isActive ? 'color:white' : 'color:' + item.iconColor;
         html += '<a href="' + item.href + '" class="menu-item ' + (isActive ? 'active' : '') + '" style="--hover-width: ' + item.hoverWidth + '">' +
             '<div class="icon-wrapper"><span style="display:flex;' + iconStyle + '">' + item.icon + '</span></div>' +
-            '<span class="menu-text ' + (isActive ? 'text-white font-medium' : 'text-gray-700') + '" style="opacity:0;position:absolute">' + item.label + '</span>' +
+            '<span class="menu-text ' + (isActive ? 'text-white font-medium' : 'text-gray-700') + '">' + item.label + '</span>' +
             '</a>';
     });
     html += '<div class="menu-divider"></div>' +
         '<button onclick="logout()" class="menu-item" style="--hover-width: 165px">' +
         '<div class="icon-wrapper"><svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></div>' +
-        '<span class="menu-text text-gray-500" style="opacity:0;position:absolute">ออกจากระบบ</span>' +
+        '<span class="menu-text text-gray-500">ออกจากระบบ</span>' +
         '</button>';
     return '<nav class="floating-menu fixed top-4 left-4 z-40">' + html + '</nav>';
 }
@@ -147,10 +125,7 @@ function renderMobileMenu(currentPage) {
     const email = getUserEmail(user);
 
     const pageTitles = {
-        home: 'Admin Portal',
-        vfc: 'Voice for Change',
-        tax: 'Tax System',
-        settings: 'ตั้งค่าระบบ'
+        vfc: 'Voice for Change'
     };
     const pageTitle = pageTitles[currentPage] || 'Admin Portal';
 
@@ -159,59 +134,53 @@ function renderMobileMenu(currentPage) {
         const isActive = currentPage === item.id;
         const activeBg = isActive ? '#eff6ff' : 'transparent';
         const activeClr = isActive ? '#1d4ed8' : '#374151';
+        const iconClr = isActive ? '#3b82f6' : '#6b7280';
         menuItems +=
-            '<a href="' + item.href + '" style="display:flex;align-items:center;padding:11px 20px;' +
+            '<a href="' + item.href + '" style="display:flex;align-items:center;gap:12px;padding:11px 16px;' +
             'background:' + activeBg + ';font-weight:' + (isActive ? '600' : '400') + ';' +
-            'text-decoration:none;color:' + activeClr + ';transition:background 0.15s;font-size:0.875rem"' +
+            'text-decoration:none;color:' + activeClr + ';transition:background 0.15s"' +
             ' onmouseover="this.style.background=\'#f9fafb\'" onmouseout="this.style.background=\'' + activeBg + '\'">' +
-            item.label +
+            '<span style="color:' + iconClr + ';flex-shrink:0;display:flex">' +
+            item.icon.replace(/w-6 h-6/g, 'w-5 h-5') + '</span>' +
+            '<span style="font-size:0.875rem">' + item.label + '</span>' +
             '</a>';
     });
 
     return (
-        '<div class="admin-mobile-nav" style="position:fixed;top:16px;left:50%;transform:translateX(-50%);' +
-        'width:calc(100% - 2rem);max-width:420px;z-index:50">' +
+        '<div class="admin-mobile-nav" style="position:fixed;top:16px;right:16px;z-index:50">' +
 
-        // ── Pill ─────────────────────────────────────────────────────
+        // ── Circle hamburger button ─────────────────────────────────
         '<div class="admin-mobile-pill" onclick="toggleAdminMobileMenu()">' +
-
-        // Left: logo (same as home navbar)
-        '<img src="' + adminNavBasePath + '../function/shared/logo/Pattaya Aviation.png" ' +
-        'alt="Pattaya Aviation" style="height:28px;object-fit:contain;flex-shrink:0;margin-left:2px">' +
-
-        // Right: hamburger icon
-        '<div style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;' +
-        'border-radius:50%;background:rgba(255,255,255,0.6);flex-shrink:0">' +
-        '<svg width="18" height="18" fill="none" stroke="#374151" viewBox="0 0 24 24">' +
+        '<svg width="20" height="20" fill="none" stroke="#374151" viewBox="0 0 24 24">' +
         '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/>' +
-        '</svg></div>' +
+        '</svg>' +
 
         '</div>' + // end pill
 
-        // ── Backdrop (dim + blur) ────────────────────────────────────
-        '<div id="adminMobileBackdrop" class="hidden" onclick="toggleAdminMobileMenu()"' +
-        ' style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);' +
-        'backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:998;transition:opacity 0.2s"></div>' +
-
         // ── Dropdown ─────────────────────────────────────────────────
-        '<div id="adminMobileMenu" class="admin-mobile-dropdown hidden" style="position:relative;z-index:999">' +
+        '<div id="adminMobileMenu" class="admin-mobile-dropdown hidden">' +
 
-        // User header (no avatar)
-        '<div style="padding:16px 20px 12px;border-bottom:1px solid rgba(229,231,235,0.6)">' +
-        '<div style="font-size:0.9rem;font-weight:700;color:#111827">' + name + '</div>' +
-        '<div style="font-size:0.72rem;color:#6b7280;margin-top:2px">' + email + '</div>' +
-        '</div>' +
+        // User header
+        '<div style="display:flex;align-items:center;gap:12px;padding:14px 16px 12px;border-bottom:1px solid rgba(229,231,235,0.6)">' +
+        '<div class="pill-avatar" style="width:40px;height:40px;flex-shrink:0;background:linear-gradient(135deg,#3b82f6,#2563eb)">' +
+        getUserAvatarHTML() + '</div>' +
+        '<div style="min-width:0;flex:1">' +
+        '<div style="font-size:0.875rem;font-weight:700;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + name + '</div>' +
+        '<div style="font-size:0.72rem;color:#6b7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px">' + email + '</div>' +
+        '</div></div>' +
 
-        // Nav items (no icons)
+        // Nav items
         '<nav style="padding:6px 0">' + menuItems + '</nav>' +
 
-        // Logout (no icon)
+        // Logout
         '<div style="border-top:1px solid rgba(229,231,235,0.6);padding:4px 0">' +
-        '<button onclick="logout()" style="display:flex;align-items:center;padding:11px 20px;width:100%;' +
+        '<button onclick="logout()" style="display:flex;align-items:center;gap:12px;padding:11px 16px;width:100%;' +
         'border:none;background:transparent;cursor:pointer;font-size:0.875rem;color:#9ca3af;text-align:left;transition:background 0.15s,color 0.15s"' +
         ' onmouseover="this.style.background=\'#fef2f2\';this.style.color=\'#ef4444\'"' +
         ' onmouseout="this.style.background=\'transparent\';this.style.color=\'#9ca3af\'">' +
-        'ออกจากระบบ' +
+        '<svg style="flex-shrink:0" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>' +
+        '</svg>ออกจากระบบ' +
         '</button></div>' +
 
         '</div>' + // end dropdown
@@ -231,7 +200,7 @@ function renderAdminNav(containerId, currentPage) {
     currentPage = currentPage || 'home';
     injectAdminNavStyles();
     const container = document.getElementById(containerId);
-    const html = renderDesktopMenu(currentPage) + renderProfilePill() + renderMobileMenu(currentPage);
+    const html = renderDesktopMenu(currentPage) + renderMobileMenu(currentPage);
     if (container) {
         container.innerHTML = html;
     } else {
@@ -241,33 +210,40 @@ function renderAdminNav(containerId, currentPage) {
 
 // ── Theme Auto-Load ──
 (function () {
-    const saved = localStorage.getItem('admin-theme');
-    const theme = saved || 'dark-grey'; // default to dark mode
-    if (theme !== 'light') {
-        document.documentElement.className = theme;
+    var saved = localStorage.getItem('admin-theme') || 'light';
+    var resolved = saved;
+    if (saved === 'system') {
+        resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-grey' : 'light';
+    }
+    if (resolved && resolved !== 'light') {
+        document.documentElement.className = resolved;
     }
 })();
 
 // Auto-initialize if data attribute is present
 document.addEventListener('DOMContentLoaded', function () {
-    const navContainer = document.querySelector('[data-admin-nav]');
+    var navContainer = document.querySelector('[data-admin-nav]');
     if (navContainer) {
-        const currentPage = navContainer.dataset.adminNav || 'home';
+        var currentPage = navContainer.dataset.adminNav || 'home';
         renderAdminNav(navContainer.id, currentPage);
-
-        // Inject floating hamburger on pages that don't already have one (e.g. Tax, Settings, Home)
-        if (!document.querySelector('.tab-hamburger')) {
-            var floatHamburger = document.createElement('button');
-            floatHamburger.className = 'tab-hamburger admin-float-hamburger';
-            floatHamburger.onclick = function () { toggleAdminMobileMenu(); };
-            floatHamburger.title = 'เมนู';
-            floatHamburger.innerHTML = '<svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>';
-            document.body.appendChild(floatHamburger);
-        }
     }
-    const savedTheme = localStorage.getItem('admin-theme') || 'dark-grey';
-    if (savedTheme !== 'light') {
+    var savedTheme = localStorage.getItem('admin-theme') || 'light';
+    var resolved = savedTheme;
+    if (savedTheme === 'system') {
+        resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-grey' : 'light';
+    }
+    document.body.classList.remove('dark-grey', 'dark-navy');
+    if (resolved !== 'light') {
+        document.body.classList.add(resolved);
+    }
+});
+
+// Listen for OS theme change when 'system' is active
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () {
+    var pref = localStorage.getItem('admin-theme');
+    if (pref === 'system') {
+        var resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark-grey' : 'light';
         document.body.classList.remove('dark-grey', 'dark-navy');
-        document.body.classList.add(savedTheme);
+        if (resolved !== 'light') document.body.classList.add(resolved);
     }
 });

@@ -18,10 +18,8 @@
 }
 
 .menu-item {
-    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
     width: 44px;
     height: 44px;
     padding: 0;
@@ -30,13 +28,19 @@
     backdrop-filter: blur(20px);
     border: 1px solid rgba(229, 231, 235, 0.8);
     box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.08);
-    overflow: visible;
-    transition: box-shadow 0.3s ease, background-color 0.2s ease;
+    overflow: hidden;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.3s ease,
+        background-color 0.2s ease,
+        padding 0.3s ease;
     cursor: pointer;
     text-decoration: none;
+    --hover-width: 180px;
 }
 
 .menu-item:hover {
+    width: var(--hover-width);
+    padding-right: 16px;
     box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.12);
 }
 
@@ -60,29 +64,17 @@
 }
 
 .menu-item .menu-text {
-    position: absolute;
-    left: calc(100% + 10px);
-    top: 50%;
-    transform: translateY(-50%) translateX(-4px);
     white-space: nowrap;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: #374151;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(229, 231, 235, 0.8);
-    border-radius: 8px;
-    padding: 6px 12px;
-    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
     opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transform: translateX(-10px);
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    padding-right: 16px;
 }
 
 .menu-item:hover .menu-text {
-    opacity: 1 !important;
-    transform: translateY(-50%) translateX(0);
-    transition-delay: 0.3s;
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.15s;
 }
 
 .menu-divider {
@@ -90,6 +82,56 @@
     height: 1px;
     background: rgba(229, 231, 235, 0.8);
     margin: 4px auto;
+}
+
+/* ── Entrance animation ── */
+@keyframes menuEnter {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.floating-menu .menu-item,
+.floating-menu .menu-divider {
+    animation: menuEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.floating-menu> :nth-child(1) {
+    animation-delay: 0.04s;
+}
+
+.floating-menu> :nth-child(2) {
+    animation-delay: 0.09s;
+}
+
+.floating-menu> :nth-child(3) {
+    animation-delay: 0.14s;
+}
+
+.floating-menu> :nth-child(4) {
+    animation-delay: 0.19s;
+}
+
+.floating-menu> :nth-child(5) {
+    animation-delay: 0.24s;
+}
+
+.floating-menu> :nth-child(6) {
+    animation-delay: 0.29s;
+}
+
+.floating-menu> :nth-child(7) {
+    animation-delay: 0.34s;
+}
+
+.floating-menu> :nth-child(8) {
+    animation-delay: 0.39s;
 }
 
 /* Mobile menu - show only on mobile */
@@ -108,11 +150,23 @@
     display: none;
 }
 
+@keyframes pillEnter {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 @media (min-width: 1024px) {
     .admin-profile-pill {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 6px;
         position: fixed;
         top: 8px;
         right: 16px;
@@ -121,10 +175,11 @@
         backdrop-filter: blur(20px);
         border: 1px solid rgba(229, 231, 235, 0.85);
         border-radius: 9999px;
-        padding: 6px 14px 6px 6px;
+        padding: 4px 10px 4px 4px;
         box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.08);
         cursor: default;
         transition: box-shadow 0.2s, background 0.2s;
+        animation: pillEnter 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
     }
 
     .admin-profile-pill:hover {
@@ -145,8 +200,8 @@
 }
 
 .pill-avatar {
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: #9ca3af;
     display: flex;
@@ -154,7 +209,7 @@
     justify-content: center;
     color: white;
     font-weight: 700;
-    font-size: 0.8rem;
+    font-size: 0.65rem;
     flex-shrink: 0;
     letter-spacing: 0.02em;
     user-select: none;
@@ -167,26 +222,23 @@
 }
 
 .pill-name {
-    font-size: 0.8125rem;
+    font-size: 0.6875rem;
     font-weight: 600;
     color: #111827;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 180px;
+    max-width: 150px;
     line-height: 1.3;
 }
 
 .pill-email {
-    font-size: 0.695rem;
+    font-size: 0.625rem;
     color: #6b7280;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 180px;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.22s ease, opacity 0.22s ease, margin-top 0.22s ease;
+    max-width: 150px;
     line-height: 1.3;
 }
 
@@ -224,12 +276,12 @@
         0 2px 16px 0 rgba(31, 38, 135, 0.1),
         inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
         inset 0 -1px 0 0 rgba(255, 255, 255, 0.2);
-    border-radius: 9999px;
-    padding: 6px 10px 6px 14px;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+    justify-content: center;
     cursor: pointer;
     transition: box-shadow 0.2s;
 }
